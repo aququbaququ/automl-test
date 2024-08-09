@@ -90,7 +90,7 @@ jobs:
 
           # "inputs":{"parameters_json":"{\"targetPlatform\":\"asd\",\"param\":45}"
 
-          apps=($(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json))      
+          apps=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json) 
           appindex=0
           for app in $(apps); do 
             curl \
