@@ -49,12 +49,18 @@ jobs:
           # cancelFutureDuplicates: true
           token: ${{ secrets.SGHTOKENLOCAL }}
 
-      - name: Remove old artifacts
-        uses: philips-labs/action-delete-artifacts@v1.0.0
-        with:
-          github_token: ${{ secrets.SGHTOKENLOCAL }}
-          workflow: linux-wd.yml
+      # - name: Remove old artifacts
+      #   uses: philips-labs/action-delete-artifacts@v1.0.0
+      #   with:
+      #     github_token: ${{ secrets.SGHTOKENLOCAL }}
+      #     workflow: linux-wd.yml
           # workflow: ${{ github.workflow_ref }}
+
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+            name: |
+              *
+            failOnError: false
 
       - name: Load ENV file
         run: |
