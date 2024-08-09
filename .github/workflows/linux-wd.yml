@@ -42,12 +42,17 @@ jobs:
       appscount: ${{ steps.apps.outputs.appscount }}
 
     steps:
-      - name: "Cancel previous workflows"
-        uses: potiuk/cancel-workflow-runs@master
-        with:
-          cancelMode: allDuplicates
-          # cancelFutureDuplicates: true
+      # - name: "Cancel previous workflows"
+      #   uses: potiuk/cancel-workflow-runs@master
+      #   with:
+      #     cancelMode: allDuplicates
+      #     # cancelFutureDuplicates: true
+      #     token: ${{ secrets.SGHTOKENLOCAL }}
+
+      - uses: n1hility/cancel-previous-runs@v3
+        with: 
           token: ${{ secrets.SGHTOKENLOCAL }}
+          workflow: linux-wd.yml
 
       # - name: Remove old artifacts
       #   uses: philips-labs/action-delete-artifacts@v1.0.0
