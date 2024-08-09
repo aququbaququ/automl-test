@@ -54,10 +54,12 @@ jobs:
       #     token: ${{ secrets.SGHTOKENLOCAL }}
       #     workflow: linux-wd.yml
 
-      - name: cancel running workflows
-        uses: everphone-gmbh/cancel-previous-workflows@v5
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      # - name: cancel running workflows
+      #   uses: everphone-gmbh/cancel-previous-workflows@v5
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+
+      - uses: fkirc/skip-duplicate-actions@master
 
       # - name: Remove old artifacts
       #   uses: philips-labs/action-delete-artifacts@v1.0.0
