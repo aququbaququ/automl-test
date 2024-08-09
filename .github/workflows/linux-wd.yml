@@ -92,7 +92,7 @@ jobs:
 
           apps=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json) 
           appindex=0
-          for app in $(apps); do 
+          for app in $apps; do 
             curl \
               -X POST \
               -H "Accept: application/vnd.github+json" \
