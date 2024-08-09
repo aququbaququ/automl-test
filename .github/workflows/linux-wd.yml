@@ -49,16 +49,16 @@ jobs:
       #     # cancelFutureDuplicates: true
       #     token: ${{ secrets.SGHTOKENLOCAL }}
 
-      # - uses: n1hility/cancel-previous-runs@v3
-      #   with: 
-      #     token: ${{ secrets.SGHTOKENLOCAL }}
-      #     workflow: linux-wd.yml
+      - uses: n1hility/cancel-previous-runs@v3
+        with: 
+          token: ${{ secrets.SGHTOKENLOCAL }}
+          workflow: linux-wd.yml
 
-      - name: cancel running workflows
-        uses: everphone-gmbh/cancel-previous-workflows@v5
-        env:
-          # GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+      # - name: cancel running workflows
+      #   uses: everphone-gmbh/cancel-previous-workflows@v5
+      #   env:
+      #     # GITHUB_TOKEN: ${{ github.token }}
+      #     GITHUB_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
 
       # - uses: fkirc/skip-duplicate-actions@master
       #   with: 
