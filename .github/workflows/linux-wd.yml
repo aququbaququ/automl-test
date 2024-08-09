@@ -366,14 +366,13 @@ jobs:
   process-build-data:
     runs-on: ubuntu-latest
     if: "${{ github.event.inputs.parameters_json == '' }}"
-    if: success() || failure()
     steps:
       - uses: actions/checkout@v4
 
       - name: wait 5h for other jobs complete
         uses: jakejarvis/wait-action@master
         with:
-          time: '5h'
+          time: '1h'
 
       - name: wait 5m for other jobs commits complete
         uses: jakejarvis/wait-action@master
@@ -446,13 +445,6 @@ jobs:
           sudo echo 'PermitRootLogin yes' | sudo tee -a /etc/ssh/sshd_config
           sudo systemctl reload sshd
           WEBPORT=22
-
-      - name: Sleep for 5 hours
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '1s'
-        timeout-minutes: 360
-
 
 
       - name: Place reports' artifacts
