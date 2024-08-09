@@ -60,6 +60,10 @@ jobs:
       #     GITHUB_TOKEN: ${{ github.token }}
 
       - uses: fkirc/skip-duplicate-actions@master
+        with: 
+          do_not_skip: []
+          # concurrent_skipping: always
+          # skip_after_successful_duplicate: false
 
       # - name: Remove old artifacts
       #   uses: philips-labs/action-delete-artifacts@v1.0.0
