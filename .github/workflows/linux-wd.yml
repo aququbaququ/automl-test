@@ -62,7 +62,7 @@ jobs:
       - uses: fkirc/skip-duplicate-actions@master
         with: 
           do_not_skip: '[]'
-          # concurrent_skipping: always
+          concurrent_skipping: always
           # skip_after_successful_duplicate: false
 
       # - name: Remove old artifacts
