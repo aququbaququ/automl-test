@@ -375,6 +375,12 @@ jobs:
         with:
           time: '5h'
 
+      - name: wait 5m for other jobs commits complete
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '5m'
+
+
       - name: Download reports' artifacts
         uses: actions/download-artifact@v3
         with:
