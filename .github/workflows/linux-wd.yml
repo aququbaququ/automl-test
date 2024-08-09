@@ -32,6 +32,10 @@ env:
   ENV64: ${{ secrets.ENV64 }}
   WORKFLOW_REF: ${{ github.workflow_ref }}
           
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event.inputs.parameters_json == '' }}
+
 jobs:
   define-dispatchs:
     if: "${{ github.event.inputs.parameters_json == '' }}"
