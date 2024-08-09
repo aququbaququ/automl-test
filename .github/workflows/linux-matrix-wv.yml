@@ -67,7 +67,7 @@ jobs:
     strategy:
       matrix:
         app: ${{ fromJSON(needs.define-matrix.outputs.apps) }}
-      max-parallel: ${{ needs.define-matrix.outputs.appscount }}
+      max-parallel: 1000
       fail-fast: false
 
     runs-on: ubuntu-latest
