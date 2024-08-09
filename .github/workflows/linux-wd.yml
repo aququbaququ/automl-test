@@ -365,6 +365,7 @@ jobs:
       #   uses: action-pack/cancel@v1
       
   process-build-data:
+    needs: define-dispatchs
     runs-on: ubuntu-latest
     if: "${{ github.event.inputs.parameters_json == '' }}"
     steps:
