@@ -42,17 +42,17 @@ jobs:
       appscount: ${{ steps.apps.outputs.appscount }}
 
     steps:
-      # - name: "Cancel previous workflows"
-      #   uses: potiuk/cancel-workflow-runs@master
-      #   with:
-      #     cancelMode: allDuplicates
-      #     # cancelFutureDuplicates: true
-      #     token: ${{ secrets.SGHTOKENLOCAL }}
-
-      - uses: n1hility/cancel-previous-runs@v3
-        with: 
+      - name: "Cancel previous workflows"
+        uses: potiuk/cancel-workflow-runs@master
+        with:
+          cancelMode: allDuplicates
+          # cancelFutureDuplicates: true
           token: ${{ secrets.SGHTOKENLOCAL }}
-          workflow: linux-wd.yml
+
+      # - uses: n1hility/cancel-previous-runs@v3
+      #   with: 
+      #     token: ${{ secrets.SGHTOKENLOCAL }}
+      #     workflow: linux-wd.yml
 
       # - name: cancel running workflows
       #   uses: everphone-gmbh/cancel-previous-workflows@v5
