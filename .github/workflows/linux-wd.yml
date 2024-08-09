@@ -53,7 +53,8 @@ jobs:
         uses: philips-labs/action-delete-artifacts@v1.0.0
         with:
           github_token: ${{ secrets.SGHTOKENLOCAL }}
-          workflow: ${{ github.workflow_ref }}
+          workflow: ${{ github.workflow }}
+          # workflow: ${{ github.workflow_ref }}
 
       - name: Load ENV file
         run: |
@@ -91,7 +92,7 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer <my token>" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
-              https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/${WORKFLOW_REF}/dispatches \
+              https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/${{ github.workflow }}/dispatches \
               -d '{"ref":"main","inputs":{"parameters_json":"{\"app\":\${app}\",\"index\":${appindex}}"}}'
             appindex=$(expr $appindex + 1)
           done; 
