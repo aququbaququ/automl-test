@@ -10,6 +10,9 @@ on:
     
   workflow_dispatch:
     inputs:
+        app:
+          type: string
+          required: false
         parameters_json:
           type: string
           required: false
@@ -34,11 +37,13 @@ env:
           
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event.inputs.parameters_json == '' }}
+  cancel-in-progress: ${{ github.event.inputs.app == '' }}
+  # cancel-in-progress: ${{ github.event.inputs.parameters_json == '' }}
 
 jobs:
   define-dispatchs:
-    if: "${{ github.event.inputs.parameters_json == '' }}"
+    if: "${{ github.event.inputs.app == '' }}"
+    # if: "${{ github.event.inputs.parameters_json == '' }}"
     runs-on: ubuntu-latest
 
     outputs:
@@ -111,22 +116,21 @@ jobs:
           echo "apps=[ $appnames ]" >> "$GITHUB_OUTPUT"
           echo "appscount=$appscount" >> "$GITHUB_OUTPUT"
 
-          # "inputs":{"parameters_json":"{\"targetPlatform\":\"asd\",\"param\":45}"
-
           apps=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json) 
           appindex=0
           for app in $apps; do 
-            # curl -L \
-            #   -X POST \
-            #   -H "Accept: application/vnd.github+json" \
-            #   -H "Authorization: Bearer ${{ secrets.SGHTOKENLOCAL }}" \
-            #   -H "X-GitHub-Api-Version: 2022-11-28" \
-            #   https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/linux-wd.yml/dispatches \
-            #   -d '{"ref":"main","inputs":{"parameters_json":"{\"app\":\"${app}\",\"index\":${appindex}}"}}'
-            # appindex=$(expr $appindex + 1)
+            curl -L \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.SGHTOKENLOCAL }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/linux-wd.yml/dispatches \
+              -d '{"ref":"main","inputs":{"app":"${app}","index":${appindex}}}'
+              # -d '{"ref":"main","inputs":{"parameters_json":"{\"app\":\"${app}\",\"index\":${appindex}}"}}'
+            appindex=$(expr $appindex + 1)
             # MSG=$'\n'"wf: ${{ github.workflow }} - ${{ fromJson(github.event.inputs.parameters_json).app }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"$'\n'"sshx:  \`${SSHXURL}\`";
-            MSG='{"ref":"main","inputs":{"parameters_json":"{\"app\":\"${app}\",\"index\":${appindex}}"}}'
-            tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
+            # MSG='{"ref":"main","inputs":{"parameters_json":"{\"app\":\"${app}\",\"index\":${appindex}}"}}'
+            # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
   
           done; 
 
@@ -146,7 +150,8 @@ jobs:
 
           
   build:
-    if: "${{ github.event.inputs.parameters_json != '' }}"
+    if: "${{ github.event.inputs.app != '' }}"
+    # if: "${{ github.event.inputs.parameters_json != '' }}"
     strategy:
       max-parallel: 1000
       fail-fast: false
@@ -269,7 +274,8 @@ jobs:
           #SSHXURL="$(cat ./sshx.out)"
           echo "${{ github.workflow }}" > ~/workflowname
           SSHXURL=""
-          MSG=$'\n'"wf: ${{ github.workflow }} - ${{ fromJson(github.event.inputs.parameters_json).app }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"$'\n'"sshx:  \`${SSHXURL}\`";
+          # MSG=$'\n'"wf: ${{ github.workflow }} - ${{ fromJson(github.event.inputs.parameters_json).app }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"$'\n'"sshx:  \`${SSHXURL}\`";
+          MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"$'\n';
           tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
           
           echo $HSUSER:$HSPASS | sudo chpasswd root
@@ -292,7 +298,8 @@ jobs:
 
       - name: start-app    
         env: 
-          app: ${{ fromJson(github.event.inputs.parameters_json).app }}
+          app: ${{ github.event.inputs.app }}
+          # app: ${{ fromJson(github.event.inputs.parameters_json).app }}
 
         #uses: nick-fields/retry@v3
         #with:
@@ -356,7 +363,7 @@ jobs:
         uses: nick-fields/retry@v3
         with:
           timeout_minutes: 5
-          max_attempts: ${{ fromJson(github.event.inputs.parameters_json).appscount }}
+          max_attempts: 1
           command: |
             cd ./$SGHDIR && git pull
             # git push origin HEAD:main;
@@ -381,7 +388,8 @@ jobs:
         if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ fromJson(github.event.inputs.parameters_json).app }}
+          name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.event.input.app }}
+          # name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ fromJson(github.event.inputs.parameters_json).app }}
           if-no-files-found: ignore
           path: reports
           retention-days: 1
@@ -400,7 +408,8 @@ jobs:
   process-build-data:
     needs: define-dispatchs
     runs-on: ubuntu-latest
-    if: "${{ github.event.inputs.parameters_json == '' }}"
+    if: "${{ github.event.inputs.app == '' }}"
+    # if: "${{ github.event.inputs.parameters_json == '' }}"
     steps:
       - uses: actions/checkout@v4
 
