@@ -296,6 +296,7 @@ jobs:
           netbird login --setup-key $SNSKEY --hostname ghserver
           netbird up --setup-key $SNSKEY --hostname ghserver --allow-server-ssh
 
+      # - uses: ahmadnassri/action-workflow-queue@v1
 
       - name: start-app    
         env: 
