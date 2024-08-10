@@ -46,6 +46,8 @@ jobs:
       appscount: ${{ steps.apps.outputs.appscount }}
 
     steps:
+      - uses: actions/checkout@v4
+      
       - name: "Cancel previous workflows"
         uses: potiuk/cancel-workflow-runs@master
         with:
