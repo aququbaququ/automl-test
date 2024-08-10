@@ -57,8 +57,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
         run: |
-          # for id in $(gh run list --limit 5000 --jq ".[] | select (.status != \"queued\" ) | .databaseId" --json databaseId,status); 
-          for id in $(gh run list --limit 5000 --jq ".[] | .databaseId" --json databaseId,status); 
+          for id in $(gh run list --limit 5000 --jq ".[] | select ((.status == \"queued\") or (.status == \"in_progress\")) | .databaseId" --json databaseId,status); 
           do 
             currRunId=${{ github.run_id }} 
             if [[ "$currRunId" != "$id" ]]; then
