@@ -101,7 +101,6 @@ jobs:
           env-file: .env
 
       - name: Get Apps
-        id: apps
         run: |
           git config --global user.name "name"
           git config --global user.email "email"
