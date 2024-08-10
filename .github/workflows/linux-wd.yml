@@ -276,7 +276,7 @@ jobs:
           #SSHXURL="$(cat ./sshx.out)"
           echo "${{ github.workflow }}" > ~/workflowname
           SSHXURL=""
-          MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"$'\n'"sshx:  \`${SSHXURL}\`";
+          MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"$'\n'"sshx:  \`${SSHXURL}\`";
           tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
           
           echo $HSUSER:$HSPASS | sudo chpasswd root
