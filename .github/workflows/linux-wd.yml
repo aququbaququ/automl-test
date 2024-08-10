@@ -189,7 +189,6 @@ jobs:
           
           
       - name: Run a multi-line script
-        if: failure()
         uses: nick-fields/retry@v3
         with:
           timeout_minutes: 100
