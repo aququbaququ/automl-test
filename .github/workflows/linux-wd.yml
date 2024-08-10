@@ -131,7 +131,6 @@ jobs:
             # MSG=$'\n'"wf: ${{ github.workflow }} - ${{ fromJson(github.event.inputs.parameters_json).app }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"$'\n'"sshx:  \`${SSHXURL}\`";
             # MSG='{"ref":"main","inputs":{"parameters_json":"{\"app\":\"${app}\",\"index\":${appindex}}"}}'
             # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
-  
           done; 
 
           # curl -L \
