@@ -72,11 +72,11 @@ jobs:
       #     workflow: linux-wd.yml
           # workflow: ${{ github.workflow_ref }}
 
-      # - uses: geekyeggo/delete-artifact@v5
-      #   with:
-      #       name: |
-      #         *
-      #       failOnError: false
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+            name: |
+              *
+            failOnError: false
 
       - name: "Delete artifacts"
         env:
