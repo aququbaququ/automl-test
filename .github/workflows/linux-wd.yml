@@ -485,7 +485,6 @@ jobs:
           command: |
             gh run download --repo ${{ github.repository }} --pattern "*" --dir downloaded_artifacts
             [[ $(ls -A downloaded_artifacts/*) ]] && echo "contains files" || { echo "empty" && exit 1 }
-
       - name: Download reports' artifacts
         uses: actions/download-artifact@v4
         with:
