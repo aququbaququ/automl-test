@@ -78,12 +78,13 @@ jobs:
       #         *
       #       failOnError: false
 
-      - name: Delete by pattern
+      - name: Delete artifacts
         uses: jimschubert/delete-artifacts-action@v1
         with:
           log_level: 'debug'
           min_bytes: '0'
-          pattern: '"'
+          pattern: '*'
+          active_duration: '1s'
 
       - name: "Delete artifacts"
         env:
