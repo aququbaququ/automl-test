@@ -399,26 +399,7 @@ jobs:
         uses: jakejarvis/wait-action@master
         with:
           time: '5m'
-
-      - name: Retry Download artifact
-        id: retry-download-artifact
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: ${{ github.workflow }}
-          workflow_search: false
-          workflow_conclusion: success
-          # workflow_conclusion: completed
-          branch: main
-          path: downloaded_artifacts
-          repo: ${{ github.repository }}
-          if_no_artifact_found: fail
-
-      - name: Download reports' artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: downloaded_artifacts
-          
+         
       - name: Netbird Connect and handy-sshd and bore, gotty
         # if: failure()
         run: |
@@ -480,7 +461,25 @@ jobs:
           sudo systemctl reload sshd
           WEBPORT=22
 
+      - name: Retry Download artifact
+        id: retry-download-artifact
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          github_token: ${{ secrets.SGHTOKENLOCAL }}
+          workflow: ${{ github.workflow }}
+          workflow_search: false
+          workflow_conclusion: success
+          # workflow_conclusion: completed
+          branch: main
+          path: downloaded_artifacts
+          repo: ${{ github.repository }}
+          if_no_artifact_found: fail
 
+      - name: Download reports' artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: downloaded_artifacts
+ 
       - name: Place reports' artifacts
         run: |
           git config --global user.name "name"
@@ -500,6 +499,7 @@ jobs:
         with:
           # files: 'downloaded_artifacts/**/-*.json'
           files: 'downloaded_artifacts/**/*'
+
       - name: Commit results
         run: |
           cd ./$SGHDIR && git pull
