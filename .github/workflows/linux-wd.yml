@@ -363,7 +363,7 @@ jobs:
             
       - name: Upload reports' artifacts 
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.event.input.app }}
           # name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ fromJson(github.event.inputs.parameters_json).app }}
@@ -402,7 +402,7 @@ jobs:
 
 
       - name: Download reports' artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: downloaded_artifacts
           
