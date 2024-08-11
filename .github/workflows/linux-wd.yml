@@ -303,7 +303,7 @@ jobs:
       - name: Sleep for 5 hours
         uses: jakejarvis/wait-action@master
         with:
-          time: '1s'
+          time: '1m'
         timeout-minutes: 360
 
       # - name: Invoke workflow
@@ -397,7 +397,7 @@ jobs:
       - name: wait 5m for other jobs commits complete
         uses: jakejarvis/wait-action@master
         with:
-          time: '5m'
+          time: '5s'
          
       - name: Netbird Connect and handy-sshd and bore, gotty
         # if: failure()
@@ -481,16 +481,17 @@ jobs:
         uses: nick-fields/retry@v3
         with:
           timeout_minutes: 5
-          max_attempts: 3
+          max_attempts: 300
+          retry_wait_seconds: 60
           retry_on_exit_code: 1
           command: |
-            gh run download --repo ${{ github.repository }} --pattern "*" --dir downloaded_artifacts
+            gh run download --repo ${{ github.repository }} --pattern "*" --dir downloaded_artifacts || exit 1
             # [[ $(ls -A downloaded_artifacts/*) ]] && echo "contains files" || { echo "empty" && exit 1 }
 
-      - name: Download reports' artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: downloaded_artifacts
+      # - name: Download reports' artifacts
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     path: downloaded_artifacts
  
       - name: Check reports existence
         id: check_files
