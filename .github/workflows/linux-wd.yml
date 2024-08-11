@@ -72,11 +72,18 @@ jobs:
       #     workflow: linux-wd.yml
           # workflow: ${{ github.workflow_ref }}
 
-      - uses: geekyeggo/delete-artifact@v5
+      # - uses: geekyeggo/delete-artifact@v5
+      #   with:
+      #       name: |
+      #         *
+      #       failOnError: false
+
+      - name: Delete by pattern
+        uses: jimschubert/delete-artifacts-action@v1
         with:
-            name: |
-              *
-            failOnError: false
+          log_level: 'debug'
+          min_bytes: '0'
+          pattern: '"'
 
       - name: "Delete artifacts"
         env:
