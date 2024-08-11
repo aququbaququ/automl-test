@@ -36,6 +36,8 @@ jobs:
       appscount: ${{ steps.apps.outputs.appscount }}
 
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Load ENV file
         run: |
           echo $ENV64 | openssl base64 -d --out .env
@@ -67,6 +69,7 @@ jobs:
     strategy:
       matrix:
         app: ${{ fromJSON(needs.define-matrix.outputs.apps) }}
+      max-parallel: 1000
       fail-fast: false
 
     runs-on: ubuntu-latest
