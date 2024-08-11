@@ -347,7 +347,8 @@ jobs:
         run:  |
             cd ./$SGHDIR && git pull
             # git push origin HEAD:main;
-            cd ./data && git checkout main && git pull --rebase --autostash
+            # cd ./data && git checkout main && git pull --rebase --autostash
+            cd ./data && git stash --include-untracked && git checkout main && git stash pop && git pull --rebase --autostash
             # git push origin HEAD:main;
             
             # git ls-files --others --exclude-standard | grep trades | xargs git add
@@ -522,7 +523,8 @@ jobs:
         if: steps.check_files.outputs.files_exists == 'true'
         run: |
           cd ./$SGHDIR && git pull
-          cd ./data && git checkout main && git pull --rebase --autostash
+          # cd ./data && git checkout main && git pull --rebase --autostash
+          cd ./data && git stash --include-untracked && git checkout main && git stash pop && git pull --rebase --autostash
           git ls-files --others --exclude-standard | grep trades | xargs git add
           git ls-files --others --exclude-standard | grep test | xargs git add
           git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
