@@ -64,30 +64,6 @@ jobs:
               gh run cancel $id; 
             fi
           done;
-      
-      # - name: "Cancel previous workflows"
-      #   uses: potiuk/cancel-workflow-runs@master
-      #   with:
-      #     cancelMode: allDuplicates
-      #     # cancelFutureDuplicates: true
-      #     token: ${{ secrets.SGHTOKENLOCAL }}
-
-      # - uses: n1hility/cancel-previous-runs@v3
-      #   with: 
-      #     token: ${{ secrets.SGHTOKENLOCAL }}
-      #     workflow: linux-wd.yml
-
-      # - name: cancel running workflows
-      #   uses: everphone-gmbh/cancel-previous-workflows@v5
-      #   env:
-      #     # GITHUB_TOKEN: ${{ github.token }}
-      #     GITHUB_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
-
-      # - uses: fkirc/skip-duplicate-actions@master
-      #   with: 
-      #     do_not_skip: '[]'
-      #     concurrent_skipping: always
-      #     skip_after_successful_duplicate: false
 
       # - name: Remove old artifacts
       #   uses: philips-labs/action-delete-artifacts@v1.0.0
