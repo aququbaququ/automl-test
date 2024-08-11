@@ -482,6 +482,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 3
+          retry_on_exit_code: 1
           command: |
             gh run download --repo ${{ github.repository }} --pattern "*" --dir downloaded_artifacts
             [[ $(ls -A downloaded_artifacts/*) ]] && echo "contains files" || { echo "empty" && exit 1 }
