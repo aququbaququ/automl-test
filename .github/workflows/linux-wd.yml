@@ -365,7 +365,7 @@ jobs:
         if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.event.input.app }}
+          name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.event.inputs.app }}
           # name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ fromJson(github.event.inputs.parameters_json).app }}
           if-no-files-found: ignore
           path: reports
