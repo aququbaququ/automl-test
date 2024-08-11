@@ -72,11 +72,20 @@ jobs:
       #     workflow: linux-wd.yml
           # workflow: ${{ github.workflow_ref }}
 
-      - uses: geekyeggo/delete-artifact@v5
-        with:
-            name: |
-              *
-            failOnError: false
+      # - uses: geekyeggo/delete-artifact@v5
+      #   with:
+      #       name: |
+      #         *
+      #       failOnError: false
+
+      - name: "Delete artifacts"
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        run: |
+          for id in $(gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/${{ github.repository }}/actions/artifacts | jq '.artifacts.[].id'); 
+          do 
+              gh api --method DELETE -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/${{ github.repository }}/actions/artifacts/${id} ); 
+          done;
 
       - name: Load ENV file
         run: |
@@ -303,7 +312,7 @@ jobs:
       - name: Sleep for 5 hours
         uses: jakejarvis/wait-action@master
         with:
-          time: '1m'
+          time: '1h'
         timeout-minutes: 360
 
       # - name: Invoke workflow
