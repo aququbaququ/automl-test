@@ -289,7 +289,7 @@ jobs:
             pm2 delete all && cd ./data && git reset --hard HEAD && cd ..;
             #pm2 start ./${app}.js
             nohup node ./${app}.js &
-            # echo test | tee -a ./data/test.md
+            echo test | tee -a ./data/test.md
             #sleep 30s;
 
             #tail -f "/home/runner/.pm2/logs/${app}-out.log" | while read LOGLINE
