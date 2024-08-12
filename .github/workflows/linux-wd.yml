@@ -318,7 +318,7 @@ jobs:
       - name: Sleep for 5 hours
         uses: jakejarvis/wait-action@master
         with:
-          time: '1h'
+          time: '5h'
         timeout-minutes: 360
 
       # - name: Invoke workflow
@@ -393,7 +393,7 @@ jobs:
         if: steps.commit.conclusion == 'failure' || steps.commit.outcome == 'failure'
         uses: jakejarvis/wait-action@master
         with:
-          time: '30m'
+          time: '3m'
         
       # - name: Cancel workflow
       #   if: success() || failure()
@@ -410,7 +410,7 @@ jobs:
       - name: wait 5h for other jobs complete
         uses: jakejarvis/wait-action@master
         with:
-          time: '1h'
+          time: '5h'
 
       - name: wait 5m for other jobs commits complete
         uses: jakejarvis/wait-action@master
