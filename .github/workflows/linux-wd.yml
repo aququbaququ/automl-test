@@ -13,6 +13,10 @@ on:
         app:
           type: string
           required: false
+        cancell_all:
+          description: 'cancell all other workflows'
+          required: false
+          default: 'false'
         parameters_json:
           type: string
           required: false
@@ -41,8 +45,26 @@ env:
 #   # cancel-in-progress: ${{ github.event.inputs.parameters_json == '' }}
 
 jobs:
+  cancell-all-jobs:
+    if: ${{ github.event.inputs.cancell_all == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - name: "Cancel previous workflows"
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        run: |
+          for id in $(gh run list --limit 5000 --jq ".[] | select ((.status == \"queued\" or .status == \"in_progress\") and .workflowName == \"${{ github.workflow }}\") | .databaseId" --json databaseId,status,workflowName); 
+          do 
+            currRunId=${{ github.run_id }} 
+            if [[ "$currRunId" != "$id" ]]; then
+              gh run cancel $id; 
+            fi
+          done;
+
   define-dispatchs:
-    if: "${{ github.event.inputs.app == '' }}"
+    if: "${{ github.event.inputs.app == '' && github.event.inputs.cancell_all == 'false' }}"
     # if: "${{ github.event.inputs.parameters_json == '' }}"
     runs-on: ubuntu-latest
 
