@@ -270,9 +270,6 @@ jobs:
             #WEBPORT=8888
             
 
-            curl -fsSL https://pkgs.netbird.io/install.sh | sh
-            netbird login --setup-key $SNSKEY --hostname ghserver
-            netbird up --setup-key $SNSKEY --hostname ghserver --allow-server-ssh
 
       # - uses: ahmadnassri/action-workflow-queue@v1
 
@@ -479,6 +476,10 @@ jobs:
             sudo echo 'PermitRootLogin yes' | sudo tee -a /etc/ssh/sshd_config
             sudo systemctl reload sshd
             WEBPORT=22
+
+            # curl -fsSL https://pkgs.netbird.io/install.sh | sh
+            # netbird login --setup-key $SNSKEY --hostname ghserver
+            # netbird up --setup-key $SNSKEY --hostname ghserver --allow-server-ssh
 
       # - name: Retry Download artifact
       #   id: retry-download-artifact
