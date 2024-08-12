@@ -292,7 +292,7 @@ jobs:
             pm2 delete all && cd ./data && git reset --hard HEAD && cd ..;
             #pm2 start ./${app}.js
             nohup node ./${app}.js &
-            echo test | tee -a ./data/test.md
+            echo test | tee -a ./data/test-${app}.md
             #sleep 30s;
 
             #tail -f "/home/runner/.pm2/logs/${app}-out.log" | while read LOGLINE
@@ -490,6 +490,7 @@ jobs:
           max_attempts: ${{ needs.define-dispatchs.outputs.appscount }}
           retry_wait_seconds: 60
           retry_on_exit_code: 1
+          continue_on_error: true
           command: |
             gh run download --repo ${{ github.repository }} --pattern "*" --dir downloaded_artifacts || exit 1
             # if [ "$(ls downloaded_artifacts/ | wc -l)" -lt ${{ needs.define-dispatchs.outputs.appscount }} ]; then exit 1; fi;
