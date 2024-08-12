@@ -221,11 +221,6 @@ jobs:
 
       - name: Netbird Connect and handy-sshd and bore, gotty
         run: |
-        # uses: nick-fields/retry@v3
-        # with:
-        #   timeout_minutes: 100
-        #   max_attempts: 3
-        #   command: | 
             echo "export TERM=xterm-256color" >> ~/.bashrc
             wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
             sudo handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
@@ -423,11 +418,6 @@ jobs:
       - name: Netbird Connect and handy-sshd and bore, gotty
         # if: failure()
         run: |
-        # uses: nick-fields/retry@v3
-        # with:
-        #   timeout_minutes: 100
-        #   max_attempts: 3
-        #   command: |
             echo "HSPORT=$HSPORT" >> $GITHUB_ENV
             sudo apt-get update
             sudo apt install fish magic-wormhole jq
