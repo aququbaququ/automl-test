@@ -106,15 +106,15 @@ jobs:
         run: |
           cd "$SGHDIR"
 
-          appnames=($(jq -r ".apps[].name" ./pm2-t-2024-*.json | sed 's/^/"/;s/$/"/' | paste -sd "," -))      
+          appnames=($(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | sed 's/^/"/;s/$/"/' | paste -sd "," -))      
           
-          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-*.json | wc -l)  
+          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | wc -l)  
           # appscount=($(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | wc | awk '{print $1}'))  
 
           echo "apps=[ $appnames ]" >> "$GITHUB_OUTPUT"
           echo "appscount=$appscount" >> "$GITHUB_OUTPUT"
 
-          apps=$(jq -r ".apps[].name" ./pm2-t-2024-*.json) 
+          apps=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json) 
           appindex=0
           for app in $apps; do 
             # curl -L \
