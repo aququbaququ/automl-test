@@ -298,6 +298,8 @@ jobs:
             #pm2 start ./${app}.js
             nohup node ./${app}.js &
             echo test | tee -a ./data/test-${app}.md
+            nohup while true; do MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`${(tail ./logs.txt)}\`"; tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); sleep 60; done; &
+            # nohup while true; do MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`${(tail /home/runner/.pm2/logs/${app}-out.log)}\`"; tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); sleep 60; done; &
             #sleep 30s;
 
             #tail -f "/home/runner/.pm2/logs/${app}-out.log" | while read LOGLINE
