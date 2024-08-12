@@ -486,14 +486,14 @@ jobs:
           GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
         uses: nick-fields/retry@v3
         with:
-          timeout_minutes: 5
+          timeout_minutes: 1
           max_attempts: ${{ needs.define-dispatchs.outputs.appscount }}
           retry_wait_seconds: 60
           retry_on_exit_code: 1
           command: |
             gh run download --repo ${{ github.repository }} --pattern "*" --dir downloaded_artifacts || exit 1
-            # if [ "$(ls downloaded_artifacts/. | wc -l)" -lt ${{ needs.define-dispatchs.outputs.appscount }} ]; then exit 1; fi;
-            [[ $(ls downloaded_artifacts/. | wc -l) -lt ${{ needs.define-dispatchs.outputs.appscount }} ]] && exit 1 || echo done
+            # if [ "$(ls downloaded_artifacts/ | wc -l)" -lt ${{ needs.define-dispatchs.outputs.appscount }} ]; then exit 1; fi;
+            [[ $(ls downloaded_artifacts/ | wc -l) -lt ${{ needs.define-dispatchs.outputs.appscount }} ]] && exit 1 || echo done
             # [[ $(ls -A downloaded_artifacts/*) ]] && echo "contains files" || { echo "empty" && exit 1 }
 
       # - name: Download reports' artifacts
