@@ -220,12 +220,12 @@ jobs:
           
 
       - name: Netbird Connect and handy-sshd and bore, gotty
-        # run: |
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 100
-          max_attempts: 3
-          command: | 
+        run: |
+        # uses: nick-fields/retry@v3
+        # with:
+        #   timeout_minutes: 100
+        #   max_attempts: 3
+        #   command: | 
             echo "export TERM=xterm-256color" >> ~/.bashrc
             wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
             sudo handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
@@ -313,7 +313,8 @@ jobs:
         with:
           run: |
             cd ./$SGHDIR
-            while true; do MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`${(tail ./logs.txt)}\`"; tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); sleep 60; done; 
+            tailmsg=$(tail ./logs.txt)
+            while true; do MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`${tailmsg}\`"; tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); sleep 60; done; 
             # while true; do MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`${(tail /home/runner/.pm2/logs/${app}-out.log)}\`"; tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); sleep 60; done; 
 
 
@@ -421,12 +422,12 @@ jobs:
          
       - name: Netbird Connect and handy-sshd and bore, gotty
         # if: failure()
-        # run: |
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 100
-          max_attempts: 3
-          command: |
+        run: |
+        # uses: nick-fields/retry@v3
+        # with:
+        #   timeout_minutes: 100
+        #   max_attempts: 3
+        #   command: |
             echo "HSPORT=$HSPORT" >> $GITHUB_ENV
             sudo apt-get update
             sudo apt install fish magic-wormhole jq
