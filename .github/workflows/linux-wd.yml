@@ -303,10 +303,14 @@ jobs:
             #killall -s SIGKILL tail
             #exit 0
       
-      - uses: JarvusInnovations/background-action@v1
-        name: bacground-tail-telegram
+      - name: 'bacground-tail-telegram'
+        uses: miguelteixeiraa/action-run-in-background@v1
         with:
-          run: |
+          shell: bash
+          timeout: 30
+          readiness-script: |
+            exit 0
+          script: |
             cd ./$SGHDIR
             tailmsg=$(tail ./logs.txt)
             while true; do MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`${tailmsg}\`"; tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); sleep 60; done; 
