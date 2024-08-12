@@ -300,20 +300,20 @@ jobs:
             #killall -s SIGKILL tail
             #exit 0
       
-      - name: 'bacground-tail-telegram'
-        uses: miguelteixeiraa/action-run-in-background@v1
-        with:
-          shell: bash
-          timeout: 30
-          readiness-script: |
-            # cd ./$SGHDIR && git pull
-            # pm2 start ./${app}.js
-            exit 0
-          script: |
-            cd ./$SGHDIR
-            tailmsg=$(tail ./logs.txt)
-            # tailmsg=$(tail -n 5 "/home/runner/.pm2/logs/${app}-out.log")
-            while true; do MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`${tailmsg}\`"; tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); sleep 60; done; 
+      # - name: 'bacground-tail-telegram'
+      #   uses: miguelteixeiraa/action-run-in-background@v1
+      #   with:
+      #     shell: bash
+      #     timeout: 30
+      #     readiness-script: |
+      #       # cd ./$SGHDIR && git pull
+      #       # pm2 start ./${app}.js
+      #       exit 0
+      #     script: |
+      #       cd ./$SGHDIR
+      #       tailmsg=$(tail ./logs.txt)
+      #       # tailmsg=$(tail -n 5 "/home/runner/.pm2/logs/${app}-out.log")
+      #       while true; do MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`${tailmsg}\`"; tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); sleep 60; done; 
 
       - name: Sleep for 5 hours
         uses: jakejarvis/wait-action@master
