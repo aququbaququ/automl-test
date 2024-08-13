@@ -325,7 +325,7 @@ jobs:
       - name: Sleep for 5 hours
         uses: jakejarvis/wait-action@master
         with:
-          time: '5h'
+          time: '1h'
         timeout-minutes: 360
 
       # - name: Invoke workflow
@@ -417,7 +417,7 @@ jobs:
       - name: wait 5h for other jobs complete
         uses: jakejarvis/wait-action@master
         with:
-          time: '5h'
+          time: '1h'
 
       - name: wait 5m for other jobs commits complete
         uses: jakejarvis/wait-action@master
