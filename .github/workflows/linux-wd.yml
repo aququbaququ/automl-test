@@ -16,8 +16,12 @@ on:
           required: false
         cancell_all:
           description: 'cancell all other workflows'
+          type: choice
           required: false
           default: 'false'
+          options:
+            - true
+            - false
         parameters_json:
           description: 'app params as json string'
           type: string
