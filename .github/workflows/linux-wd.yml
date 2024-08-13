@@ -135,13 +135,15 @@ jobs:
           cd "$SGHDIR"
 
           appnames=($(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | sed 's/^/"/;s/$/"/' | paste -sd "," -))
-          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | wc -l)  
+          # appscount=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | wc -l)  
+          appscount=$(jq -r ".apps[].name" ./pm2-t-2024*.json | wc -l)  
 
           echo "apps=[ $appnames ]" >> "$GITHUB_OUTPUT"
           echo "appscount=$appscount" >> "$GITHUB_OUTPUT"
 
           appsperjob=5
-          apps=($(jq -r ".apps[].script" ./pm2-t-2024-withvolume.json))
+          # apps=($(jq -r ".apps[].script" ./pm2-t-2024-withvolume.json))
+          apps=($(jq -r ".apps[].script" ./pm2-t*.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f app="$appsexpr"
@@ -382,7 +384,8 @@ jobs:
         if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.event.inputs.app }}
+          name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.run_id }}
+          # name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.event.inputs.app }}
           # name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ fromJson(github.event.inputs.parameters_json).app }}
           if-no-files-found: ignore
           path: reports
