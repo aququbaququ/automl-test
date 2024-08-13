@@ -142,7 +142,7 @@ jobs:
           echo "apps=[ $appnames ]" >> "$GITHUB_OUTPUT"
           echo "appscount=$appscount" >> "$GITHUB_OUTPUT"
 
-          apps=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json) 
+          apps=$(jq -r ".apps[].script" ./pm2-t-2024-withvolume.json) 
           # appindex=0
           # for app in $apps; do 
           for (( appindex=0; appindex<$appscount; appindex+=5 )); do
