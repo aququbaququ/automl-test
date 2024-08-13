@@ -248,15 +248,7 @@ jobs:
             sudo handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
             WEBPORT="$HSPORT"
             wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
-            wget https://github.com/yudai/gotty/releases/download/v2.0.0-alpha.3/gotty_2.0.0-alpha.3_linux_amd64.tar.gz && tar xvf gotty_2.0.0-alpha.3_linux_amd64.tar.gz && mv ./gotty ~/.local/bin/.
-            wget https://github.com/yubo/gotty/releases/download/pre-release/gotty_linux_amd64.tar.gz && tar xf ./gotty_linux_amd64.tar.gz && mv ./gotty ~/.local/bin/gotty2
             chmod +x ~/.local/bin/.
-            #gotty --height 384 --width 512 --reconnect -c $HSUSER:$HSPASS -w fish &
-            #sudo gotty2 deamon
-            #WEBPORT=8080
-            #sudo apt install ttyd && sudo -u runner ttyd -c "$HSUSER:$HSPASS" -W fish &
-            #WEBPORT=7681
-            #bore local -t bore.pub -p $HSPORT $WEBPORT &
             boreport=$(shuf -i 2000-65000 -n 1)
             nohup bore local -t bore.pub -p $boreport $HSPORT &
             cmdpid=$!
@@ -270,11 +262,6 @@ jobs:
             done
             echo "boreport=$boreport" >> $GITHUB_ENV
             
-            #curl -sSf https://sshx.io/get | sh
-            #nohup sshx -q --shell fish > ./sshx.out 2> /dev/null & sleep 3
-            ##SSHXURL=$(<sshx.out)
-            ##SSHXURL=`cat sshx.out`
-            #SSHXURL="$(cat ./sshx.out)"
             echo "${{ github.workflow }}" > ~/workflowname
             SSHXURL=""
             MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`";
@@ -286,12 +273,6 @@ jobs:
             sudo echo 'PermitRootLogin yes' | sudo tee -a /etc/ssh/sshd_config
             sudo systemctl reload sshd
             WEBPORT=22
-            #bore local -t bore.pub -p $HSPORT $WEBPORT &
-            #pip install webssh
-            #wssh &
-            #WEBPORT=8888
-            
-
 
       # - uses: ahmadnassri/action-workflow-queue@v1
 
@@ -499,10 +480,6 @@ jobs:
             sudo echo 'PermitRootLogin yes' | sudo tee -a /etc/ssh/sshd_config
             sudo systemctl reload sshd
             WEBPORT=22
-
-            # curl -fsSL https://pkgs.netbird.io/install.sh | sh
-            # netbird login --setup-key $SNSKEY --hostname ghserver
-            # netbird up --setup-key $SNSKEY --hostname ghserver --allow-server-ssh
 
       # - name: Retry Download artifact
       #   id: retry-download-artifact
