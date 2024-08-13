@@ -136,14 +136,14 @@ jobs:
 
           appnames=($(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | sed 's/^/"/;s/$/"/' | paste -sd "," -))
           # appscount=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | wc -l)  
-          appscount=$(jq -r ".apps[].name" ./pm2-t-2024*.json | wc -l)  
+          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-*.json | wc -l)  
 
           echo "apps=[ $appnames ]" >> "$GITHUB_OUTPUT"
           echo "appscount=$appscount" >> "$GITHUB_OUTPUT"
 
           appsperjob=5
           # apps=($(jq -r ".apps[].script" ./pm2-t-2024-withvolume.json))
-          apps=($(jq -r ".apps[].script" ./pm2-t*.json))
+          apps=($(jq -r ".apps[].script" ./pm2-t-2024-*.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f app="$appsexpr"
@@ -502,7 +502,8 @@ jobs:
         uses: nick-fields/retry@v3
         with:
           timeout_minutes: 1
-          max_attempts: ${{ needs.define-dispatchs.outputs.appscount }}
+          # max_attempts: ${{ needs.define-dispatchs.outputs.appscount }}
+          max_attempts: 5
           retry_wait_seconds: 60
           retry_on_exit_code: 1
           continue_on_error: true
