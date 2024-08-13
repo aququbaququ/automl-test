@@ -11,6 +11,7 @@ on:
   workflow_dispatch:
     inputs:
         app:
+          description: 'app to start'
           type: string
           required: false
         cancell_all:
@@ -18,6 +19,7 @@ on:
           required: false
           default: 'false'
         parameters_json:
+          description: 'app params as json string'
           type: string
           required: false
   # repository_dispatch:
@@ -146,8 +148,9 @@ jobs:
             #   -H "X-GitHub-Api-Version: 2022-11-28" \
             #   https://api.github.com/repos/${{ github.repository }}/actions/workflows/linux-wd.yml/dispatches \
             #   -d '{"ref":"main","inputs":{"app":"${app}","index":${appindex}}}'
-            gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f app=$app
-            # gh workflow run linux-wd.yml --repo ${{ github.repository }} --ref main -f app=$app
+            appsexpr=$app
+            appsexpr=$(echo ("${apps[@]:appindex:5}"))
+            gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f app=$appsexpr
             appindex=$(expr $appindex + 1)
           done; 
 
@@ -290,7 +293,8 @@ jobs:
             cd ./$SGHDIR && git pull
             cd ./data && git checkout main && git pull --rebase --autostash && cd ..;
             pm2 delete all && cd ./data && git reset --hard HEAD && cd ..;
-            pm2 start ./${app}.js
+            # pm2 start ./${app}.js
+            pm2 start ${app}
             # nohup node ./${app}.js &
             # echo test | tee -a ./data/test-${app}.md
 
