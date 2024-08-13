@@ -154,7 +154,7 @@ jobs:
             #   https://api.github.com/repos/${{ github.repository }}/actions/workflows/linux-wd.yml/dispatches \
             #   -d '{"ref":"main","inputs":{"app":"${app}","index":${appindex}}}'
             # appsexpr=$app
-            appsexpr=$(echo ("${apps[@]:appindex:5}"))
+            appsexpr=$(echo "${apps[@]:appindex:5}")
             gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f app=$appsexpr
             # appindex=$(expr $appindex + 1)
           done; 
