@@ -11,11 +11,11 @@ on:
   workflow_dispatch:
     inputs:
         app:
-          description: 'app to start'
+          description: 'app'
           type: string
           required: false
         cancell_all:
-          description: 'cancell all other workflows'
+          description: 'cancell_all'
           type: choice
           required: false
           default: 'false'
@@ -23,7 +23,7 @@ on:
             - true
             - false
         parameters_json:
-          description: 'app params as json string'
+          description: 'parameters_json'
           type: string
           required: false
   # repository_dispatch:
