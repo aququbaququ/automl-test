@@ -143,8 +143,8 @@ jobs:
           appsperjob=5
           apps=($(jq -r ".apps[].script" ./pm2-t-2024-withvolume.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
-            appsexpr=$(echo "${apps[@]:$appindex:$appsperjob}")
-            gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f app=$appsexpr
+            appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
+            gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f app="$appsexpr"
           done; 
 
           
