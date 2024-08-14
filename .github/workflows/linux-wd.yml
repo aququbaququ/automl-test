@@ -134,15 +134,13 @@ jobs:
         run: |
           cd "$SGHDIR"
 
-          appnames=($(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | sed 's/^/"/;s/$/"/' | paste -sd "," -))
-          # appscount=$(jq -r ".apps[].name" ./pm2-t-2024-withvolume.json | wc -l)  
+          appnames=($(jq -r ".apps[].name" ./pm2-t-2024-*.json | sed 's/^/"/;s/$/"/' | paste -sd "," -))
           appscount=$(jq -r ".apps[].name" ./pm2-t-2024-*.json | wc -l)  
 
           echo "apps=[ $appnames ]" >> "$GITHUB_OUTPUT"
           echo "appscount=$appscount" >> "$GITHUB_OUTPUT"
 
           appsperjob=5
-          # apps=($(jq -r ".apps[].script" ./pm2-t-2024-withvolume.json))
           apps=($(jq -r ".apps[].script" ./pm2-t-2024-*.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
