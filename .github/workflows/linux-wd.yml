@@ -270,8 +270,6 @@ jobs:
             sudo systemctl reload sshd
             WEBPORT=22
 
-      # - uses: ahmadnassri/action-workflow-queue@v1
-
       - name: start-app    
         env: 
           app: ${{ github.event.inputs.app }}
@@ -341,11 +339,11 @@ jobs:
       #     repo: ${{ github.repository }}
       #     token: "${{ secrets.SGHTOKENLOCAL }}"
 
-      - name: Sleep for 5 mins for new Workflow to init
-        if: success() || failure()
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '5s'
+      # - name: Sleep for 5 mins for new Workflow to init
+      #   if: success() || failure()
+      #   uses: jakejarvis/wait-action@master
+      #   with:
+      #     time: '5m'
           
       - name: Commit changes
         id: commit
@@ -390,11 +388,11 @@ jobs:
           retention-days: 1
           overwrite: true
 
-      - name: wait 30m for commit
-        if: steps.commit.conclusion == 'failure' || steps.commit.outcome == 'failure'
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '3m'
+      # - name: wait 30m for commit
+      #   if: steps.commit.conclusion == 'failure' || steps.commit.outcome == 'failure'
+      #   uses: jakejarvis/wait-action@master
+      #   with:
+      #     time: '30m'
         
       # - name: Cancel workflow
       #   if: success() || failure()
@@ -492,6 +490,8 @@ jobs:
       #     path: downloaded_artifacts
       #     repo: ${{ github.repository }}
       #     if_no_artifact_found: fail
+
+      - uses: ahmadnassri/action-workflow-queue@v1
 
       - name: Retry Download artifact
         id: retry-download-artifact
