@@ -492,7 +492,7 @@ jobs:
           retry_on_exit_code: 1
           continue_on_error: true
           command: |
-            gh run download --repo ${{ github.repository }} --pattern "*" --dir downloaded_artifacts || exit 1
+            gh run download --repo ${{ github.repository }} --pattern "artifact_*" --dir downloaded_artifacts || exit 1
             # if [ "$(ls downloaded_artifacts/ | wc -l)" -lt ${{ needs.define-dispatchs.outputs.appscount }} ]; then exit 1; fi;
             [[ $(ls downloaded_artifacts/ | wc -l) -lt ${{ needs.define-dispatchs.outputs.appscount }} ]] && exit 1 || echo done
             # [[ $(ls -A downloaded_artifacts/*) ]] && echo "contains files" || { echo "empty" && exit 1 }
