@@ -270,7 +270,7 @@ jobs:
         #  command: |
         run:  |
             cd ./$SGHDIR && git pull
-            cd ./data && git checkout main && git pull --rebase --autostash && cd ..;
+            cd ./data && git switch main && git pull --rebase --autostash && cd ..;
             pm2 delete all && cd ./data && git reset --hard HEAD && cd ..;
             # pm2 start ./${app}.js
             pm2 start ${app}
@@ -343,11 +343,9 @@ jobs:
         #   max_attempts: 1
         #   command: |
         run:  |
-            cd ./$SGHDIR && git pull
-            # git push origin HEAD:main;
-            cd ./data && git switch main && git pull --rebase --autostash
-            # cd ./data && git stash --include-untracked && git checkout main && git stash pop && git pull --rebase --autostash
-            # git push origin HEAD:main;
+            # cd ./$SGHDIR && git pull
+            # cd ./data && git switch main && git pull --rebase --autostash
+            cd ./$SGHDIR/data
             
             # git ls-files --others --exclude-standard | grep trades | xargs git add
             # git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
@@ -369,7 +367,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: artifact_${{ github.run_id }}
-          # name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.event.inputs.app }}
           if-no-files-found: ignore
           path: reports
           retention-days: 1
@@ -531,13 +528,13 @@ jobs:
           # cd ./data && git stash --include-untracked && git checkout main && git stash pop && git pull --rebase --autostash
           git ls-files --others --exclude-standard | grep trades | xargs git add
           git ls-files --others --exclude-standard | grep test | xargs git add
-          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
           git ls-files -m | grep trades | xargs git add
           git ls-files -m | grep test | xargs git add
-          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "modified trade changes" && git push origin HEAD:main; }
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple modified trade changes" && git push origin HEAD:main; }
           cd ..;
           git add ./data
-          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
 
       - name: Sleep for 5 hours
         if: steps.check_files.outputs.files_exists == 'true'
