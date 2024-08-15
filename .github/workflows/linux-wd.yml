@@ -14,18 +14,15 @@ on:
           description: 'app'
           type: string
           required: false
-        cancell_all:
+        mode:
           description: 'cancell_all'
           type: choice
           required: false
-          default: 'false'
+          default: 'default'
           options:
-            - true
-            - false
-        parameters_json:
-          description: 'parameters_json'
-          type: string
-          required: false
+            - default
+            - cancell_all
+            - commit_only
   # repository_dispatch:
   
 env:
@@ -44,15 +41,10 @@ env:
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   ENV64: ${{ secrets.ENV64 }}
   WORKFLOW_REF: ${{ github.workflow_ref }}
-          
-# concurrency:
-#   group: ${{ github.workflow }}-${{ github.ref }}
-#   cancel-in-progress: ${{ github.event.inputs.app == '' }}
-#   # cancel-in-progress: ${{ github.event.inputs.parameters_json == '' }}
 
 jobs:
   cancell-all-jobs:
-    if: ${{ github.event.inputs.cancell_all == 'true' }}
+    if: ${{ github.event.inputs.mode == 'cancell_all' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -70,8 +62,7 @@ jobs:
           done;
 
   define-dispatchs:
-    if: "${{ github.event.inputs.app == '' && github.event.inputs.cancell_all == 'false' }}"
-    # if: "${{ github.event.inputs.parameters_json == '' }}"
+    if: "${{ github.event.inputs.app == '' && github.event.inputs.mode == 'default' }}"
     runs-on: ubuntu-latest
 
     outputs:
@@ -147,10 +138,8 @@ jobs:
             gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f app="$appsexpr"
           done; 
 
-          
   build:
     if: "${{ github.event.inputs.app != '' }}"
-    # if: "${{ github.event.inputs.parameters_json != '' }}"
     strategy:
       max-parallel: 1000
       fail-fast: false
@@ -273,7 +262,6 @@ jobs:
       - name: start-app    
         env: 
           app: ${{ github.event.inputs.app }}
-          # app: ${{ fromJson(github.event.inputs.parameters_json).app }}
 
         #uses: nick-fields/retry@v3
         #with:
@@ -382,7 +370,6 @@ jobs:
         with:
           name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.run_id }}
           # name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ github.event.inputs.app }}
-          # name: ${{ env.RUN_UNIQUE_ID }}_artifact_${{ fromJson(github.event.inputs.parameters_json).app }}
           if-no-files-found: ignore
           path: reports
           retention-days: 1
@@ -402,7 +389,6 @@ jobs:
     needs: define-dispatchs
     runs-on: ubuntu-latest
     if: "${{ github.event.inputs.app == '' }}"
-    # if: "${{ github.event.inputs.parameters_json == '' }}"
     steps:
       - uses: actions/checkout@v4
 
