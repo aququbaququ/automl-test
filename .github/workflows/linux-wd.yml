@@ -479,28 +479,29 @@ jobs:
 
       - uses: ahmadnassri/action-workflow-queue@v1
 
-      - name: Retry Download artifact
-        id: retry-download-artifact
-        env:
-          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 1
-          # max_attempts: ${{ needs.define-dispatchs.outputs.appscount }}
-          max_attempts: 5
-          retry_wait_seconds: 60
-          retry_on_exit_code: 1
-          continue_on_error: true
-          command: |
-            gh run download --repo ${{ github.repository }} --pattern "artifact_*" --dir downloaded_artifacts || exit 1
-            # if [ "$(ls downloaded_artifacts/ | wc -l)" -lt ${{ needs.define-dispatchs.outputs.appscount }} ]; then exit 1; fi;
-            [[ $(ls downloaded_artifacts/ | wc -l) -lt ${{ needs.define-dispatchs.outputs.appscount }} ]] && exit 1 || echo done
-            # [[ $(ls -A downloaded_artifacts/*) ]] && echo "contains files" || { echo "empty" && exit 1 }
-
-      # - name: Download reports' artifacts
-      #   uses: actions/download-artifact@v4
+      # - name: Retry Download artifact
+      #   id: retry-download-artifact
+      #   env:
+      #     GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+      #   uses: nick-fields/retry@v3
       #   with:
-      #     path: downloaded_artifacts
+      #     timeout_minutes: 1
+      #     # max_attempts: ${{ needs.define-dispatchs.outputs.appscount }}
+      #     max_attempts: 5
+      #     retry_wait_seconds: 60
+      #     retry_on_exit_code: 1
+      #     continue_on_error: true
+      #     command: |
+      #       gh run download --repo ${{ github.repository }} --pattern "artifact_*" --dir downloaded_artifacts || exit 1
+      #       # if [ "$(ls downloaded_artifacts/ | wc -l)" -lt ${{ needs.define-dispatchs.outputs.appscount }} ]; then exit 1; fi;
+      #       [[ $(ls downloaded_artifacts/ | wc -l) -lt ${{ needs.define-dispatchs.outputs.appscount }} ]] && exit 1 || echo done
+      #       # [[ $(ls -A downloaded_artifacts/*) ]] && echo "contains files" || { echo "empty" && exit 1 }
+
+      - name: Download reports' artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: downloaded_artifacts
+          name: artifact_*
  
       - name: Check reports existence
         id: check_files
