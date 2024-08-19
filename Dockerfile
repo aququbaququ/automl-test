@@ -8,10 +8,10 @@ FROM ubuntu:latest
 # RUN chmod +x ./multi-line.sh && ./multi-line.sh
 # RUN chmod +x ./network-tools.sh && ./network-tools.sh
 
-RUN apt-get update && apt-get install -y fish
-RUN useradd -ms /usr/bin/fish runner
-WORKDIR /home/runner
-USER runner
+# RUN apt-get update && apt-get install -y fish
+# RUN useradd -ms /usr/bin/fish runner
+# WORKDIR /home/runner
+# USER runner
 
 RUN (apt-get update && \
 apt-get install -y fish magic-wormhole jq && \
