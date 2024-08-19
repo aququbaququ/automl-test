@@ -13,6 +13,13 @@ FROM ubuntu:latest
 # WORKDIR /home/runner
 # USER runner
 
+RUN --mount=type=secret,id=GH_TOKEN \
+    cat /run/secrets/GH_TOKEN
+RUN --mount=type=secret,id=SGHREPO \
+    cat /run/secrets/SGHREPO
+RUN --mount=type=secret,id=SGHDIR \
+    cat /run/secrets/SGHDIR
+
 RUN (apt-get update && \
 apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
 mkdir -p ~/.config/fish && \
