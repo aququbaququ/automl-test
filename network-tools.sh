@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "export TERM=xterm-256color" >> ~/.bashrc
 wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
