@@ -8,12 +8,15 @@ FROM ubuntu:latest
 # RUN chmod +x ./multi-line.sh && ./multi-line.sh
 # RUN chmod +x ./network-tools.sh && ./network-tools.sh
 
+RUN apt-get update && apt-get install -y fish && useradd -m -r -u 1000 -g users runner -s /usr/bin/fish
+WORKDIR /home/runner
+USER simha
+
 RUN (apt-get update && \
 apt-get install -y fish magic-wormhole jq && \
 mkdir -p ~/.config/fish && \
 mkdir -p ~/.local/bin && \
-echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile && \
-chsh -s /usr/bin/fish root)
+echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
 # wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage && \
 # chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim && \
 # apt-get install fuse libfuse2 && \
