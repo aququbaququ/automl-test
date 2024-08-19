@@ -13,12 +13,6 @@ FROM ubuntu:latest
 # WORKDIR /home/runner
 # USER runner
 
-# RUN --mount=type=secret,id=GH_TOKEN \
-#     cat /run/secrets/GH_TOKEN
-RUN --mount=type=secret,id=SGHREPO \
-    cat /run/secrets/SGHREPO
-RUN --mount=type=secret,id=SGHDIR \
-    cat /run/secrets/SGHDIR
 
 RUN (apt-get update && \
 apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
@@ -38,18 +32,16 @@ RUN apt-get update && apt-get install -y gh;
 # wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz && \ lazygit && mv lazygit ~/.local/bin/. && \
 
 # RUN (set -u && echo "$GH_TOKEN" > .githubtoken && unset GITHUB_TOKEN && gh auth login --with-token < .githubtoken && rm .githubtoken)
-# RUN (--mount=type=secret,id=GH_TOKEN \
-#     GH_TOKEN="$(cat /run/secrets/GH_TOKEN)" && gh auth setup-git)
-
 RUN --mount=type=secret,id=GH_TOKEN \
-    GH_TOKEN="$(cat /run/secrets/GH_TOKEN)" && \
-    export GH_TOKEN && \
-    gh auth setup-git
-# RUN (gh auth setup-git)
-# RUN (gh auth setup-git && \
-# gh repo clone $SGHREPO && cd "$SGHDIR")
-# cp -r ./fixes/ghrunner-dotfiles/. ~/. && \
-# cp -r ./fixes/termux-configs/lazyvim ~/.config/. && \
+    --mount=type=secret,id=SGHREPO \
+    --mount=type=secret,id=SGHDIR \
+    GH_TOKEN="$(cat /run/secrets/GH_TOKEN)" && export GH_TOKEN && \
+    SGHREPO="$(cat /run/secrets/SGHREPO)" && export SGHREPO && \
+    SGHDIR="$(cat /run/secrets/SGHDIR)" && export SGHDIR && \
+    gh auth setup-git && \
+    gh repo clone $SGHREPO && cd "$SGHDIR" && \
+    cp -r ./fixes/ghrunner-dotfiles/. ~/. && \
+    cp -r ./fixes/termux-configs/lazyvim ~/.config/.
 # systemctl restart sshd && \
 # fish -c "lvim" & && \
 # tmpvar=$(git submodule update --init --recursive && git config submodule.recurse true && git pull) && \
