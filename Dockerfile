@@ -15,7 +15,7 @@ FROM ubuntu:latest
 
 RUN (apt-get update && \
 apt-get install -y fish magic-wormhole jq fuse libfuse2 git snapd && \
-snap install gh && \
+sudo snap install gh && \
 mkdir -p ~/.config/fish && \
 mkdir -p ~/.local/bin && \
 echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
