@@ -22,7 +22,7 @@ echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
 RUN (apt-get install -y git && \
 git config --global user.name "name" && \
 git config --global user.email "email" && \
-(wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && apt-get install -y ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb))
+{wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && apt-get install -y ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb})
 
 # wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage && \
 # chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim && \
