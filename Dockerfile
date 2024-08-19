@@ -8,13 +8,13 @@ FROM ubuntu:latest
 # RUN chmod +x ./multi-line.sh && ./multi-line.sh
 # RUN chmod +x ./network-tools.sh && ./network-tools.sh
 
-RUN (echo "HSPORT=$HSPORT" >> $GITHUB_ENV && \
+RUN (echo "HSPORT=$HSPORT" && \
     sudo apt-get update && \
     echo finish)
 
 # RUN (echo "HSPORT=$HSPORT" >> $GITHUB_ENV && \
 #     sudo apt-get update && \
-#     sudo apt install fish magic-wormhole jq && \
+#     sudo apt install fish magic-wormhole jq && \r
 #     mkdir -p ~/.config/fish && \
 #     mkdir -p ~/.local/bin && \
 #     echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | sudo tee -a ~/.bash_profile && \
