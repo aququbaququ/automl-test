@@ -31,8 +31,8 @@ RUN apt-get update && apt-get install -y gh;
 # wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz && \ lazygit && mv lazygit ~/.local/bin/. && \
 
 # RUN (set -u && echo "$GH_TOKEN" > .githubtoken && unset GITHUB_TOKEN && gh auth login --with-token < .githubtoken && rm .githubtoken)
-# RUN ((echo $SGHTOKEN | gh auth login --with-token) && gh auth setup-git)
-RUN (gh auth setup-git)
+RUN ((cat /run/secrets/GH_TOKEN | gh auth login --with-token) && gh auth setup-git)
+# RUN (gh auth setup-git)
 # RUN (gh auth setup-git && \
 # gh repo clone $SGHREPO && cd "$SGHDIR")
 # cp -r ./fixes/ghrunner-dotfiles/. ~/. && \
