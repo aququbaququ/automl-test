@@ -14,17 +14,19 @@ FROM ubuntu:latest
 # USER runner
 
 RUN (apt-get update && \
-apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
+apt-get install -y fish magic-wormhole jq fuse libfuse2 git && \
 mkdir -p ~/.config/fish && \
 mkdir -p ~/.local/bin && \
-echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
+echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile && \
+git config --global user.name "name" && \
+git config --global user.email "email" && \
+wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && apt-get install -y ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb)
+
 # wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage && \
 # chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim && \
 # wget https://github.com/extrawurst/gitui/releases/download/v0.26.3/gitui-linux-x86_64.tar.gz && tar xvf gitui-linux-x86_64.tar.gz && mv ./gitui ~/.local/bin/. && \
 # wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz && \ lazygit && mv lazygit ~/.local/bin/. && \
-# git config --global user.name "name" && \
-# git config --global user.email "email" && \
-# wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && apt-get install -y ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb && \
+
 # gh auth setup-git && \
 # gh repo clone $SGHREPO && cd "$SGHDIR" && \
 # cp -r ./fixes/ghrunner-dotfiles/. ~/. && \
