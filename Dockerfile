@@ -17,9 +17,9 @@ RUN (apt-get update && \
 apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
 mkdir -p ~/.config/fish && \
 mkdir -p ~/.local/bin && \
-echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
-# git config --global user.name "name" && \
-# git config --global user.email "email" && \
+echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile && \
+git config --global user.name "name" && \
+git config --global user.email "email")
 # wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && apt-get install -y ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb && \
 
 # wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage && \
