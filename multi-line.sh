@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "HSPORT=$HSPORT" >> $GITHUB_ENV
 sudo apt-get update
