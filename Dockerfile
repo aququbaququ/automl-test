@@ -14,7 +14,8 @@ FROM ubuntu:latest
 # USER runner
 
 RUN (apt-get update && \
-apt-get install -y fish magic-wormhole jq fuse libfuse2 git snapd && \
+apt-get install -y fish magic-wormhole jq fuse libfuse2 git && \
+apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 && apt-add-repository https://cli.github.com/packages && apt update && apt-get install -y gh && \
 mkdir -p ~/.config/fish && \
 mkdir -p ~/.local/bin && \
 echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
