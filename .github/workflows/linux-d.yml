@@ -24,7 +24,7 @@ jobs:
           build-args: |
             SGHREPO=${{ secrets.SGHREPO }}
             SGHDIR=${{ secrets.SGHDIR }}
-            GH_TOKEN=${{ secrets.SGHTOKEN }}
+            "GH_TOKEN=${{ secrets.SGHTOKEN }}"
             SGHTOKEN=${{ secrets.SGHTOKEN }}
             SGHTOKENLOCAL=${{ secrets.SGHTOKENLOCAL }}
             SNUSER=${{ secrets.SNUSER }}
@@ -42,7 +42,7 @@ jobs:
           secrets: |
             SGHREPO=${{ secrets.SGHREPO }}
             SGHDIR=${{ secrets.SGHDIR }}
-            GH_TOKEN=${{ secrets.SGHTOKEN }}
+            "GH_TOKEN=${{ secrets.SGHTOKEN }}"
             SGHTOKEN=${{ secrets.SGHTOKEN }}
             SGHTOKENLOCAL=${{ secrets.SGHTOKENLOCAL }}
             SNUSER=${{ secrets.SNUSER }}
