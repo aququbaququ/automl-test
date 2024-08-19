@@ -19,12 +19,10 @@ mkdir -p ~/.config/fish && \
 mkdir -p ~/.local/bin && \
 echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
 
-RUN (apt-get install -y git curl gpg && \
-git config --global user.name "name" && \
-git config --global user.email "email" && \
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg;)
-RUn echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null;
-Run apt-get update && apt-get install -y gh;
+RUN (apt-get install -y git curl gpg git config --global user.name "name" && git config --global user.email "email")
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg;
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null;
+RUN apt-get update && apt-get install -y gh;
 # {wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && apt-get install -y ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb})
 
 # wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage && \
@@ -32,8 +30,8 @@ Run apt-get update && apt-get install -y gh;
 # wget https://github.com/extrawurst/gitui/releases/download/v0.26.3/gitui-linux-x86_64.tar.gz && tar xvf gitui-linux-x86_64.tar.gz && mv ./gitui ~/.local/bin/. && \
 # wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz && \ lazygit && mv lazygit ~/.local/bin/. && \
 
-# gh auth setup-git && \
-# gh repo clone $SGHREPO && cd "$SGHDIR" && \
+RUN (gh auth setup-git && \
+gh repo clone $SGHREPO && cd "$SGHDIR")
 # cp -r ./fixes/ghrunner-dotfiles/. ~/. && \
 # cp -r ./fixes/termux-configs/lazyvim ~/.config/. && \
 # systemctl restart sshd && \
