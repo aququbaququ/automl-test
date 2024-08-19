@@ -8,9 +8,7 @@ FROM ubuntu:latest
 # RUN chmod +x ./multi-line.sh && ./multi-line.sh
 # RUN chmod +x ./network-tools.sh && ./network-tools.sh
 
-RUN (echo "HSPORT=$HSPORT" && \
-    sudo apt-get update && \
-    echo finish)
+RUN (sudo apt-get update)
 
 # RUN (echo "HSPORT=$HSPORT" >> $GITHUB_ENV && \
 #     sudo apt-get update && \
