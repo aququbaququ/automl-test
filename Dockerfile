@@ -29,7 +29,8 @@ RUN apt-get update && apt-get install -y gh;
 RUN wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage && \
 chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim && \
 wget https://github.com/extrawurst/gitui/releases/download/v0.26.3/gitui-linux-x86_64.tar.gz && tar xvf gitui-linux-x86_64.tar.gz && mv ./gitui ~/.local/bin/. && \
-wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz && \ lazygit && mv lazygit ~/.local/bin/.
+wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz && \
+mv lazygit ~/.local/bin/.
 
 # RUN (set -u && echo "$GH_TOKEN" > .githubtoken && unset GITHUB_TOKEN && gh auth login --with-token < .githubtoken && rm .githubtoken)
 RUN --mount=type=secret,id=GH_TOKEN \
