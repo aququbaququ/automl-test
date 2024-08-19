@@ -13,8 +13,7 @@ apt-get install -y fish magic-wormhole jq && \
 mkdir -p ~/.config/fish && \
 mkdir -p ~/.local/bin && \
 echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile && \
-sudo chsh -s /usr/bin/fish runner && \
-sudo chsh -s /usr/bin/fish root)
+chsh -s /usr/bin/fish root)
 # wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage && \
 # chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim && \
 # apt-get install fuse libfuse2 && \
