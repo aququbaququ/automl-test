@@ -23,8 +23,10 @@ echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
 RUN (apt-get install -y git curl wget gpg && git config --global user.name "name" && git config --global user.email "email")
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg;
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null;
-RUN apt-get update && apt-get install -y gh;
-# {wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && apt-get install -y ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb})
+# RUN apt-get update && apt-get install -y gh;
+RUN wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && \ 
+apt-get install -y ./gh_2.52.0_linux_amd64.deb && \
+rm ./gh_2.52.0_linux_amd64.deb
 
 RUN wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage && \
 chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim && \
