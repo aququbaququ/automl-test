@@ -15,7 +15,6 @@ FROM ubuntu:latest
 
 RUN (apt-get update && \
 apt-get install -y fish magic-wormhole jq fuse libfuse2 git && \
-apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 && apt-add-repository https://cli.github.com/packages && apt update && apt-get install -y gh && \
 mkdir -p ~/.config/fish && \
 mkdir -p ~/.local/bin && \
 echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
@@ -40,6 +39,7 @@ echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
 # echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && source ~/.bashrc && \
 # mise use --global node@14.15.4 && \
 # npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js && \
+# apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 && apt-add-repository https://cli.github.com/packages && apt update && apt-get install -y gh && \
 # echo finish)
 
 
