@@ -8,7 +8,10 @@ FROM ubuntu:latest
 # RUN chmod +x ./multi-line.sh && ./multi-line.sh
 # RUN chmod +x ./network-tools.sh && ./network-tools.sh
 
-RUN (apt-get update && apt install fish magic-wormhole jq)
+RUN (apt-get update && \
+apt-get install -y fish magic-wormhole jq && \
+mkdir -p ~/.config/fish && \
+mkdir -p ~/.local/bin)
 # echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile && \
 # chsh -s /usr/bin/fish runner && \
 # chsh -s /usr/bin/fish root && \
