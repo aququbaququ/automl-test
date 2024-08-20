@@ -73,8 +73,8 @@ ARG APP
 #     APP="$(cat /run/secrets/APP)" && export APP && \
 #     echo finish
 
-# COPY multi-line2.sh .
-# RUN chmod +x ./multi-line2.sh && ./multi-line2.sh
+COPY multi-line2.sh .
+RUN chmod +x ./multi-line2.sh && ./multi-line2.sh
 
 # RUN (apt-get update && \
 # apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
@@ -117,32 +117,32 @@ ARG APP
 #     npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js
 
 
-# COPY network-tools2.sh .
-# RUN chmod +x ./network-tools2.sh && ./network-tools2.sh
+COPY network-tools2.sh .
+RUN chmod +x ./network-tools2.sh && ./network-tools2.sh
 
-RUN apt-get -y update && apt-get install -y git curl wget gpg coreutils
-RUN mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
-    wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb && \
-    HSUSER="root" && \
-    handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" & \
-    wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore /usr/bin/. && \
-    chmod +x /usr/bin/. && \
-    boreport=$(shuf -i 2000-65000 -n 1) && \
-    echo "H $HSPORT" && \
-    echo "W ${WORKFLOW}" && \
-    nohup bore local -t bore.pub -p "$boreport" "$HSPORT" & \
-    cmdpid=$! && \
-    sleep 3 && \
-    # while [ ! ps -p $cmdpid > /dev/null ]; do boreport=$(shuf -i 2000-65000 -n 1); nohup bore local -t bore.pub -p $boreport $HSPORT &; cmdpid=$!; sleep 3; done;
-    # echo "boreport=$boreport" >> $GITHUB_ENV && \
-    echo "${WORKFLOW}" > ~/workflowname && \
-    SSHXURL="" && \
-    MSG="wf: ${WORKFLOW} - ${APP}; boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`" && \
-    tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); \
-    echo "root:$HSPASS" | chpasswd root && \
-    # sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
-    # echo 'PermitRootLogin yes' | tee -a /etc/ssh/sshd_config && \
-    # systemctl reload sshd
-    echo finish
+# RUN apt-get -y update && apt-get install -y git curl wget gpg coreutils
+# RUN mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
+#     wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb && \
+#     HSUSER="root" && \
+#     handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" & \
+#     wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore /usr/bin/. && \
+#     chmod +x /usr/bin/. && \
+#     boreport=$(shuf -i 2000-65000 -n 1) && \
+#     echo "H $HSPORT" && \
+#     echo "W ${WORKFLOW}" && \
+#     nohup bore local -t bore.pub -p "$boreport" "$HSPORT" & \
+#     cmdpid=$! && \
+#     sleep 3 && \
+#     # while [ ! ps -p $cmdpid > /dev/null ]; do boreport=$(shuf -i 2000-65000 -n 1); nohup bore local -t bore.pub -p $boreport $HSPORT &; cmdpid=$!; sleep 3; done;
+#     # echo "boreport=$boreport" >> $GITHUB_ENV && \
+#     echo "${WORKFLOW}" > ~/workflowname && \
+#     SSHXURL="" && \
+#     MSG="wf: ${WORKFLOW} - ${APP}; boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`" && \
+#     tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); \
+#     echo "root:$HSPASS" | chpasswd root && \
+#     # sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+#     # echo 'PermitRootLogin yes' | tee -a /etc/ssh/sshd_config && \
+#     # systemctl reload sshd
+#     echo finish
 
 ENTRYPOINT ["/bin/bash"]
