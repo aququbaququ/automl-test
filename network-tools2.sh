@@ -10,6 +10,7 @@ chmod +x /usr/bin/. && \
 export boreport=$(shuf -i 2000-65000 -n 1) && \
 echo "H $HSPORT" && \
 echo "W ${WORKFLOW}" && \
+echo "B ${boreport}" && \
 nohup bore local -t bore.pub -p "$boreport" "$HSPORT" & \
 cmdpid=$! && \
 sleep 3 && \
