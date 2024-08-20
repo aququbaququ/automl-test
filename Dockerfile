@@ -125,10 +125,10 @@ RUN echo "export TERM=xterm-256color" >> ~/.bashrc && \
     # echo "boreport=$boreport" >> $GITHUB_ENV && \
     echo "${WORKFLOW}" > ~/workflowname && \
     SSHXURL="" && \
-    MSG="${WORKFLOW}"
+    MSG="${WORKFLOW}" && \
     # MSG="wf: ${WORKFLOW},\`boldssh ${HSUSER}@bore.pub -p ${boreport}\`" && \
     # MSG=$'\n'"wf: ${WORKFLOW} - ${APP}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"; && \
-    # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); && \
+    tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); && \
     echo finish
 
     # echo $HSUSER:$HSPASS | chpasswd root
