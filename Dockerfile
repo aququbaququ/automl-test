@@ -48,7 +48,7 @@ RUN --mount=type=secret,id=GH_TOKEN \
     systemctl restart sshd && \
     fish -c "lvim" &
 
-RUN curl https://mise.run | sh && \
+RUN exec bash && curl https://mise.run | sh && \
     echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && . ~/.bashrc && \
     mise use --global node@14.15.4 && \
     mise activate --shims && mise reshim && . ~/.bashrc && \
