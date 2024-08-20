@@ -113,12 +113,12 @@ RUN echo "export TERM=xterm-256color" >> ~/.bashrc && \
     nohup bore local -t bore.pub -p $boreport $HSPORT & \
     cmdpid=$! && \
     sleep 3 && \
-    while [ ! ps -p $cmdpid > /dev/null ]; do boreport=$(shuf -i 2000-65000 -n 1); nohup bore local -t bore.pub -p $boreport $HSPORT &; cmdpid=$!; sleep 3; done; && \
-    echo "boreport=$boreport" >> $GITHUB_ENV && \
-    echo "${WORKFLOW}" > ~/workflowname && \
-    SSHXURL="" && \
-    MSG=$'\n'"wf: ${WORKFLOW} - ${APP}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"; && \
-    tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
+    while [ ! ps -p $cmdpid > /dev/null ]; do boreport=$(shuf -i 2000-65000 -n 1); nohup bore local -t bore.pub -p $boreport $HSPORT &; cmdpid=$!; sleep 3; done;
+    # echo "boreport=$boreport" >> $GITHUB_ENV && \
+    # echo "${WORKFLOW}" > ~/workflowname && \
+    # SSHXURL="" && \
+    # MSG=$'\n'"wf: ${WORKFLOW} - ${APP}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"; && \
+    # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
 
     # echo $HSUSER:$HSPASS | chpasswd root
     # echo $HSUSER:$HSPASS | chpasswd runner
