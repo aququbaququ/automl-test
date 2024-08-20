@@ -97,6 +97,7 @@ RUN --mount=type=secret,id=GH_TOKEN \
 # RUN chmod +x ./network-tools2.sh && ./network-tools2.sh
 
 RUN echo "export TERM=xterm-256color" >> ~/.bashrc && \
+    apt-get update && \
     apt-get install -y wget curl && \
     wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
     # handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
