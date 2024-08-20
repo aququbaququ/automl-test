@@ -140,15 +140,16 @@ RUN --mount=type=secret,id=GH_TOKEN \
     WORKFLOW="$(cat /run/secrets/WORKFLOW)" && export WORKFLOW && \
     APP="$(cat /run/secrets/APP)" && export APP && \
     mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
-    echo "H1 $HSPORT" && \
+    WEBPORT="$HSPORT" && \
+    echo "H1 $WEBPORT" && \
     echo "W1 ${WORKFLOW}" && \
     wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb && \
-    handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" & \
-    WEBPORT="$HSPORT" && \
+    handy-sshd -p "$WEBPORT" -u "$HSUSER":"$HSPASS" & \
+    # WEBPORT="$HSPORT" && \
     wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore /usr/bin/. && \
     chmod +x /usr/bin/. && \
     boreport=$(shuf -i 2000-65000 -n 1) && \
-    echo "H $HSPORT" && \
+    echo "H $WEBPORT" && \
     echo "W ${WORKFLOW}" && \
     # nohup bore local -t bore.pub -p "$boreport" "$HSPORT" & \
     # cmdpid=$! && \
