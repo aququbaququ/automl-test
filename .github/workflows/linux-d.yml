@@ -48,7 +48,9 @@ jobs:
         with:
           name: project
           path: /tmp/project.tar
-
+          retention-days: 1
+          overwrite: true
+          
   docker-test:
     name: DocerTest
     runs-on: ubuntu-latest
