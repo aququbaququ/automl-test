@@ -73,9 +73,10 @@ RUN chmod +x ./multi-line2.sh && ./multi-line2.sh
 COPY network-tools2.sh .
 RUN chmod +x ./network-tools2.sh && ./network-tools2.sh
 
-ENTRYPOINT ["/bin/bash"]
+# ENTRYPOINT ["/bin/bash"]
 COPY run-app.sh /.
-CMD chmod +x /run-ap.sh && nohup sh -c "/run-app.sh" &
+COPY entrypoint.sh /.
+RUN chmod +x ./run-app.sh
 # CMD sh -c "sh /run-app.sh"
-# ENTRYPOINT ["/bin/bash", "/run-app.sh"]
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 EXPOSE 22
