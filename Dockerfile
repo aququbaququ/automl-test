@@ -47,7 +47,8 @@ RUN --mount=type=secret,id=GH_TOKEN \
     systemctl restart sshd && \
     fish -c "lvim" &
 
-RUN cd /"$SGHDIR" && tmpvar="$(git submodule update --init --recursive && git config submodule.recurse true && git pull)"
+RUN cd /"$SGHDIR" && pwd && echo "$SGHDIR" && ls -a
+#  && tmpvar=$(git submodule update --init --recursive && git config submodule.recurse true && git pull)
 # curl https://mise.run | sh && \
 # echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && source ~/.bashrc && \
 # mise use --global node@14.15.4 && \
