@@ -100,6 +100,7 @@ RUN --mount=type=secret,id=GH_TOKEN \
 # COPY network-tools2.sh .
 # RUN chmod +x ./network-tools2.sh && ./network-tools2.sh
 
+RUN apt-get update && apt-get install -y git curl wget gpg
 RUN echo "export TERM=xterm-256color" >> ~/.bashrc && \
     apt-get -y update && \
     apt-get install -y wget curl && \
