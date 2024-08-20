@@ -122,16 +122,15 @@ ARG APP
 
 RUN apt-get -y update && apt-get install -y git curl wget gpg coreutils
 RUN mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
-    WEBPORT="$HSPORT" && \
-    echo "H1 $WEBPORT" && \
+    echo "H1 $HSPORT" && \
     echo "W1 ${WORKFLOW}" && \
     wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb && \
-    handy-sshd -p "$WEBPORT" -u "$HSUSER":"$HSPASS" & \
+    handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" & \
     # WEBPORT="$HSPORT" && \
     wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore /usr/bin/. && \
     chmod +x /usr/bin/. && \
     boreport=$(shuf -i 2000-65000 -n 1) && \
-    echo "H $WEBPORT" && \
+    echo "H $HSPORT" && \
     echo "W ${WORKFLOW}" && \
     # nohup bore local -t bore.pub -p "$boreport" "$HSPORT" & \
     # cmdpid=$! && \
