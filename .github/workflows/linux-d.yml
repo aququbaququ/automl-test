@@ -3,6 +3,26 @@ name: CI-d
 on: 
   workflow_dispatch:
 
+env:
+  SGHREPO: ${{ secrets.SGHREPO }}
+  SGHDIR: ${{ secrets.SGHDIR }}
+  GH_TOKEN: ${{ secrets.SGHTOKEN }}
+  SNUSER: ${{ secrets.SNUSER }}
+  SNUSERTOKEN: ${{ secrets.SNUSERTOKEN }}
+  SNSKEY: ${{ secrets.SNSKEY }}
+  HSUSER: ${{ secrets.HSUSER }}
+  HSPASS: ${{ secrets.HSPASS }}
+  HSPORT: ${{ secrets.HSPORT }}
+  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+  SSH_PASSWORD: ${{ secrets.HSPASS }}
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  ENV64: ${{ secrets.ENV64 }}
+  WORKFLOW_REF: ${{ github.workflow_ref }}
+  SGHTOKEN: ${{ secrets.SGHTOKEN }}
+  SGHTOKENLOCAL: ${{ secrets.SGHTOKENLOCAL }}
+  WORKFLOW: ${{ github.workflow }}
+
 jobs:
   build-image:
     name: Build image
