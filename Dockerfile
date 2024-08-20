@@ -48,14 +48,10 @@ RUN --mount=type=secret,id=GH_TOKEN \
     systemctl restart sshd && \
     fish -c "lvim" &
 
-RUN cd /"$SGHDIR" && pwd && echo "$SGHDIR" && ls -a
-#  && tmpvar=$(git submodule update --init --recursive && git config submodule.recurse true && git pull)
-# curl https://mise.run | sh && \
-# echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && source ~/.bashrc && \
-# mise use --global node@14.15.4 && \
-# npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js && \
-# apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 && apt-add-repository https://cli.github.com/packages && apt update && apt-get install -y gh && \
-# echo finish)
+RUN curl https://mise.run | sh && \
+    echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && source ~/.bashrc && \
+    mise use --global node@14.15.4 && \
+    npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js
 
 
 # RUN (echo "HSPORT=$HSPORT" >> $GITHUB_ENV && \
