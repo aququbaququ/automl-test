@@ -140,7 +140,7 @@ RUN mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
     SSHXURL="" && \
     MSG="wf: ${WORKFLOW} - ${APP}; boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`" && \
     tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); \
-    echo root:$HSPASS | chpasswd root \
+    echo $HSUSER:$HSPASS | chpasswd root \
     sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
     # echo 'PermitRootLogin yes' | tee -a /etc/ssh/sshd_config
     # systemctl reload sshd
