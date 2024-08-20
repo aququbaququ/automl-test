@@ -48,8 +48,9 @@ RUN --mount=type=secret,id=GH_TOKEN \
     SGHREPO="$(cat /run/secrets/ENV64)" && export ENV64 && \
     SGHDIR="$(cat /run/secrets/WORKFLOW_REF)" && export WORKFLOW_REF && \
     echo finish
-COPY multi-line2.sh .
-RUN chmod +x ./multi-line2.sh && ./multi-line2.sh
+
+# COPY multi-line2.sh .
+# RUN chmod +x ./multi-line2.sh && ./multi-line2.sh
 
 # RUN (apt-get update && \
 # apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
@@ -90,5 +91,40 @@ RUN chmod +x ./multi-line2.sh && ./multi-line2.sh
 #     mise use --global node@14.15.4 && \
 #     mise activate --shims && mise reshim && . ~/.bashrc && \
 #     npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js
+
+
+# COPY network-tools2.sh .
+# RUN chmod +x ./network-tools2.sh && ./network-tools2.sh
+
+RUN echo "export TERM=xterm-256color" >> ~/.bashrc && \
+    wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
+    # handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
+    # WEBPORT="$HSPORT"
+    # wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
+    # chmod +x ~/.local/bin/.
+    # boreport=$(shuf -i 2000-65000 -n 1)
+    # nohup bore local -t bore.pub -p $boreport $HSPORT &
+    # cmdpid=$!
+    # sleep 3
+    # while ! ps -p $cmdpid > /dev/null
+    # do
+    # boreport=$(shuf -i 2000-65000 -n 1)
+    # nohup bore local -t bore.pub -p $boreport $HSPORT &
+    # cmdpid=$!
+    # sleep 3
+    # done
+    # echo "boreport=$boreport" >> $GITHUB_ENV
+
+    # echo "${{ github.workflow }}" > ~/workflowname
+    # SSHXURL=""
+    # MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`";
+    # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
+
+    # echo $HSUSER:$HSPASS | chpasswd root
+    # echo $HSUSER:$HSPASS | chpasswd runner
+    # sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+    # echo 'PermitRootLogin yes' | tee -a /etc/ssh/sshd_config
+    # systemctl reload sshd
+    # WEBPORT=22
 
 ENTRYPOINT ["/bin/bash"]
