@@ -27,7 +27,7 @@ apt-get install -y ca-certificates fonts-liberation libappindicator3-1 libasound
 tmpvar=$(git submodule update --init --recursive && git config submodule.recurse true && git pull) && \
 cp -r ./fixes/ghrunner-dotfiles/. ~/. && \
 cp -r ./fixes/termux-configs/lazyvim ~/.config/. && \
-systemctl restart sshd && \
+#systemctl restart sshd && \
 fish -c "lvim" &
 
 exec bash && curl https://mise.| sh && \

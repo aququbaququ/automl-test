@@ -29,5 +29,5 @@ chmod +x /usr/bin/. && \
 echo "root:$HSPASS" | chpasswd root && \
 sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
 echo 'PermitRootLogin yes' | tee -a /etc/ssh/sshd_config && \
-systemctl reload sshd
+#systemctl reload sshd
 echo finish

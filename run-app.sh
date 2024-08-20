@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+service ssh start 
 echo $USER
 exec bash && \
 cd ./$SGHDIR && git pull && \
