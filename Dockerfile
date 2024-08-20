@@ -75,6 +75,7 @@ RUN chmod +x ./network-tools2.sh && ./network-tools2.sh
 
 ENTRYPOINT ["/bin/bash"]
 COPY run-app.sh /.
-CMD sh -c "sh /run-app.sh"
+CMD nohup /run-app.sh &
+# CMD sh -c "sh /run-app.sh"
 # ENTRYPOINT ["/bin/bash", "/run-app.sh"]
 EXPOSE 22
