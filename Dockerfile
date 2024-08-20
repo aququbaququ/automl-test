@@ -35,22 +35,22 @@ RUN --mount=type=secret,id=GH_TOKEN \
     GH_TOKEN="$(cat /run/secrets/GH_TOKEN)" && export GH_TOKEN && \
     SGHREPO="$(cat /run/secrets/SGHREPO)" && export SGHREPO && \
     SGHDIR="$(cat /run/secrets/SGHDIR)" && export SGHDIR && \
-    SGHREPO="$(cat /run/secrets/SGHTOKEN)" && export SGHTOKEN && \
-    SGHDIR="$(cat /run/secrets/SGHTOKENLOCAL)" && export SGHTOKENLOCAL && \
-    SGHREPO="$(cat /run/secrets/SNUSER)" && export SNUSER && \
-    SGHDIR="$(cat /run/secrets/SNUSERTOKEN)" && export SNUSERTOKEN && \
-    SGHREPO="$(cat /run/secrets/SNSKEY)" && export SNSKEY && \
-    SGHDIR="$(cat /run/secrets/HSUSER)" && export HSUSER && \
-    SGHREPO="$(cat /run/secrets/HSPASS)" && export HSPASS && \
-    SGHDIR="$(cat /run/secrets/HSPORT)" && export HSPORT && \
-    SGHREPO="$(cat /run/secrets/NGROK_TOKEN)" && export NGROK_TOKEN && \
-    SGHDIR="$(cat /run/secrets/SSH_PASSWORD)" && export SSH_PASSWORD && \
-    SGHREPO="$(cat /run/secrets/TELEGRAM_BOT_TOKEN)" && export TELEGRAM_BOT_TOKEN && \
-    SGHDIR="$(cat /run/secrets/TELEGRAM_CHAT_ID)" && export TELEGRAM_CHAT_ID && \
-    SGHREPO="$(cat /run/secrets/ENV64)" && export ENV64 && \
-    SGHDIR="$(cat /run/secrets/WORKFLOW_REF)" && export WORKFLOW_REF && \
-    SGHDIR="$(cat /run/secrets/WORKFLOW)" && export WORKFLOW && \
-    SGHREPO="$(cat /run/secrets/APP)" && export APP && \
+    SGHTOKEN="$(cat /run/secrets/SGHTOKEN)" && export SGHTOKEN && \
+    SGHTOKENLOCAL="$(cat /run/secrets/SGHTOKENLOCAL)" && export SGHTOKENLOCAL && \
+    SNUSER="$(cat /run/secrets/SNUSER)" && export SNUSER && \
+    SNUSERTOKEN="$(cat /run/secrets/SNUSERTOKEN)" && export SNUSERTOKEN && \
+    SNSKEY="$(cat /run/secrets/SNSKEY)" && export SNSKEY && \
+    HSUSER="$(cat /run/secrets/HSUSER)" && export HSUSER && \
+    HSPASS="$(cat /run/secrets/HSPASS)" && export HSPASS && \
+    HSPORT="$(cat /run/secrets/HSPORT)" && export HSPORT && \
+    NGROK_TOKEN="$(cat /run/secrets/NGROK_TOKEN)" && export NGROK_TOKEN && \
+    SSH_PASSWORD="$(cat /run/secrets/SSH_PASSWORD)" && export SSH_PASSWORD && \
+    TELEGRAM_BOT_TOKEN="$(cat /run/secrets/TELEGRAM_BOT_TOKEN)" && export TELEGRAM_BOT_TOKEN && \
+    TELEGRAM_CHAT_ID="$(cat /run/secrets/TELEGRAM_CHAT_ID)" && export TELEGRAM_CHAT_ID && \
+    ENV64="$(cat /run/secrets/ENV64)" && export ENV64 && \
+    WORKFLOW_REF="$(cat /run/secrets/WORKFLOW_REF)" && export WORKFLOW_REF && \
+    WORKFLOW="$(cat /run/secrets/WORKFLOW)" && export WORKFLOW && \
+    APP="$(cat /run/secrets/APP)" && export APP && \
     echo finish
 
 # COPY multi-line2.sh .
@@ -101,45 +101,7 @@ RUN --mount=type=secret,id=GH_TOKEN \
 # RUN chmod +x ./network-tools2.sh && ./network-tools2.sh
 
 RUN apt-get -y update && apt-get install -y git curl wget gpg coreutils
-RUN --mount=type=secret,id=GH_TOKEN \
-    --mount=type=secret,id=SGHREPO \
-    --mount=type=secret,id=SGHDIR \
-    --mount=type=secret,id=SGHTOKEN \
-    --mount=type=secret,id=SGHTOKENLOCAL \
-    --mount=type=secret,id=SNUSER \
-    --mount=type=secret,id=SNUSERTOKEN \
-    --mount=type=secret,id=SNSKEY \
-    --mount=type=secret,id=HSUSER \
-    --mount=type=secret,id=HSPASS \
-    --mount=type=secret,id=HSPORT \
-    --mount=type=secret,id=NGROK_TOKEN \
-    --mount=type=secret,id=SSH_PASSWORD \
-    --mount=type=secret,id=TELEGRAM_BOT_TOKEN \
-    --mount=type=secret,id=TELEGRAM_CHAT_ID \
-    --mount=type=secret,id=ENV64 \
-    --mount=type=secret,id=WORKFLOW_REF \
-    --mount=type=secret,id=WORKFLOW \
-    --mount=type=secret,id=APP \
-    GH_TOKEN="$(cat /run/secrets/GH_TOKEN)" && export GH_TOKEN && \
-    SGHREPO="$(cat /run/secrets/SGHREPO)" && export SGHREPO && \
-    SGHDIR="$(cat /run/secrets/SGHDIR)" && export SGHDIR && \
-    SGHREPO="$(cat /run/secrets/SGHTOKEN)" && export SGHTOKEN && \
-    SGHDIR="$(cat /run/secrets/SGHTOKENLOCAL)" && export SGHTOKENLOCAL && \
-    SGHREPO="$(cat /run/secrets/SNUSER)" && export SNUSER && \
-    SGHDIR="$(cat /run/secrets/SNUSERTOKEN)" && export SNUSERTOKEN && \
-    SGHREPO="$(cat /run/secrets/SNSKEY)" && export SNSKEY && \
-    SGHDIR="$(cat /run/secrets/HSUSER)" && export HSUSER && \
-    SGHREPO="$(cat /run/secrets/HSPASS)" && export HSPASS && \
-    SGHDIR="$(cat /run/secrets/HSPORT)" && export HSPORT && \
-    SGHREPO="$(cat /run/secrets/NGROK_TOKEN)" && export NGROK_TOKEN && \
-    SGHDIR="$(cat /run/secrets/SSH_PASSWORD)" && export SSH_PASSWORD && \
-    SGHREPO="$(cat /run/secrets/TELEGRAM_BOT_TOKEN)" && export TELEGRAM_BOT_TOKEN && \
-    SGHDIR="$(cat /run/secrets/TELEGRAM_CHAT_ID)" && export TELEGRAM_CHAT_ID && \
-    SGHREPO="$(cat /run/secrets/ENV64)" && export ENV64 && \
-    SGHDIR="$(cat /run/secrets/WORKFLOW_REF)" && export WORKFLOW_REF && \
-    SGHDIR="$(cat /run/secrets/WORKFLOW)" && export WORKFLOW && \
-    SGHREPO="$(cat /run/secrets/APP)" && export APP && \
-    mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
+RUN mkdir -p ~/.local/bin && exec bash && echo "export TERM=xterm-256color" >> ~/.bashrc && \
     wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb && \
     # wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.2/handy-sshd-0.4.2-linux-amd64.deb && dpkg -i handy-sshd-0.4.2-linux-amd64.deb && \
     handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" & \
