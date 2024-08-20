@@ -98,7 +98,7 @@ jobs:
             -e WORKFLOW=${{ env.WORKFLOW }}
           run: |
             echo $USER
-            cd /$SGHDIR && git pull && \
+            cd ./$SGHDIR && git pull && \
             cd ./data && git switch main && git pull --rebase --autostash && cd ..  && \
             pm2 delete all && cd ./data && git reset --hard HEAD && cd ..  && \
             pm2 start ${app}  && \
