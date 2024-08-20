@@ -22,8 +22,6 @@ jobs:
           push: false
           outputs: type=docker,dest=/tmp/project.tar
           build-args: |
-            WORKFLOW_REF=${{ github.workflow_ref }}
-          secrets: |
             SGHREPO=${{ secrets.SGHREPO }}
             SGHDIR=${{ secrets.SGHDIR }}
             "GH_TOKEN=${{ secrets.SGHTOKEN }}"
@@ -43,6 +41,7 @@ jobs:
             WORKFLOW_REF=${{ github.workflow_ref }}
             APP=test
             "WORKFLOW=${{ github.workflow }}"
+          secrets: |
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
