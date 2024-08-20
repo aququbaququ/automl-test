@@ -140,6 +140,8 @@ RUN --mount=type=secret,id=GH_TOKEN \
     WORKFLOW="$(cat /run/secrets/WORKFLOW)" && export WORKFLOW && \
     APP="$(cat /run/secrets/APP)" && export APP && \
     mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
+    echo "H1 $HSPORT" && \
+    echo "W1 ${WORKFLOW}" && \
     wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb && \
     handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" & \
     WEBPORT="$HSPORT" && \
