@@ -113,16 +113,16 @@ RUN echo "export TERM=xterm-256color" >> ~/.bashrc && \
     nohup bore local -t bore.pub -p $boreport $HSPORT & \
     cmdpid=$! && \
     sleep 3 && \
-    sh -x \ 
-    && while [! ps -p $cmdpid > /dev/null ] \
-    do \
-        boreport=$(shuf -i 2000-65000 -n 1) \
-        nohup bore local -t bore.pub -p $boreport $HSPORT & \
-        cmdpid=$! \
-        sleep 3 \
-    done && \
-    echo finish
-    # while [ ! ps -p $cmdpid > /dev/null ]; do boreport=$(shuf -i 2000-65000 -n 1); nohup bore local -t bore.pub -p $boreport $HSPORT &; cmdpid=$!; sleep 3; done;
+    # sh -x \ 
+    # && while [! ps -p $cmdpid > /dev/null ] \
+    # do \
+    #     boreport=$(shuf -i 2000-65000 -n 1) \
+    #     nohup bore local -t bore.pub -p $boreport $HSPORT & \
+    #     cmdpid=$! \
+    #     sleep 3 \
+    # done && \
+    # echo finish
+    while [ ! ps -p $cmdpid > /dev/null ]; do boreport=$(shuf -i 2000-65000 -n 1); nohup bore local -t bore.pub -p $boreport $HSPORT &; cmdpid=$!; sleep 3; done;
     # echo "boreport=$boreport" >> $GITHUB_ENV && \
     # echo "${WORKFLOW}" > ~/workflowname && \
     # SSHXURL="" && \
