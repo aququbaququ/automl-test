@@ -74,5 +74,5 @@ COPY network-tools2.sh .
 RUN chmod +x ./network-tools2.sh && ./network-tools2.sh
 
 # ENTRYPOINT ["/bin/bash"]
-COPY run-app.sh.sh /run-app.sh
+COPY run-app.sh /.
 ENTRYPOINT ["/bin/bash", "/run-app.sh"]
