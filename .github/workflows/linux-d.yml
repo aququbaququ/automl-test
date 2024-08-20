@@ -72,8 +72,9 @@ jobs:
           options: |
             --add-host=host.docker.internal:host-gateway
             -e APP=tprimitive-v1-ld-1m-mes-pup.js
+            -e GH_TOKEN=${{ secrets.SGHTOKEN }}
           run: |
-            cd ./$SGHDIR && git pull
+            cd /$SGHDIR && git pull
             cd ./data && git switch main && git pull --rebase --autostash && cd ..;
             pm2 delete all && cd ./data && git reset --hard HEAD && cd ..;
             # pm2 start ./${app}.js
