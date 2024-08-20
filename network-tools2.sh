@@ -14,7 +14,6 @@ echo "B $(cat ./boreport)" && \
 nohup bore local -t bore.pub -p "$(cat ./boreport)" "$HSPORT" & \
 cmdpid=$! && \
 sleep 3 && \
-# while [ ! ps -p $cmdpid > /dev/null ]; do boreport=$(shuf -i 2000-65000 -n 1); nohup bore local -t bore.pub -p $boreport $HSPORT &; cmdpid=$!; sleep 3; done;
 while ! ps -p $cmdpid > /dev/null
 do
   export boreport=$(shuf -i 2000-65000 -n 1)
@@ -23,7 +22,6 @@ do
   cmdpid=$!
   sleep 3
 done
-# echo "boreport=$boreport" >> $GITHUB_ENV && \
 echo "${WORKFLOW}" > ~/workflowname && \
 SSHXURL="" && \
 MSG="wf: ${WORKFLOW} - ${APP}; boressh:  \`boldssh $(cat ./HANDYSSHUSER)@bore.pub -p $(cat ./boreport)\`" && \
