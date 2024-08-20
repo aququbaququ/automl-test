@@ -41,7 +41,7 @@ jobs:
             TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
             ENV64=${{ secrets.ENV64 }}
             WORKFLOW_REF=${{ github.workflow_ref }}
-            APP=${{ secrets.APP }}
+            APP=${{ "test" }}
             WORKFLOW=${{ github.workflow }}
 
       - name: Upload artifact
