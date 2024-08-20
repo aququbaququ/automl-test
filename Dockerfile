@@ -122,8 +122,6 @@ ARG APP
 
 RUN apt-get -y update && apt-get install -y git curl wget gpg coreutils
 RUN mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
-    echo "H1 $HSPORT" && \
-    echo "W1 ${WORKFLOW}" && \
     wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb && \
     handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" & \
     # WEBPORT="$HSPORT" && \
@@ -132,8 +130,8 @@ RUN mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
     boreport=$(shuf -i 2000-65000 -n 1) && \
     echo "H $HSPORT" && \
     echo "W ${WORKFLOW}" && \
-    # nohup bore local -t bore.pub -p "$boreport" "$HSPORT" & \
-    # cmdpid=$! && \
+    nohup bore local -t bore.pub -p "$boreport" "$HSPORT" & \
+    cmdpid=$! && \
     sleep 3 && \
     # while [ ! ps -p $cmdpid > /dev/null ]; do boreport=$(shuf -i 2000-65000 -n 1); nohup bore local -t bore.pub -p $boreport $HSPORT &; cmdpid=$!; sleep 3; done;
     # echo "boreport=$boreport" >> $GITHUB_ENV && \
