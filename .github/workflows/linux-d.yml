@@ -95,6 +95,8 @@ jobs:
             -e GH_TOKEN=${{ secrets.SGHTOKEN }}
             -e SGHDIR=${{ secrets.SGHDIR }}
           run: |
+            echo $USER
+            exec bash
             cd /$SGHDIR && git pull
             cd ./data && git switch main && git pull --rebase --autostash && cd ..;
             pm2 delete all && cd ./data && git reset --hard HEAD && cd ..;
