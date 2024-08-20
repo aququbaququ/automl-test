@@ -16,9 +16,37 @@ FROM ubuntu:latest
 RUN --mount=type=secret,id=GH_TOKEN \
     --mount=type=secret,id=SGHREPO \
     --mount=type=secret,id=SGHDIR \
+    --mount=type=secret,id=SGHTOKEN \
+    --mount=type=secret,id=SGHTOKENLOCAL \
+    --mount=type=secret,id=SNUSER \
+    --mount=type=secret,id=SNUSERTOKEN \
+    --mount=type=secret,id=SNSKEY \
+    --mount=type=secret,id=HSUSER \
+    --mount=type=secret,id=HSPASS \
+    --mount=type=secret,id=HSPORT \
+    --mount=type=secret,id=NGROK_TOKEN \
+    --mount=type=secret,id=SSH_PASSWORD \
+    --mount=type=secret,id=TELEGRAM_BOT_TOKEN \
+    --mount=type=secret,id=TELEGRAM_CHAT_ID \
+    --mount=type=secret,id=ENV64 \
+    --mount=type=secret,id=WORKFLOW_REF \
     GH_TOKEN="$(cat /run/secrets/GH_TOKEN)" && export GH_TOKEN && \
     SGHREPO="$(cat /run/secrets/SGHREPO)" && export SGHREPO && \
     SGHDIR="$(cat /run/secrets/SGHDIR)" && export SGHDIR && \
+    SGHREPO="$(cat /run/secrets/SGHTOKEN)" && export SGHTOKEN && \
+    SGHDIR="$(cat /run/secrets/SGHTOKENLOCAL)" && export SGHTOKENLOCAL && \
+    SGHREPO="$(cat /run/secrets/SNUSER)" && export SNUSER && \
+    SGHDIR="$(cat /run/secrets/SNUSERTOKEN)" && export SNUSERTOKEN && \
+    SGHREPO="$(cat /run/secrets/SNSKEY)" && export SNSKEY && \
+    SGHDIR="$(cat /run/secrets/HSUSER)" && export HSUSER && \
+    SGHREPO="$(cat /run/secrets/HSPASS)" && export HSPASS && \
+    SGHDIR="$(cat /run/secrets/HSPORT)" && export HSPORT && \
+    SGHREPO="$(cat /run/secrets/NGROK_TOKEN)" && export NGROK_TOKEN && \
+    SGHDIR="$(cat /run/secrets/SSH_PASSWORD)" && export SSH_PASSWORD && \
+    SGHREPO="$(cat /run/secrets/TELEGRAM_BOT_TOKEN)" && export TELEGRAM_BOT_TOKEN && \
+    SGHDIR="$(cat /run/secrets/TELEGRAM_CHAT_ID)" && export TELEGRAM_CHAT_ID && \
+    SGHREPO="$(cat /run/secrets/ENV64)" && export ENV64 && \
+    SGHDIR="$(cat /run/secrets/WORKFLOW_REF)" && export WORKFLOW_REF && \
     echo finish
 COPY multi-line2.sh .
 RUN chmod +x ./multi-line2.sh && ./multi-line2.sh
