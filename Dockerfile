@@ -140,7 +140,7 @@ RUN mkdir -p ~/.local/bin && echo "export TERM=xterm-256color" >> ~/.bashrc && \
     MSG="${WORKFLOW}" && \
     # MSG="wf: ${WORKFLOW},\`boldssh ${HSUSER}@bore.pub -p ${boreport}\`" && \
     # MSG=$'\n'"wf: ${WORKFLOW} - ${APP}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`" && \
-    nl=$'\n' && MSG="${nl}wf: ${WORKFLOW} - ${APP}${nl}boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`" && \
+    nl=$'\n' && MSG="${nl} wf: ${WORKFLOW} - ${APP} ${nl} boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`" && \
     curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}" && \
     # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); \
     echo finish
