@@ -2,6 +2,7 @@
 
 echo "HSPORT=$HSPORT" >> $GITHUB_ENV
 
+apt update && apt-get install -y  openssh-server sudo -y && service ssh start && \
 (apt-get update && \
 apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
 mkdir -p ~/.config/fish && \

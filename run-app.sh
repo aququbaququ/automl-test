@@ -10,14 +10,14 @@ pm2 start ${app}  && \
 export HANDYSSHUSER="root" && echo "$HANDYSSHUSER" > ./HANDYSSHUSER  && \
 handy-sshd -p "$HSPORT" -u "$(cat ./HANDYSSHUSER)":"$HSPASS" & \
 export boreport=$(shuf -i 2000-65000 -n 1) && echo "$boreport" > ./boreport && \
-nohup bore local -t bore.pub -p "$(cat ./boreport)" "$HSPORT" & \
+nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 & \
 cmdpid=$! && \
 sleep 3 && \
 while ! ps -p $cmdpid > /dev/null
 do
     export boreport=$(shuf -i 2000-65000 -n 1)
     echo "$boreport" > ./boreport
-    nohup bore local -t bore.pub -p "$(cat ./boreport)" $HSPORT &
+    nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 &
     cmdpid=$!
     sleep 3
 done
