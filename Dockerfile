@@ -109,8 +109,8 @@ RUN mkdir -p ~/.local/bin && exec bash && echo "export TERM=xterm-256color" >> ~
     wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore /usr/bin/. && \
     chmod +x /usr/bin/. && \
     boreport=$(shuf -i 2000-65000 -n 1) && \
-    echo "$boreport"
-    echo "$HSPORT"
+    echo "$boreport" && \
+    echo "$HSPORT" && \
     # nohup bore local -t bore.pub -p "$boreport" "$HSPORT" & \
     # cmdpid=$! && \
     sleep 3 && \
