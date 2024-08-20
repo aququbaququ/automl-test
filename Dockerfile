@@ -100,7 +100,7 @@ RUN echo "export TERM=xterm-256color" >> ~/.bashrc && \
     apt-get update && \
     apt-get install -y wget curl && \
     wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && apt-get install -y ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
-    $(handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &) && \
+    tmpvar=$(handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &) && \
     WEBPORT="$HSPORT"
     # wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
     # chmod +x ~/.local/bin/.
