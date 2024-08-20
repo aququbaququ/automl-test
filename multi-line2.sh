@@ -36,5 +36,5 @@ wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/
 echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
 apt-get update -y && apt-get install -y mise
 mise use --global node@14.15.4 && \
-#mise activate --shims && mise reshim && . ~/.bashrc && \
+mise activate --shims bash && mise reshim && . ~/.bashrc && \
 npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js
