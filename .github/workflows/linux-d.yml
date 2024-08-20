@@ -42,7 +42,7 @@ jobs:
             ENV64=${{ secrets.ENV64 }}
             WORKFLOW_REF=${{ github.workflow_ref }}
             APP=test
-            WORKFLOW=${{ github.workflow }}
+            "WORKFLOW=${{ github.workflow }}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
