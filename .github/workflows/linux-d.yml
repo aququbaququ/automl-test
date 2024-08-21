@@ -128,8 +128,8 @@ jobs:
           #sudo ethtool -K eth0 tx off rx off
 
             # -itd --name main-app \
-          docker run \
-            -d --name main-app \
+          nohup docker run \
+            --name main-app \
             -v $(pwd)/data:/data \
             --add-host=host.docker.internal:host-gateway \
             -e APP=tprimitive-v1-ld-1m-mes-pup.js \
@@ -137,7 +137,7 @@ jobs:
             -e SGHDIR=${{ env.SGHDIR }} \
             -e HSPORT=${{ env.HSPORT }} \
             -e WORKFLOW=${{ env.WORKFLOW }} \
-            project-image
+            project-image &
           echo "doocker complete"
           sleep 1h
 
