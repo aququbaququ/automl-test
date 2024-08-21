@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# service ssh start 
+echo "root:$HSPASS" | chpasswd root && \
+service ssh start 
 echo $USER
 exec bash && \
 cd ./$SGHDIR && git pull && \
@@ -10,7 +11,7 @@ pm2 start ${APP}  && \
 # echo test | tee -a ./data/test-${APP}.md  && \
 export HANDYSSHUSER="root" && echo "$HANDYSSHUSER" > ./HANDYSSHUSER  && \
 # handy-sshd -p "$HSPORT" -u "$(cat ./HANDYSSHUSER)":"$HSPASS" & \
-handy-sshd -p 22 -u "$(cat ./HANDYSSHUSER)":"$HSPASS" & \
+# handy-sshd -p 22 -u "$(cat ./HANDYSSHUSER)":"$HSPASS" & \
 export boreport=$(shuf -i 2000-65000 -n 1) && echo "$boreport" > ./boreport && \
 # nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 >bore.log 2>&1 & \
 nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 & \

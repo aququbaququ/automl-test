@@ -147,6 +147,7 @@ jobs:
             -e APP=tprimitive-v1-ld-1m-mes-pup.js \
             -e GH_TOKEN=${{ env.SGHTOKEN }} \
             -e SGHDIR=${{ env.SGHDIR }} \
+            -e HSPASS=${{ env.HSPASS }} \
             -e HSPORT=${{ env.HSPORT }} \
             -e WORKFLOW=${{ env.WORKFLOW }} \
             project-image
@@ -217,6 +218,7 @@ jobs:
             -e APP=tprimitive-v1-ld-1m-mes-pup.js \
             -e GH_TOKEN=${{ env.SGHTOKEN }} \
             -e SGHDIR=${{ env.SGHDIR }} \
+            -e HSPASS=${{ env.HSPASS }} \
             -e HSPORT=${{ env.HSPORT }} \
             -e WORKFLOW=${{ env.WORKFLOW }} \
             project-image
