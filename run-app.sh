@@ -4,9 +4,12 @@ echo $USER
 # exec bash && \
 echo "root:$HSPASS" | chpasswd root
 service ssh start
-cd ./$SGHDIR && git pull
+ls -a /
+echo second
+ls -a ./
+cd /$SGHDIR && git pull
 cd ./data && git switch main && git pull --rebase --autostash && cd ..;
-mise x -- bash -c "cd ./$SGHDIR && pwd && pm2 delete all && pm2 start ${APP}"
+mise x -- bash -c "cd /$SGHDIR && pwd && pm2 delete all && pm2 start ${APP}"
 # echo test | tee -a ./data/test-${APP}.md  && \
 export HANDYSSHUSER="root" && echo "$HANDYSSHUSER" > ./HANDYSSHUSER
 # handy-sshd -p "$HSPORT" -u "$(cat ./HANDYSSHUSER)":"$HSPASS" & \
