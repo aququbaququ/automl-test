@@ -231,6 +231,9 @@ jobs:
           #sudo ethtool -K eth0 tx off rx off
 
             # -itd --name main-app \
+                        -p 2222:22 \
+              -v $(pwd)/data:/data \
+
 
           gh repo clone $SGHREPO && cd "$SGHDIR"
           appsperjob=5
@@ -240,8 +243,6 @@ jobs:
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             docker run \
               -d --name "main-app-$appindex" \
-              -p 2222:22 \
-              -v $(pwd)/data:/data \
               --add-host=host.docker.internal:host-gateway \
               -e APP="$appsexpr" \
               -e GH_TOKEN=${{ env.SGHTOKEN }} \
