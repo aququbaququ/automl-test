@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo $USER
-exec bash && \
+# exec bash && \
 echo "root:$HSPASS" | chpasswd root && service ssh start && \
 cd ./$SGHDIR && git pull && \
 cd ./data && git switch main && git pull --rebase --autostash && cd .. && \
