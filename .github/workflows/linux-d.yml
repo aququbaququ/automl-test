@@ -199,7 +199,7 @@ jobs:
         #   continue_on_error: true
         #   command: |
         run: |
-            gh run download --repo ${{ github.repository }} -n "project*" --dir /tmp
+            gh run download --repo ${{ github.repository }} -n "project" --dir /tmp
             echo $(ls /tmp) 
       
       # - name: Download artifact
