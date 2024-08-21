@@ -136,6 +136,8 @@ jobs:
             -e HSPORT=${{ env.HSPORT }} \
             -e WORKFLOW=${{ env.WORKFLOW }} \
             project-image
+          echo "doocker complete"
+          sleep 1h
 
   remove-image:
     name: Remove image
