@@ -2,12 +2,11 @@
 
 # echo "HSPORT=$HSPORT" >> $GITHUB_ENV
 
-apt update && apt-get install -y  openssh-server sudo -y && service ssh start && \
-(apt-get update && \
-apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
+apt update && apt-get install -y openssh-server sudo -y && service ssh start && \
+apt-get update && apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
 mkdir -p ~/.config/fish && \
 mkdir -p ~/.local/bin && \
-echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile)
+echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile
 
 (apt-get install -y git curl wget gpg && git config --global user.name "name" && git config --global user.email "email")
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg;
@@ -23,7 +22,6 @@ mv lazygit /usr/bin/.
 
 gh auth setup-git && \
 gh repo clone $SGHREPO && cd /$SGHDIR
-# apt-get install -y ca-certificates fonts-liberation libappindicator3-1 libasound2t64 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libnss3-dev libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils && \
 
 apt-get install -y ca-certificates fonts-liberation libappindicator3-1 libasound2t64 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libnss3-dev libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
 # apt-get install -y libpango-1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0
