@@ -13,7 +13,9 @@ mise x -- pm2 start "${APP}"
 export HANDYSSHUSER="root" && echo "$HANDYSSHUSER" > ./HANDYSSHUSER
 # handy-sshd -p "$HSPORT" -u "$(cat ./HANDYSSHUSER)":"$HSPASS" & \
 # handy-sshd -p 22 -u "$(cat ./HANDYSSHUSER)":"$HSPASS" & \
-export boreport=$(shuf -i 2000-65000 -n 1)
+# export boreport=$(shuf -i 2000-65000 -n 1)
+mise x -- npm i shuf -g
+export boreport=$(mise x -- shuf -i 2000-65000 -n 1)
 echo "$boreport" > ./boreport
 # nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 >bore.log 2>&1 & \
 MSG="wf: ${WORKFLOW} - ${APP}; boressh:  \`boldssh $(cat ./HANDYSSHUSER)@bore.pub -p $(cat ./boreport)\`"
