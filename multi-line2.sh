@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "HSPORT=$HSPORT" >> $GITHUB_ENV
+# echo "HSPORT=$HSPORT" >> $GITHUB_ENV
 
 apt update && apt-get install -y  openssh-server sudo -y && service ssh start && \
 (apt-get update && \
