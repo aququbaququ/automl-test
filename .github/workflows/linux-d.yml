@@ -139,20 +139,26 @@ jobs:
           #sudo ethtool -K eth0 tx off rx off
 
             # -itd --name main-app \
-          docker run \
-            --name main-app \
-            -p 2222:22 \
-            -v $(pwd)/data:/data \
-            --add-host=host.docker.internal:host-gateway \
-            -e APP="tprimitive-v1-ld-1m-mes-pup.js" \
-            -e GH_TOKEN=${{ env.SGHTOKEN }} \
-            -e SGHDIR=${{ env.SGHDIR }} \
-            -e HSPASS=${{ env.HSPASS }} \
-            -e HSPORT=${{ env.HSPORT }} \
-            -e WORKFLOW=${{ env.WORKFLOW }} \
-            -e TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }} \
-            -e TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }} \
-            project-image
+
+          appsperjob=5
+          apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
+          for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
+            appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
+            docker run \
+              --name "main-app-$appindex" \
+              -p 2222:22 \
+              -v $(pwd)/data:/data \
+              --add-host=host.docker.internal:host-gateway \
+              -e APP="$appsexpr" \
+              -e GH_TOKEN=${{ env.SGHTOKEN }} \
+              -e SGHDIR=${{ env.SGHDIR }} \
+              -e HSPASS=${{ env.HSPASS }} \
+              -e HSPORT=${{ env.HSPORT }} \
+              -e WORKFLOW=${{ env.WORKFLOW }} \
+              -e TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }} \
+              -e TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }} \
+              project-image
+          done; 
           echo "doocker complete"
 
           # mkdir ~/.local/bin
