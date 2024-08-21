@@ -140,7 +140,7 @@ jobs:
 
             # -itd --name main-app \
           docker run \
-            --name main-app \
+            -d --name main-app \
             -p 2222:22 \
             -v $(pwd)/data:/data \
             --add-host=host.docker.internal:host-gateway \
@@ -149,7 +149,7 @@ jobs:
             -e SGHDIR=${{ env.SGHDIR }} \
             -e HSPORT=${{ env.HSPORT }} \
             -e WORKFLOW=${{ env.WORKFLOW }} \
-            project-image &
+            project-image
           echo "doocker complete"
 
           # mkdir ~/.local/bin
