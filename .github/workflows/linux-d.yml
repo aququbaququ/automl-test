@@ -186,7 +186,22 @@ jobs:
     if: ${{ github.event.inputs.mode == 'docker-just-test' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Retry Download artifact
+        id: retry-download-artifact
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 1
+          max_attempts: 1
+          retry_wait_seconds: 60
+          retry_on_exit_code: 1
+          continue_on_error: true
+          command: |
+            gh run download --repo ${{ github.repository }} --pattern "project*" --dir /tmp || exit 1
+      
       - name: Download artifact
+        if: failure()
         uses: actions/download-artifact@v4
         with:
           name: project
