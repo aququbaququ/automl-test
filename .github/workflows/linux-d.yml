@@ -134,12 +134,13 @@ jobs:
 
       - name: Run Docker container
         run: |
+          echo start
           # possible puppeteer socket stuck fix tcp/udp network offload fix
           #sudo ethtool -K eth0 tx off rx off
 
             # -itd --name main-app \
-          nohup docker run \
-            --name main-app \
+          docker run \
+            -d --name main-app \
             -p 2222:22 \
             -v $(pwd)/data:/data \
             --add-host=host.docker.internal:host-gateway \
