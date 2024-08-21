@@ -22,8 +22,8 @@ wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_
 mv lazygit /usr/bin/.
 
 gh auth setup-git && \
-gh repo clone $SGHREPO && cd /$SGHDIR && \
-apt-get install -y ca-certificates fonts-liberation libappindicator3-1 libasound2t64 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libnss3-dev libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils && \
+gh repo clone $SGHREPO && cd /$SGHDIR
+# apt-get install -y ca-certificates fonts-liberation libappindicator3-1 libasound2t64 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libnss3-dev libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils && \
 
 apt-get install -y ca-certificates fonts-liberation libappindicator3-1 libasound2t64 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libnss3-dev libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
 # apt-get install -y libpango-1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0
@@ -34,11 +34,15 @@ cp -r ./fixes/termux-configs/lazyvim ~/.config/. && \
 #systemctl restart sshd && \
 fish -c "lvim" &
 
-echo 'eval "$(mise activate bash)"' >>~/.bashrc && . ~/.bashrc && \
-echo 'mise activate fish | source' >>~/.config/fish/config.fish && \
+# curl https://mise.run | sh
+# echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
+# echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && source ~/.bashrc
+
 wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1>/dev/null
 echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
 apt-get update -y && apt-get install -y mise && \
+echo 'eval "$(mise activate bash)"' >>~/.bashrc && . ~/.bashrc && \
+echo 'mise activate fish | source' >>~/.config/fish/config.fish && \
 mise use --global node@14.15.4 && \
 #mise activate --shims bash && mise reshim && . ~/.bashrc && \
 mise x -- bash -c "cd /$SGHDIR && npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js"
