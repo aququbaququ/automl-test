@@ -128,8 +128,8 @@ jobs:
           #sudo ethtool -K eth0 tx off rx off
 
             # -itd --name main-app \
-          docker run \
-            -d --name main-app \
+          nohup docker run \
+            --name main-app \
             -p 2222:22 \
             -v $(pwd)/data:/data \
             --add-host=host.docker.internal:host-gateway \
@@ -138,7 +138,7 @@ jobs:
             -e SGHDIR=${{ env.SGHDIR }} \
             -e HSPORT=${{ env.HSPORT }} \
             -e WORKFLOW=${{ env.WORKFLOW }} \
-            project-image
+            project-image &
           echo "doocker complete"
 
           mkdir ~/.local/bin
