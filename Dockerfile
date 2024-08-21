@@ -78,5 +78,6 @@ COPY run-app.sh /.
 COPY entrypoint.sh /.
 RUN chmod +x ./run-app.sh
 # CMD sh -c "sh /run-app.sh"
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+# ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/run-app.sh"]
 EXPOSE 22
