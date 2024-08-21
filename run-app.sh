@@ -17,6 +17,7 @@ export HANDYSSHUSER="root" && echo "$HANDYSSHUSER" > ./HANDYSSHUSER
 mise x -- npm i shuf -g
 export boreport=$(mise x -- shuf -i 2000-65000 -n 1)
 echo "$boreport" > ./boreport
+echo "before-bore 2: $boreport"
 # nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 >bore.log 2>&1 & \
 MSG="wf: ${WORKFLOW} - ${APP}; boressh:  \`boldssh $(cat ./HANDYSSHUSER)@bore.pub -p $(cat ./boreport)\`"
 curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"
