@@ -2,11 +2,9 @@
 
 # echo "HSPORT=$HSPORT" >> $GITHUB_ENV
 
-apt update && apt-get install -y openssh-server sudo -y && service ssh start && \
-apt-get update && apt-get install -y fish magic-wormhole jq fuse libfuse2 && \
-mkdir -p ~/.config/fish && \
-mkdir -p ~/.local/bin && \
-echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile
+apt update && apt-get install -y openssh-server sudo -y && service ssh start
+apt-get update -y && apt-get install -y fish magic-wormhole jq fuse libfuse2
+mkdir -p ~/.config/fish && mkdir -p ~/.local/bin && echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile && echo "export PATH=$HOME/.local/bin:$PATH" >> ~/.bashrc && source ~/.bashrc
 
 (apt-get install -y git curl wget gpg && git config --global user.name "name" && git config --global user.email "email")
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg;
@@ -39,8 +37,8 @@ fish -c "lvim" &
 wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1>/dev/null
 echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
 apt-get update -y && apt-get install -y mise && \
-echo 'eval "$(mise activate bash)"' >>~/.bashrc && . ~/.bashrc && \
-echo 'mise activate fish | source' >>~/.config/fish/config.fish && \
+echo 'eval "$(/usr/bin/mise activate bash)"' >>~/.bashrc && . ~/.bashrc && \
+echo '/usr/bin/mise activate fish | source' >>~/.config/fish/config.fish && \
 mise use --global node@14.15.4 && \
 #mise activate --shims bash && mise reshim && . ~/.bashrc && \
 mise x -- bash -c "cd /$SGHDIR && npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js"
