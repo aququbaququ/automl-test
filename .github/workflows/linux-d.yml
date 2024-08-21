@@ -140,7 +140,7 @@ jobs:
 
             # -itd --name main-app \
           docker run \
-            -itd --name main-app \
+            -it --name main-app \
             -p 2222:22 \
             -v $(pwd)/data:/data \
             --add-host=host.docker.internal:host-gateway \
