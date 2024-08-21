@@ -150,6 +150,8 @@ jobs:
             -e HSPASS=${{ env.HSPASS }} \
             -e HSPORT=${{ env.HSPORT }} \
             -e WORKFLOW=${{ env.WORKFLOW }} \
+            -e TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }} \
+            -e TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }} \
             project-image
           echo "doocker complete"
 
@@ -221,6 +223,8 @@ jobs:
             -e HSPASS=${{ env.HSPASS }} \
             -e HSPORT=${{ env.HSPORT }} \
             -e WORKFLOW=${{ env.WORKFLOW }} \
+            -e TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }} \
+            -e TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }} \
             project-image
           echo "doocker complete"
 
