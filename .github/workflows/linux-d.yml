@@ -144,7 +144,7 @@ jobs:
             -p 2222:22 \
             -v $(pwd)/data:/data \
             --add-host=host.docker.internal:host-gateway \
-            -e APP=tprimitive-v1-ld-1m-mes-pup.js \
+            -e APP="tprimitive-v1-ld-1m-mes-pup.js" \
             -e GH_TOKEN=${{ env.SGHTOKEN }} \
             -e SGHDIR=${{ env.SGHDIR }} \
             -e HSPASS=${{ env.HSPASS }} \
@@ -215,7 +215,7 @@ jobs:
             -p 2222:22 \
             -v $(pwd)/data:/data \
             --add-host=host.docker.internal:host-gateway \
-            -e APP=tprimitive-v1-ld-1m-mes-pup.js \
+            -e APP="tprimitive-v1-ld-1m-mes-pup.js" \
             -e GH_TOKEN=${{ env.SGHTOKEN }} \
             -e SGHDIR=${{ env.SGHDIR }} \
             -e HSPASS=${{ env.HSPASS }} \
