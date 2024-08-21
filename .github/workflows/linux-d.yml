@@ -133,6 +133,8 @@ jobs:
       #       sleep 1h
 
       - name: Run Docker container
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKEN }}
         run: |
           echo start
           # possible puppeteer socket stuck fix tcp/udp network offload fix
@@ -140,8 +142,9 @@ jobs:
 
             # -itd --name main-app \
 
+          gh repo clone $SGHREPO && cd "$SGHDIR"
           appsperjob=5
-          apps=($(jq -r ".apps[].script" ./pm2-t-2024-*.json))
+          apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             docker run \
