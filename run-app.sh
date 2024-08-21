@@ -18,7 +18,7 @@ echo "$boreport" > ./boreport
 # nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 >bore.log 2>&1 & \
 MSG="wf: ${WORKFLOW} - ${APP}; boressh:  \`boldssh $(cat ./HANDYSSHUSER)@bore.pub -p $(cat ./boreport)\`"
 curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"
-echo before-bore
+echo "before-bore"
 nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 &
 # cmdpid=$! && \
 # sleep 3 && \
