@@ -5,7 +5,7 @@ echo $USER
 echo "root:$HSPASS" | chpasswd root
 service ssh start
 cd /$SGHDIR && git pull
-echo $(ls ./ | grep ${APP})
+ls ./ | grep ${APP} | echo
 cd ./data && git switch main && git pull --rebase --autostash && cd ..;
 mise x -- bash -c "cd /$SGHDIR && echo ${APP} && pm2 delete all && pm2 start ${APP}"
 # echo test | tee -a ./data/test-${APP}.md  && \
