@@ -144,6 +144,7 @@ jobs:
 
           gh repo clone $SGHREPO && cd "$SGHDIR"
           appsperjob=5
+          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
           apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
@@ -222,25 +223,36 @@ jobs:
         run: docker load --input /tmp/project.tar
 
       - name: Run Docker container
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKEN }}
         run: |
+          echo start
           # possible puppeteer socket stuck fix tcp/udp network offload fix
           #sudo ethtool -K eth0 tx off rx off
 
             # -itd --name main-app \
-          docker run \
-            --name main-app \
-            -p 2222:22 \
-            -v $(pwd)/data:/data \
-            --add-host=host.docker.internal:host-gateway \
-            -e APP="tprimitive-v1-ld-1m-mes-pup.js" \
-            -e GH_TOKEN=${{ env.SGHTOKEN }} \
-            -e SGHDIR=${{ env.SGHDIR }} \
-            -e HSPASS=${{ env.HSPASS }} \
-            -e HSPORT=${{ env.HSPORT }} \
-            -e WORKFLOW=${{ env.WORKFLOW }} \
-            -e TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }} \
-            -e TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }} \
-            project-image
+
+          gh repo clone $SGHREPO && cd "$SGHDIR"
+          appsperjob=5
+          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
+          apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
+          for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
+            appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
+            docker run \
+              --name "main-app-$appindex" \
+              -p 2222:22 \
+              -v $(pwd)/data:/data \
+              --add-host=host.docker.internal:host-gateway \
+              -e APP="$appsexpr" \
+              -e GH_TOKEN=${{ env.SGHTOKEN }} \
+              -e SGHDIR=${{ env.SGHDIR }} \
+              -e HSPASS=${{ env.HSPASS }} \
+              -e HSPORT=${{ env.HSPORT }} \
+              -e WORKFLOW=${{ env.WORKFLOW }} \
+              -e TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }} \
+              -e TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }} \
+              project-image
+          done; 
           echo "doocker complete"
 
           # mkdir ~/.local/bin
@@ -260,6 +272,8 @@ jobs:
           # echo "boreport=$boreport" >> $GITHUB_ENV          
           # MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`boldssh root@bore.pub -p ${boreport}\`";
           # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
+
+          # sleep 1h
 
       - name: Sleep for 5h
         uses: jakejarvis/wait-action@master
