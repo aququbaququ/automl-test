@@ -124,6 +124,9 @@ jobs:
 
       - name: Run Docker container
         run: |
+          # possible puppeteer socket stuck fix tcp/udp network offload fix
+          #sudo ethtool -K eth0 tx off rx off
+
           docker run \
             -v $(pwd)/data:/data \
             --add-host=host.docker.internal:host-gateway \
