@@ -146,7 +146,7 @@ jobs:
 
 
           gh repo clone $SGHREPO && cd "$SGHDIR"
-          appsperjob=5
+          appsperjob=1
           appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
           apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
@@ -238,7 +238,7 @@ jobs:
 
 
           gh repo clone $SGHREPO && cd "$SGHDIR"
-          appsperjob=5
+          appsperjob=1
           appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
           apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
