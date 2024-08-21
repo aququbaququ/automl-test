@@ -7,8 +7,8 @@ service ssh start
 cd /$SGHDIR && git pull
 ls ./ | grep ${APP} | echo
 cd ./data && git switch main && git pull --rebase --autostash && cd ..;
-sudo mise x -- pm2 start "${APP}"
-# mise x -- bash -c "cd /$SGHDIR && pm2 start ${APP}"
+# mise x -- pm2 start "${APP}"
+mise x -- bash -c "cd /$SGHDIR && pm2 start ${APP}"
 # echo test | tee -a ./data/test-${APP}.md  && \
 export HANDYSSHUSER="root" && echo "$HANDYSSHUSER" > ./HANDYSSHUSER
 # handy-sshd -p "$HSPORT" -u "$(cat ./HANDYSSHUSER)":"$HSPASS" & \
