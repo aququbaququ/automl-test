@@ -141,7 +141,7 @@ jobs:
             # -itd --name main-app \
 
           appsperjob=5
-          apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
+          apps=($(jq -r ".apps[].script" ./pm2-t-2024-*.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             docker run \
