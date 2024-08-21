@@ -231,8 +231,8 @@ jobs:
           #sudo ethtool -K eth0 tx off rx off
 
             # -itd --name main-app \
-                        -p 2222:22 \
-              -v $(pwd)/data:/data \
+            #           -p 2222:22 \
+            # -v $(pwd)/data:/data \
 
 
           gh repo clone $SGHREPO && cd "$SGHDIR"
