@@ -3,7 +3,7 @@
 # echo "HSPORT=$HSPORT" >> $GITHUB_ENV
 
 apt update && apt-get install -y openssh-server sudo -y && service ssh start
-apt-get update -y && apt-get install -y fish magic-wormhole jq fuse libfuse2
+apt-get update -y && apt-get install -y fish magic-wormhole jq neovim
 mkdir -p ~/.config/fish && mkdir -p ~/.local/bin && echo "if [ -f ~/.bashrc ]; then . ~/.bashrc fi" | tee -a ~/.bash_profile && echo "export PATH=$HOME/.local/bin:$PATH" >> ~/.bashrc && source ~/.bashrc
 
 (apt-get install -y git curl wget gpg && git config --global user.name "name" && git config --global user.email "email")
@@ -12,8 +12,6 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githu
 apt-get update && apt-get install -y gh;
 # wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && apt-get install -y ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb
 
-wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage && \
-chmod u+x ./nvim.appimage && mv ./nvim.appimage /usr/bin/nvim && \
 wget https://github.com/extrawurst/gitui/releases/download/v0.26.3/gitui-linux-x86_64.tar.gz && tar xvf gitui-linux-x86_64.tar.gz && mv ./gitui /usr/bin/. && \
 wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz && \
 mv lazygit /usr/bin/.
