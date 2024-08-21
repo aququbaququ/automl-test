@@ -28,5 +28,5 @@ MSG="wf: ${WORKFLOW} - ${APP}; boressh:  \`boldssh $(cat ./HANDYSSHUSER)@bore.pu
 # sleep 1h
 
 curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"
-bore local -t bore.pub -p "$(cat ./boreport)" 22
+nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 &
 echo "Inside-Docker"
