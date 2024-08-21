@@ -28,15 +28,15 @@ cp -r ./fixes/termux-configs/lazyvim ~/.config/. && \
 #systemctl restart sshd && \
 fish -c "lvim" &
 
-# curl https://mise.run | sh
-# echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
-# echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && source ~/.bashrc
+curl https://mise.run | sh
+echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
+echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && source ~/.bashrc
 
-wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1>/dev/null
-echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
-apt-get update -y && apt-get install -y mise && \
-echo 'eval "$(/usr/bin/mise activate bash)"' >>~/.bashrc && . ~/.bashrc && \
-echo '/usr/bin/mise activate fish | source' >>~/.config/fish/config.fish && \
+# wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1>/dev/null
+# echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
+# apt-get update -y && apt-get install -y mise && \
+# echo 'eval "$(/usr/bin/mise activate bash)"' >>~/.bashrc && . ~/.bashrc && \
+# echo '/usr/bin/mise activate fish | source' >>~/.config/fish/config.fish && \
 mise use --global node@14.15.4 && \
 #mise activate --shims bash && mise reshim && . ~/.bashrc && \
 mise x -- bash -c "cd /$SGHDIR && npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js"
