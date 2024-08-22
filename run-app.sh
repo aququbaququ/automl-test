@@ -38,4 +38,4 @@ nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 &
 # nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 &
 echo "Inside-Docker"
 
-sleep 1h
+sleep 5h
