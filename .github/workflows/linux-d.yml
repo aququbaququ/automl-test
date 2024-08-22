@@ -245,7 +245,7 @@ jobs:
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             docker run \
               -d --name "main-app-$appindex" \
-              -v $(pwd)/data:/"$SGHDIR"/data
+              -v $(pwd)/data:/"$SGHDIR"/data \
               --add-host=host.docker.internal:host-gateway \
               -e APP="$appsexpr" \
               -e APPINDEX="$appindex" \
