@@ -84,12 +84,17 @@ jobs:
             fi
           done;
 
-      - name: Delete artifacts
-        uses: jimschubert/delete-artifacts-action@v1
+      # - name: Delete artifacts
+      #   uses: jimschubert/delete-artifacts-action@v1
+      #   with:
+      #     log_level: 'debug'
+      #     min_bytes: '0'
+      #     active_duration: '1s'
+
+      - uses: geekyeggo/delete-artifact@v5
         with:
-          log_level: 'debug'
-          min_bytes: '0'
-          active_duration: '1s'
+          name: |
+            artifact_*
 
       # - name: "Delete artifacts"
       #   env:
