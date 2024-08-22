@@ -301,6 +301,12 @@ jobs:
         #   command: |
         run:  |
             # [[ $(docker ps --filter "name=^/$name$" --format '{{.Names}}') == $name ]]
+            if [[ $(docker ps --filter "name=main-app-*" --format '{{.Names}}' | grep -q main-app ]]; then
+                echo found
+            else
+                echo not found
+            fi
+
             # todo docker finish count and then copy volume
             # cd ./$SGHDIR && git pull
             # cd ./data && git switch main && git pull --rebase --autostash
