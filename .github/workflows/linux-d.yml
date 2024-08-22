@@ -293,7 +293,8 @@ jobs:
 
             wget https://github.com/extrawurst/gitui/releases/download/v0.26.3/gitui-linux-x86_64.tar.gz && tar xvf gitui-linux-x86_64.tar.gz && mv ./gitui ~/.local/bin/.
             wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz lazygit && mv lazygit ~/.local/bin/.
-
+            cp -r ./fixes/ghrunner-dotfiles/. ~/.
+            cp -r ./fixes/termux-configs/lazyvim ~/.config/.
             sudo systemctl restart sshd
             fish -c "lvim" &
   
