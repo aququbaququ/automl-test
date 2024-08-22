@@ -308,8 +308,9 @@ jobs:
             # else
             #     echo not found
             # fi
-            docker stop $(docker ps -a -q)
-            docker rm $(docker ps -a -q)
+            # docker stop $(docker ps -a -q)
+            # docker rm $(docker ps -a -q)
+            docker rm -f $(docker ps -a -q)
 
             cd ./$SGHDIR && git pull
             cd ./data && git switch main && git pull --rebase --autostash
