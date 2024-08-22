@@ -301,7 +301,8 @@ jobs:
         #   command: |
         run:  |
             # [[ $(docker ps --filter "name=^/$name$" --format '{{.Names}}') == $name ]]
-            if [[ $(docker ps --filter "name=main-app-*" --format '{{.Names}}' | grep -q main-app ]]; then
+            # if [[ "$(docker ps --filter \"name=main-app-*\" --format '{{.Names}}' | grep -c main-app)" -ge 0 ]]; then
+            if [[ $(docker ps --filter "name=main-app-*" --format '{{.Names}}' | grep -q main-app) ]]; then
                 echo found
             else
                 echo not found
