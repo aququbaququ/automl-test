@@ -11,6 +11,7 @@ on:
         options:
           - default
           - docker-just-test
+          - cancell_all
       pm2file:
         description: 'pm2 file'
         type: choice
@@ -42,6 +43,24 @@ env:
   WORKFLOW: ${{ github.workflow }}
 
 jobs:
+  cancell-all-jobs:
+    if: ${{ github.event.inputs.mode == 'cancell_all' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - name: "Cancel previous workflows"
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        run: |
+          for id in $(gh run list --limit 5000 --jq ".[] | select ((.status == \"queued\" or .status == \"in_progress\") and .workflowName == \"${{ github.workflow }}\") | .databaseId" --json databaseId,status,workflowName); 
+          do 
+            currRunId=${{ github.run_id }} 
+            if [[ "$currRunId" != "$id" ]]; then
+              gh run cancel $id; 
+            fi
+          done;
+
   build-image:
     if: ${{ github.event.inputs.mode == 'default' }}
     name: Build image
@@ -225,13 +244,13 @@ jobs:
           
           npm i -g imgur-upload-cli
           appsperjob=1
-          # appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
-          # apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
-          # appnames=($(jq -r ".apps[].name" ./pm2-t-2024-?.json))
-          pm2file="${{ github.event.inputs.pm2file }}"
-          appscount=$(jq -r ".apps[].name" ./"$pm2file" | wc -l)  
-          apps=($(jq -r ".apps[].script" ./"$pm2file"))
-          appnames=($(jq -r ".apps[].name" ./"$pm2file"))
+          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
+          apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
+          appnames=($(jq -r ".apps[].name" ./pm2-t-2024-?.json))
+          # pm2file="${{ github.event.inputs.pm2file }}"
+          # appscount=$(jq -r ".apps[].name" ./"$pm2file" | wc -l)  
+          # apps=($(jq -r ".apps[].script" ./"$pm2file"))
+          # appnames=($(jq -r ".apps[].name" ./"$pm2file"))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             appnameexpr="$(echo "${appnames[@]:$appindex:$appsperjob}")"
