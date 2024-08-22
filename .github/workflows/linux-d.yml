@@ -80,8 +80,16 @@ jobs:
           path: /tmp/project.tar
           retention-days: 1
           overwrite: true
+
+      - name: Invoke workflow
+        id: invoke-workflow
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        run: |
+          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test"
           
   docker-test:
+    if: failure()
     name: DocerTest
     runs-on: ubuntu-latest
     needs: [ build-image ]
@@ -250,7 +258,7 @@ jobs:
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             docker run \
-              -d --name "main-app-$appindex" \
+              -d --name "main-app-$appindex-$appsexpr" \
               -v $(pwd)/data:/"$SGHDIR"/data \
               --add-host=host.docker.internal:host-gateway \
               -e APP="$appsexpr" \
