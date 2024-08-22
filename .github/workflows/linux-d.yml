@@ -187,7 +187,7 @@ jobs:
 
             # -itd --name main-app \
             #           -p 2222:22 \
-            # -v $(pwd)/data:/data \
+            # -v $(pwd)/data:/"$SGHDIR"/data \
 
 
           git config --global user.name "name"
@@ -206,7 +206,8 @@ jobs:
             appnameexpr="$(echo "${appnames[@]:$appindex:$appsperjob}")"
             docker run \
               -d --name "main-app-$appindex-$appnameexpr" \
-              -v $(pwd)/data:/"$SGHDIR"/data \
+              -v $(pwd):/"$SGHDIR" \
+              -v ~/.pm2/logs:/root/.pm2/logs \
               --add-host=host.docker.internal:host-gateway \
               -e APP="$appsexpr" \
               -e APPINDEX="$appindex" \
