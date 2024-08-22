@@ -11,6 +11,15 @@ on:
         options:
           - default
           - docker-just-test
+      pm2file:
+        description: 'pm2 file'
+        type: choice
+        required: false
+        default: 'pm2-t-2024-1.json'
+        options:
+          - pm2-t-2024-1.json
+          - pm2-t-2024-2.json
+          - pm2-t-2024-3.json
 
 env:
   SGHREPO: ${{ secrets.SGHREPO }}
@@ -86,7 +95,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
         run: |
-          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test"
+          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-1.json"
+          sleep 5m
+          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-2.json"
+          sleep 5m
+          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-3.json"
           
   docker-test:
     if: failure()
@@ -212,9 +225,13 @@ jobs:
           
           npm i -g imgur-upload-cli
           appsperjob=1
-          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
-          apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
-          appnames=($(jq -r ".apps[].name" ./pm2-t-2024-?.json))
+          # appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
+          # apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
+          # appnames=($(jq -r ".apps[].name" ./pm2-t-2024-?.json))
+          pm2file="${{ github.event.inputs.pm2file }}"
+          appscount=$(jq -r ".apps[].name" ./"$pm2file" | wc -l)  
+          apps=($(jq -r ".apps[].script" ./"$pm2file"))
+          appnames=($(jq -r ".apps[].name" ./"$pm2file"))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             appnameexpr="$(echo "${appnames[@]:$appindex:$appsperjob}")"
