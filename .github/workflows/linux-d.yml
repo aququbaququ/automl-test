@@ -237,7 +237,13 @@ jobs:
             # -v $(pwd)/data:/data \
 
 
+          git config --global user.name "name"
+          git config --global user.email "email"
+          wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && sudo apt install ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb
+          gh auth setup-git
           gh repo clone $SGHREPO && cd "$SGHDIR"
+          tmpvar=$(git submodule update --init --recursive && git config submodule.recurse true && git pull)
+          
           appsperjob=1
           appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
           apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
