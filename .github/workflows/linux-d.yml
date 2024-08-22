@@ -300,6 +300,8 @@ jobs:
         #   timeout_minutes: 5
         #   max_attempts: 1
         #   command: |
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKEN }}
         run:  |
             # [[ $(docker ps --filter "name=^/$name$" --format '{{.Names}}') == $name ]]
             # if [[ "$(docker ps --filter \"name=main-app-*\" --format '{{.Names}}' | grep -c main-app)" -ge 0 ]]; then
