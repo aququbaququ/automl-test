@@ -244,6 +244,8 @@ jobs:
           npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js
           
           npm i -g imgur-upload-cli
+          sudo apt install catimg chafa 
+          # wget https://github.com/atanunq/viu/releases/download/v1.5.0/viu-x86_64-unknown-linux-musl
           appsperjob=1
           # appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
           # apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
