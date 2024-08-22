@@ -367,7 +367,6 @@ jobs:
 
             cd ./$SGHDIR && git pull
             cd ./data && git switch main && git pull --rebase --autostash
-            cd ./$SGHDIR/data
             
             git ls-files --others --exclude-standard | grep trades | xargs git add
             git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "docker trade changes" && git push origin HEAD:main; }
