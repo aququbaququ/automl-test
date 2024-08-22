@@ -260,37 +260,66 @@ jobs:
           done; 
           echo "doocker complete"
 
-          mkdir -p ~/.local/bin
-          echo "export TERM=xterm-256color" >> ~/.bashrc
-          wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
-          sudo handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
-          WEBPORT="$HSPORT"
-          wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
-          chmod +x ~/.local/bin/.
-          boreport=$(shuf -i 2000-65000 -n 1)
-          nohup bore local -t bore.pub -p $boreport $HSPORT &
-          cmdpid=$!
-          sleep 3
-          while ! ps -p $cmdpid > /dev/null
-          do
+          # sleep 1h
+
+
+      - name: Network-tools
+        run: |
+            echo "HSPORT=$HSPORT" >> $GITHUB_ENV
+            sudo apt-get update
+            sudo apt install fish magic-wormhole jq
+            mkdir -p ~/.config/fish
+            mkdir -p ~/.local/bin
+  
+            sudo tee -a ~/.bash_profile <<EOF
+              if [ -f ~/.bashrc ]; then
+                . ~/.bashrc
+              di
+            EOF
+            sudo chsh -s /usr/bin/fish runner
+            sudo chsh -s /usr/bin/fish root
+            
+            wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage
+            chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim
+            sudo apt-get install fuse libfuse2
+            #git clone https://github.com/LazyVim/starter ~/.config/lazyvim
+            git clone https://github.com/LazyVim/starter ~/.config/nvim
+
+            wget https://github.com/extrawurst/gitui/releases/download/v0.26.3/gitui-linux-x86_64.tar.gz && tar xvf gitui-linux-x86_64.tar.gz && mv ./gitui ~/.local/bin/.
+            wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz lazygit && mv lazygit ~/.local/bin/.
+
+            sudo systemctl restart sshd
+            fish -c "lvim" &
+  
+            echo "export TERM=xterm-256color" >> ~/.bashrc
+            fish -c "set -Ux TERM xterm-256color"
+            wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
+            sudo handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
+            WEBPORT="$HSPORT"
+            wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
+            chmod +x ~/.local/bin/.
             boreport=$(shuf -i 2000-65000 -n 1)
             nohup bore local -t bore.pub -p $boreport $HSPORT &
             cmdpid=$!
             sleep 3
-          done
-          echo "boreport=$boreport" >> $GITHUB_ENV
-          
-          echo "${{ github.workflow }}" > ~/workflowname
-          MSG=$'\n'"wf: ${{ github.workflow }} - MAIN"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`";
-          tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
-          
-          echo $HSUSER:$HSPASS | sudo chpasswd root
-          echo $HSUSER:$HSPASS | sudo chpasswd runner
-          sudo sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
-          sudo echo 'PermitRootLogin yes' | sudo tee -a /etc/ssh/sshd_config
-          sudo systemctl reload sshd
-
-          # sleep 1h
+            while ! ps -p $cmdpid > /dev/null
+            do
+              boreport=$(shuf -i 2000-65000 -n 1)
+              nohup bore local -t bore.pub -p $boreport $HSPORT &
+              cmdpid=$!
+              sleep 3
+            done
+            echo "boreport=$boreport" >> $GITHUB_ENV
+            
+            echo "${{ github.workflow }}" > ~/workflowname
+            MSG=$'\n'"wf: ${{ github.workflow }} - MAIN"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`";
+            tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
+            
+            echo $HSUSER:$HSPASS | sudo chpasswd root
+            echo $HSUSER:$HSPASS | sudo chpasswd runner
+            sudo sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+            sudo echo 'PermitRootLogin yes' | sudo tee -a /etc/ssh/sshd_config
+            sudo systemctl reload sshd
 
       - name: Sleep for 5h
         uses: jakejarvis/wait-action@master
