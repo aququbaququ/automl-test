@@ -245,6 +245,7 @@ jobs:
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             docker run \
               -d --name "main-app-$appindex" \
+              -v $(pwd)/data:/"$SGHDIR"/data
               --add-host=host.docker.internal:host-gateway \
               -e APP="$appsexpr" \
               -e APPINDEX="$appindex" \
@@ -259,23 +260,23 @@ jobs:
           done; 
           echo "doocker complete"
 
-          # mkdir ~/.local/bin
-          # wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
-          # chmod +x ~/.local/bin/.
-          # boreport=$(shuf -i 2000-65000 -n 1)
-          # nohup bore local -t bore.pub -p $boreport 2222 &
-          # cmdpid=$!
-          # sleep 3
-          # while ! ps -p $cmdpid > /dev/null
-          # do
-          #   boreport=$(shuf -i 2000-65000 -n 1)
-          #   nohup bore local -t bore.pub -p $boreport 2222 &
-          #   cmdpid=$!
-          #   sleep 3
-          # done
-          # echo "boreport=$boreport" >> $GITHUB_ENV          
-          # MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`boldssh root@bore.pub -p ${boreport}\`";
-          # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
+          mkdir ~/.local/bin
+          wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
+          chmod +x ~/.local/bin/.
+          boreport=$(shuf -i 2000-65000 -n 1)
+          nohup bore local -t bore.pub -p $boreport 2222 &
+          cmdpid=$!
+          sleep 3
+          while ! ps -p $cmdpid > /dev/null
+          do
+            boreport=$(shuf -i 2000-65000 -n 1)
+            nohup bore local -t bore.pub -p $boreport 2222 &
+            cmdpid=$!
+            sleep 3
+          done
+          echo "boreport=$boreport" >> $GITHUB_ENV          
+          MSG=$'\n'"wf: ${{ github.workflow }} - MAIN"$'\n'"boressh:  \`boldssh root@bore.pub -p ${boreport}\`";
+          tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
 
           # sleep 1h
 
@@ -296,6 +297,7 @@ jobs:
         #   max_attempts: 1
         #   command: |
         run:  |
+            # [[ $(docker ps --filter "name=^/$name$" --format '{{.Names}}') == $name ]]
             # todo docker finish count and then copy volume
             # cd ./$SGHDIR && git pull
             # cd ./data && git switch main && git pull --rebase --autostash
