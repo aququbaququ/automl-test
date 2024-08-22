@@ -42,4 +42,4 @@ chsh -s /usr/bin/fish root
 # nohup bore local -t bore.pub -p "$(cat ./boreport)" 22 &
 echo "Inside-Docker"
 
-sleep 5h
+sleep 5s
