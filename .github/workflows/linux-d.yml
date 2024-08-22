@@ -200,10 +200,12 @@ jobs:
           appsperjob=1
           appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
           apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
+          appnames=($(jq -r ".apps[].name" ./pm2-t-2024-?.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
+            appnameexpr="$(echo "${appnames[@]:$appindex:$appsperjob}")"
             docker run \
-              -d --name "main-app-$appindex-$appsexpr" \
+              -d --name "main-app-$appindex-$appnameexpr" \
               -v $(pwd)/data:/"$SGHDIR"/data \
               --add-host=host.docker.internal:host-gateway \
               -e APP="$appsexpr" \
