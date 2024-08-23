@@ -340,7 +340,7 @@ jobs:
       - name: Sleep for 5h
         uses: jakejarvis/wait-action@master
         with:
-          time: '5h'
+          time: '5s'
         timeout-minutes: 360
 
 
@@ -367,8 +367,14 @@ jobs:
             # docker rm $(docker ps -a -q)
             docker rm -f $(docker ps -a -q)
 
-            cd ./$SGHDIR && git pull
+            # cd ./$SGHDIR && git pull
+            # cd ./data && git switch main && git pull --rebase --autostash
+
+            echo test | tee -a ./$SGHDIR/data/test2.md  && \
+            cd ./$SGHDIR/data && git stash --include-untracked
+            cd .. && git pull
             cd ./data && git switch main && git pull --rebase --autostash
+            git stash show -p | git apply
             
             git ls-files --others --exclude-standard | grep trades | xargs git add
             git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "docker trade changes" && git push origin HEAD:main; }
