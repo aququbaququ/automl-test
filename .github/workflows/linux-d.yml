@@ -370,7 +370,8 @@ jobs:
             # cd ./$SGHDIR && git pull
             # cd ./data && git switch main && git pull --rebase --autostash
 
-            echo test | tee -a ./$SGHDIR/data/test2.md  && \
+            echo test | tee -a ./$SGHDIR/data/test2.md
+            echo test | tee ./$SGHDIR/data/test2.md
             cd ./$SGHDIR/data && git stash --include-untracked
             cd .. && git pull
             cd ./data && git switch main && git pull --rebase --autostash
