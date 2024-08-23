@@ -340,7 +340,7 @@ jobs:
       - name: Sleep for 5h
         uses: jakejarvis/wait-action@master
         with:
-          time: '5s'
+          time: '5m'
         timeout-minutes: 360
 
 
@@ -370,25 +370,22 @@ jobs:
             # cd ./$SGHDIR && git pull
             # cd ./data && git switch main && git pull --rebase --autostash
 
-            echo test | tee -a ./$SGHDIR/data/test2.md
-            echo test | tee ./$SGHDIR/data/test2.md
             cd ./$SGHDIR/data && mkdir -p ~/stash
-            git ls-files --others --exclude-standard | grep test | xargs -I {} mv {} ~/stash/
-            git ls-files -m | grep test | xargs -I {} mv {} ~/stash/
+            git ls-files --others --exclude-standard | xargs -I {} mv {} ~/stash/
+            git ls-files -m | xargs -I {} mv {} ~/stash/
             cd .. && git pull
             cd ./data && git switch main && git pull --rebase --autostash
             rsync -av ~/stash/* ./
 
             
             git ls-files --others --exclude-standard | grep trades | xargs git add
-            git ls-files --others --exclude-standard | grep test | xargs git add
-            git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "docker trade changes" && git push origin HEAD:main; }
+            pm2file="${{ github.event.inputs.pm2file }}"
+            git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "$pm2file docker trade changes" && git push origin HEAD:main; }
             git ls-files -m | grep trades | xargs git add
-            git ls-files -m | grep test | xargs git add
-            git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "docker modified trade changes" && git push origin HEAD:main; }
+            git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "$pm2file docker modified trade changes" && git push origin HEAD:main; }
             cd ..;
             git add ./data
-            git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "docker trade changes" && git push origin HEAD:main; }
+            git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "$pm2file docker trade changes" && git push origin HEAD:main; }
 
             # mkdir reports
             # git ls-files --others --exclude-standard | grep trades | xargs -I {} mv {} reports/
