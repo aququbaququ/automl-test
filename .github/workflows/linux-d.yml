@@ -379,8 +379,10 @@ jobs:
 
             
             git ls-files --others --exclude-standard | grep trades | xargs git add
+            git ls-files --others --exclude-standard | grep test | xargs git add
             git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "docker trade changes" && git push origin HEAD:main; }
             git ls-files -m | grep trades | xargs git add
+            git ls-files -m | grep test | xargs git add
             git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "docker modified trade changes" && git push origin HEAD:main; }
             cd ..;
             git add ./data
