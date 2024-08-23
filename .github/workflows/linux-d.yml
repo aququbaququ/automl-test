@@ -340,7 +340,7 @@ jobs:
       - name: Sleep for 5h
         uses: jakejarvis/wait-action@master
         with:
-          time: '5m'
+          time: '5s'
         timeout-minutes: 360
 
 
