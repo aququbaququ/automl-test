@@ -11,6 +11,7 @@ on:
         options:
           - default
           - docker-just-test
+          - docker-just-test-all
           - cancell_all
       pm2file:
         description: 'pm2 file'
@@ -188,6 +189,38 @@ jobs:
       - uses: geekyeggo/delete-artifact@v2
         with:
           name: project
+
+  docker-just-test-all:
+    if: ${{ github.event.inputs.mode == 'docker-just-test-all' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get pm2files
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKEN }}
+        run: |
+          git config --global user.name "name"
+          git config --global user.email "email"
+          # wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && sudo apt install ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb
+          gh auth setup-git
+          gh repo clone $SGHREPO && cd "$SGHDIR"
+
+      - name: Invoke workflow
+        id: invoke-workflow
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        run: |
+          cd "$SGHDIR"
+          # grep -E "pm2-t-2024-([0-9]+)"
+          # grep -E "pm2-t-2024-(.+)"
+          appscount=$(ls | grep -E "pm2-t-2024-[0-9]{1}.json" | wc -l)  
+          apps=($(ls | grep -E "pm2-t-2024-[0-9]{1}.json"))
+          appsperjob=1;
+          for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
+            appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
+            gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="$appsexpr"
+            sleep 5m
+          done; 
+
 
   docker-just-test:
     if: ${{ github.event.inputs.mode == 'docker-just-test' }}
