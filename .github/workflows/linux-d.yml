@@ -22,6 +22,7 @@ on:
           - pm2-t-2024-1.json
           - pm2-t-2024-2.json
           - pm2-t-2024-3.json
+          - pm2-t-2024-4.json
 
 env:
   SGHREPO: ${{ secrets.SGHREPO }}
