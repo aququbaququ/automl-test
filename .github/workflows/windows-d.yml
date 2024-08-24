@@ -207,6 +207,8 @@ jobs:
     if: ${{ github.event.inputs.mode == 'docker-just-test' }}
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v4
+
       # - name: Retry Download artifact
       #   id: retry-download-artifact
       #   env:
