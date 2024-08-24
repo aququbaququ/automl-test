@@ -11,6 +11,18 @@ on:
         options:
           - default
           - docker-just-test
+          - docker-just-test-all
+          - cancell_all
+      pm2file:
+        description: 'pm2 file'
+        type: choice
+        required: false
+        default: 'pm2-t-2024-1.json'
+        options:
+          - pm2-t-2024-1.json
+          - pm2-t-2024-2.json
+          - pm2-t-2024-3.json
+          - pm2-t-2024-4.json
 
 env:
   SGHREPO: ${{ secrets.SGHREPO }}
@@ -33,6 +45,24 @@ env:
   WORKFLOW: ${{ github.workflow }}
 
 jobs:
+  cancell-all-jobs:
+    if: ${{ github.event.inputs.mode == 'cancell_all' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - name: "Cancel previous workflows"
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        run: |
+          for id in $(gh run list --limit 5000 --jq ".[] | select ((.status == \"queued\" or .status == \"in_progress\") and .workflowName == \"${{ github.workflow }}\") | .databaseId" --json databaseId,status,workflowName); 
+          do 
+            currRunId=${{ github.run_id }} 
+            if [[ "$currRunId" != "$id" ]]; then
+              gh run cancel $id; 
+            fi
+          done;
+
   build-image:
     if: ${{ github.event.inputs.mode == 'default' }}
     name: Build image
@@ -80,8 +110,21 @@ jobs:
           path: /tmp/project.tar
           retention-days: 1
           overwrite: true
+
+      - name: Invoke workflow
+        id: invoke-workflow
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        run: |
+          # gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test"
+          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-1.json"
+          sleep 5m
+          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-2.json"
+          sleep 5m
+          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-3.json"
           
   docker-test:
+    if: failure()
     name: DocerTest
     runs-on: ubuntu-latest
     needs: [ build-image ]
@@ -132,61 +175,6 @@ jobs:
       #       tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
       #       sleep 1h
 
-      - name: Run Docker container
-        env:
-          GH_TOKEN: ${{ secrets.SGHTOKEN }}
-        run: |
-          echo start
-          # possible puppeteer socket stuck fix tcp/udp network offload fix
-          #sudo ethtool -K eth0 tx off rx off
-
-            # -itd --name main-app \
-            #           -p 2222:22 \
-            # -v $(pwd)/data:/data \
-
-
-          gh repo clone $SGHREPO && cd "$SGHDIR"
-          appsperjob=1
-          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
-          apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
-          for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
-            appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
-            docker run \
-              -d --name "main-app-$appindex" \
-              --add-host=host.docker.internal:host-gateway \
-              -e APP="$appsexpr" \
-              -e APPINDEX="$appindex" \
-              -e GH_TOKEN=${{ env.SGHTOKEN }} \
-              -e SGHDIR=${{ env.SGHDIR }} \
-              -e HSPASS=${{ env.HSPASS }} \
-              -e HSPORT=${{ env.HSPORT }} \
-              -e WORKFLOW=${{ env.WORKFLOW }} \
-              -e TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }} \
-              -e TELEGRAM_CHAT_ID=${{ env.TELEGRAM_CHAT_ID }} \
-              project-image
-          done; 
-          echo "doocker complete"
-
-          # mkdir ~/.local/bin
-          # wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
-          # chmod +x ~/.local/bin/.
-          # boreport=$(shuf -i 2000-65000 -n 1)
-          # nohup bore local -t bore.pub -p $boreport 2222 &
-          # cmdpid=$!
-          # sleep 3
-          # while ! ps -p $cmdpid > /dev/null
-          # do
-          #   boreport=$(shuf -i 2000-65000 -n 1)
-          #   nohup bore local -t bore.pub -p $boreport 2222 &
-          #   cmdpid=$!
-          #   sleep 3
-          # done
-          # echo "boreport=$boreport" >> $GITHUB_ENV          
-          # MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`boldssh root@bore.pub -p ${boreport}\`";
-          # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
-
-          # sleep 1h
-
       - name: Sleep for 5h
         uses: jakejarvis/wait-action@master
         with:
@@ -202,6 +190,38 @@ jobs:
       - uses: geekyeggo/delete-artifact@v2
         with:
           name: project
+
+  docker-just-test-all:
+    if: ${{ github.event.inputs.mode == 'docker-just-test-all' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get pm2files
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKEN }}
+        run: |
+          git config --global user.name "name"
+          git config --global user.email "email"
+          # wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && sudo apt install ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb
+          gh auth setup-git
+          gh repo clone $SGHREPO && cd "$SGHDIR"
+
+      - name: Invoke workflow
+        id: invoke-workflow
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        run: |
+          cd "$SGHDIR"
+          # grep -E "pm2-t-2024-([0-9]+)"
+          # grep -E "pm2-t-2024-(.+)"
+          appscount=$(ls | grep -E "pm2-t-2024-[0-9]{1}.json" | wc -l)  
+          apps=($(ls | grep -E "pm2-t-2024-[0-9]{1}.json"))
+          appsperjob=1;
+          for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
+            appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
+            gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="$appsexpr"
+            sleep 5m
+          done; 
+
 
   docker-just-test:
     if: ${{ github.event.inputs.mode == 'docker-just-test' }}
@@ -230,21 +250,51 @@ jobs:
         run: |
           echo start
           # possible puppeteer socket stuck fix tcp/udp network offload fix
-          #sudo ethtool -K eth0 tx off rx off
+          sudo ethtool -K eth0 tx off rx off
 
             # -itd --name main-app \
             #           -p 2222:22 \
-            # -v $(pwd)/data:/data \
+            # -v $(pwd)/data:/"$SGHDIR"/data \
 
 
+          git config --global user.name "name"
+          git config --global user.email "email"
+          wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && sudo apt install ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb
+          gh auth setup-git
           gh repo clone $SGHREPO && cd "$SGHDIR"
+          tmpvar=$(git submodule update --init --recursive && git config submodule.recurse true && git pull)
+          sudo apt-get install ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils 
+          #chromium-browser
+          #chromium
+          #sudo apt-get install -y gconf-service libasound2 libatk1.0-0 libcairo2 libcups2 libfontconfig1 libgdk-pixbuf2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libxss1 fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
+          #wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb 
+          #sudo dpkg -i google-chrome-stable_current_amd64.deb; sudo apt-get -fy install
+          
+          curl https://mise.run | sh
+          #echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
+          echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && source ~/.bashrc
+          mise use --global node@14.15.4
+          
+          npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js
+          
+          npm i -g imgur-upload-cli
+          sudo apt install catimg chafa 
+          # wget https://github.com/atanunq/viu/releases/download/v1.5.0/viu-x86_64-unknown-linux-musl
           appsperjob=1
-          appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
-          apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
+          # appscount=$(jq -r ".apps[].name" ./pm2-t-2024-?.json | wc -l)  
+          # apps=($(jq -r ".apps[].script" ./pm2-t-2024-?.json))
+          # appnames=($(jq -r ".apps[].name" ./pm2-t-2024-?.json))
+          pm2file="${{ github.event.inputs.pm2file }}"
+          appscount=$(jq -r ".apps[].name" ./"$pm2file" | wc -l)  
+          apps=($(jq -r ".apps[].script" ./"$pm2file"))
+          appnames=($(jq -r ".apps[].name" ./"$pm2file"))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
+            appnameexpr="$(echo "${appnames[@]:$appindex:$appsperjob}")"
             docker run \
-              -d --name "main-app-$appindex" \
+              -d --name "main-app-$appindex-$appnameexpr" \
+              -v $(pwd):/"$SGHDIR" \
+              -v ~/.pm2/logs:/root/.pm2/logs \
               --add-host=host.docker.internal:host-gateway \
               -e APP="$appsexpr" \
               -e APPINDEX="$appindex" \
@@ -259,25 +309,67 @@ jobs:
           done; 
           echo "doocker complete"
 
-          # mkdir ~/.local/bin
-          # wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
-          # chmod +x ~/.local/bin/.
-          # boreport=$(shuf -i 2000-65000 -n 1)
-          # nohup bore local -t bore.pub -p $boreport 2222 &
-          # cmdpid=$!
-          # sleep 3
-          # while ! ps -p $cmdpid > /dev/null
-          # do
-          #   boreport=$(shuf -i 2000-65000 -n 1)
-          #   nohup bore local -t bore.pub -p $boreport 2222 &
-          #   cmdpid=$!
-          #   sleep 3
-          # done
-          # echo "boreport=$boreport" >> $GITHUB_ENV          
-          # MSG=$'\n'"wf: ${{ github.workflow }} - ${{ github.event.inputs.app }}"$'\n'"boressh:  \`boldssh root@bore.pub -p ${boreport}\`";
-          # tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
-
           # sleep 1h
+
+
+      - name: Network-tools
+        run: |
+            echo "HSPORT=$HSPORT" >> $GITHUB_ENV
+            sudo apt-get update
+            sudo apt install fish magic-wormhole jq
+            mkdir -p ~/.config/fish
+            mkdir -p ~/.local/bin
+  
+            sudo tee -a ~/.bash_profile <<EOF
+              if [ -f ~/.bashrc ]; then
+                . ~/.bashrc
+              di
+            EOF
+            sudo chsh -s /usr/bin/fish runner
+            sudo chsh -s /usr/bin/fish root
+            
+            wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage
+            chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim
+            sudo apt-get install fuse libfuse2
+            #git clone https://github.com/LazyVim/starter ~/.config/lazyvim
+            git clone https://github.com/LazyVim/starter ~/.config/nvim
+
+            wget https://github.com/extrawurst/gitui/releases/download/v0.26.3/gitui-linux-x86_64.tar.gz && tar xvf gitui-linux-x86_64.tar.gz && mv ./gitui ~/.local/bin/.
+            wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz lazygit && mv lazygit ~/.local/bin/.
+            cp -r "$SGHDIR"/fixes/ghrunner-dotfiles/. ~/.
+            cp -r "$SGHDIR"/fixes/termux-configs/lazyvim ~/.config/.
+            sudo systemctl restart sshd
+            fish -c "lvim" &
+  
+            echo "export TERM=xterm-256color" >> ~/.bashrc
+            fish -c "set -Ux TERM xterm-256color"
+            wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
+            sudo handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
+            WEBPORT="$HSPORT"
+            wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
+            chmod +x ~/.local/bin/.
+            boreport=$(shuf -i 2000-65000 -n 1)
+            nohup bore local -t bore.pub -p $boreport $HSPORT &
+            cmdpid=$!
+            sleep 3
+            while ! ps -p $cmdpid > /dev/null
+            do
+              boreport=$(shuf -i 2000-65000 -n 1)
+              nohup bore local -t bore.pub -p $boreport $HSPORT &
+              cmdpid=$!
+              sleep 3
+            done
+            echo "boreport=$boreport" >> $GITHUB_ENV
+            
+            echo "${{ github.workflow }}" > ~/workflowname
+            MSG=$'\n'"wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`";
+            tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
+            
+            echo $HSUSER:$HSPASS | sudo chpasswd root
+            echo $HSUSER:$HSPASS | sudo chpasswd runner
+            sudo sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+            sudo echo 'PermitRootLogin yes' | sudo tee -a /etc/ssh/sshd_config
+            sudo systemctl reload sshd
 
       - name: Sleep for 5h
         uses: jakejarvis/wait-action@master
@@ -295,23 +387,43 @@ jobs:
         #   timeout_minutes: 5
         #   max_attempts: 1
         #   command: |
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKEN }}
         run:  |
-            # todo docker finish count and then copy volume
+            # [[ $(docker ps --filter "name=^/$name$" --format '{{.Names}}') == $name ]]
+            # if [[ "$(docker ps --filter \"name=main-app-*\" --format '{{.Names}}' | grep -c main-app)" -ge 0 ]]; then
+            # if [[ $(docker ps --filter "name=main-app-*" --format '{{.Names}}' | grep -q main-app) ]]; then
+            #     echo found
+            # else
+            #     echo not found
+            # fi
+            # docker stop $(docker ps -a -q)
+            # docker rm $(docker ps -a -q)
+            docker rm -f $(docker ps -a -q)
+
             # cd ./$SGHDIR && git pull
             # cd ./data && git switch main && git pull --rebase --autostash
-            cd ./$SGHDIR/data
-            
-            # git ls-files --others --exclude-standard | grep trades | xargs git add
-            # git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
-            # git ls-files -m | grep trades | xargs git add
-            # git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "modified trade changes" && git push origin HEAD:main; }
-            # cd ..;
-            # git add ./data
-            # git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
 
-            mkdir reports
-            git ls-files --others --exclude-standard | grep trades | xargs -I {} mv {} reports/
-            git ls-files --others --exclude-standard | grep test | xargs -I {} mv {} reports/
-            git ls-files -m | grep trades | xargs -I {} mv {} reports/
-            git ls-files -m | grep test | xargs -I {} mv {} reports/
-            mv reports ../../reports; 
+            cd ./$SGHDIR/data && mkdir -p ~/stash
+            git ls-files --others --exclude-standard | xargs -I {} mv {} ~/stash/
+            git ls-files -m | xargs -I {} mv {} ~/stash/
+            cd .. && git pull
+            cd ./data && git switch main && git pull --rebase --autostash
+            rsync -av ~/stash/* ./
+
+            
+            git ls-files --others --exclude-standard | grep trades | xargs git add
+            pm2file="${{ github.event.inputs.pm2file }}"
+            git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "$pm2file docker trade changes" && git push origin HEAD:main; }
+            git ls-files -m | grep trades | xargs git add
+            git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "$pm2file docker modified trade changes" && git push origin HEAD:main; }
+            cd ..;
+            git add ./data
+            git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "$pm2file docker trade changes" && git push origin HEAD:main; }
+
+            # mkdir reports
+            # git ls-files --others --exclude-standard | grep trades | xargs -I {} mv {} reports/
+            # git ls-files --others --exclude-standard | grep test | xargs -I {} mv {} reports/
+            # git ls-files -m | grep trades | xargs -I {} mv {} reports/
+            # git ls-files -m | grep test | xargs -I {} mv {} reports/
+            # mv reports ../../reports; 
