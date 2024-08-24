@@ -205,21 +205,34 @@ jobs:
 
   docker-just-test:
     if: ${{ github.event.inputs.mode == 'docker-just-test' }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - name: Retry Download artifact
-        id: retry-download-artifact
+      # - name: Retry Download artifact
+      #   id: retry-download-artifact
+      #   env:
+      #     GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+      #   uses: nick-fields/retry@v3
+      #   with:
+      #     timeout_minutes: 1
+      #     max_attempts: 1
+      #     retry_wait_seconds: 60
+      #     retry_on_exit_code: 1
+      #     continue_on_error: true
+      #     command: |
+      #       gh run download --repo ${{ github.repository }} -n "project" --dir /tmp
+
+      - name: "Cancel current workflow"
         env:
           GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 1
-          max_attempts: 1
-          retry_wait_seconds: 60
-          retry_on_exit_code: 1
-          continue_on_error: true
-          command: |
-            gh run download --repo ${{ github.repository }} -n "project" --dir /tmp
+        run: |
+          $currRunId=${{ github.run_id }} 
+          gh run cancel $currRunId; 
+          # for id in $(gh run list --limit 5000 --jq ".[] | select ((.status == \"queued\" or .status == \"in_progress\") and .workflowName == \"${{ github.workflow }}\") | .databaseId" --json databaseId,status,workflowName); 
+          # do 
+          #   if [[ "$currRunId" != "$id" ]]; then
+          #     gh run cancel $id; 
+          #   fi
+          # done;
 
       - name: Load image
         run: docker load --input /tmp/project.tar
