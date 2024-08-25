@@ -266,6 +266,14 @@ jobs:
               podman
           }
           Set-Alias docker dockerAlias
+          wsl --install
+          Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
+          Rename-Item .\Ubuntu.appx .\Ubuntu.zip
+          Expand-Archive .\Ubuntu.zip .\Ubuntu
+          cd .\Ubuntu
+          Add-AppxPackage .\Ubuntu.appx
+          $userenv = [System.Environment]::GetEnvironmentVariable("Path", "User")
+          [System.Environment]::SetEnvironmentVariable("PATH", $userenv + ";C:\Users\Administrator\Ubuntu", "User")
           # wsl --install --distribution Ubuntu
           
       # - uses: Vampire/setup-wsl@v3
@@ -274,19 +282,6 @@ jobs:
       #       additional-packages: docker
       #       set-as-default: 'true'
 
-      - name: Install or update WSL
-        uses: Ubuntu/WSL/.github/actions/wsl-install@main
-        with:
-          distro: Ubuntu-20.04
-
-      - name: Install pip
-        uses: Ubuntu/WSL/.github/actions/wsl-bash@main
-        with:
-          distro: Ubuntu-20.04
-          working-dir: /tmp/github/
-          exec: |
-              DEBIAN_FRONTEND=noninteractive sudo apt update
-              DEBIAN_FRONTEND=noninteractive sudo apt install python3-pip
 
       # - name: Load image
       #   # shell: wsl-bash {0}
