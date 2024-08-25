@@ -281,8 +281,17 @@ jobs:
           #   fi
           # done;
 
+      - uses: Vampire/setup-wsl@v3
+        with:
+            wsl-shell-command: bash
+
       - name: Load image
-        run: docker load --input /tmp/project.tar
+        shell: wsl-bash {0}
+        run: |
+          docker load --input /tmp/project.tar
+
+      # - name: Load image
+      #   run: docker load --input /tmp/project.tar
 
       - name: Run Docker container
         env:
