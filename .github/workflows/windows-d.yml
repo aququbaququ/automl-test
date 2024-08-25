@@ -243,6 +243,21 @@ jobs:
           command: |
             gh run download --repo ${{ github.repository }} -n "project" --dir /tmp
 
+      - uses: MinoruSekine/setup-scoop@v4
+        with:
+          buckets: extras
+          apps: autohotkey podman
+
+      - name: Choco help
+        uses: crazy-max/ghaction-chocolatey@v3
+        with:
+          args: -h
+
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+
       - name: "Cancel current workflow"
         env:
           GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
