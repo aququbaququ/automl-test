@@ -274,7 +274,7 @@ jobs:
             set-as-default: 'true'
 
       - name: Load image
-        shell: wsl-bash {0}
+        shell: wsl-bash
         run: |
           echo "deb <https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/> /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
           curl -L <https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/Release.key> | sudo apt-key add -
