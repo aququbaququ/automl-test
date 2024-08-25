@@ -274,14 +274,24 @@ jobs:
       #       additional-packages: docker
       #       set-as-default: 'true'
 
-      - name: Load image
-        # shell: wsl-bash {0}
-        run: |
+      - name: Install or update WSL
+        uses: Ubuntu/WSL/.github/actions/wsl-install@main
+        with:
+          distro: Ubuntu-20.04
+          working-dir: /tmp/github/
+          exec: |
+              DEBIAN_FRONTEND=noninteractive sudo apt update
+              DEBIAN_FRONTEND=noninteractive sudo apt install python3-pip
+
+      # - name: Load image
+      #   # shell: wsl-bash {0}
+      #   run: |
           # echo "deb <https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/> /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
           # curl -L <https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/Release.key> | sudo apt-key add -
           # sudo apt-get update && sudo apt install podman podman-compose
           # wsl ls `&`& ls
-          wsl sudo apt-get update `&`& sudo apt install podman `&`& ls
+          # wsl sudo apt-get update `&`& sudo apt install podman `&`& ls
+
           # sudo apt-get update
           # sudo apt install podman
           # podman load --input /tmp/project.tar
