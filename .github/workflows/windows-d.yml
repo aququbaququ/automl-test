@@ -267,6 +267,18 @@ jobs:
           }
           Set-Alias docker dockerAlias
           
+      - uses: Vampire/setup-wsl@v3
+        with:
+            wsl-shell-command: bash
+
+      - name: Load image
+        shell: wsl-bash {0}
+        run: |
+          docker load --input /tmp/project.tar
+
+      # - name: Load image
+      #   run: docker load --input /tmp/project.tar
+
       - name: "Cancel current workflow"
         env:
           GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
@@ -280,18 +292,6 @@ jobs:
           #     gh run cancel $id; 
           #   fi
           # done;
-
-      - uses: Vampire/setup-wsl@v3
-        with:
-            wsl-shell-command: bash
-
-      - name: Load image
-        shell: wsl-bash {0}
-        run: |
-          docker load --input /tmp/project.tar
-
-      # - name: Load image
-      #   run: docker load --input /tmp/project.tar
 
       - name: Run Docker container
         env:
