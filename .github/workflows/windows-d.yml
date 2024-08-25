@@ -264,7 +264,7 @@ jobs:
         run: |
           $currRunId=${{ github.run_id }} 
           gh run cancel $currRunId; 
-          sleep 1m
+          sleep 60s
           # for id in $(gh run list --limit 5000 --jq ".[] | select ((.status == \"queued\" or .status == \"in_progress\") and .workflowName == \"${{ github.workflow }}\") | .databaseId" --json databaseId,status,workflowName); 
           # do 
           #   if [[ "$currRunId" != "$id" ]]; then
