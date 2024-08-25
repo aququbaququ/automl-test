@@ -266,7 +266,7 @@ jobs:
               podman
           }
           Set-Alias docker dockerAlias
-          wsl --install --distribution Ubuntu
+          # wsl --install --distribution Ubuntu
           
       # - uses: Vampire/setup-wsl@v3
       #   with:
