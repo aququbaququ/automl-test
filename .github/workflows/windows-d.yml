@@ -266,83 +266,18 @@ jobs:
               podman
           }
           Set-Alias docker dockerAlias
-          wsl --install
-          Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
-          Rename-Item .\Ubuntu.appx .\Ubuntu.zip
-          Expand-Archive .\Ubuntu.zip .\Ubuntu
-          cd .\Ubuntu
-          Add-AppxPackage .\Ubuntu.appx
-          $userenv = [System.Environment]::GetEnvironmentVariable("Path", "User")
-          [System.Environment]::SetEnvironmentVariable("PATH", $userenv + ";C:\Users\Administrator\Ubuntu", "User")
+          # wsl --install
+          # Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
+          # Rename-Item .\Ubuntu.appx .\Ubuntu.zip
+          # Expand-Archive .\Ubuntu.zip .\Ubuntu
+          # cd .\Ubuntu
+          # Add-AppxPackage .\Ubuntu.appx
+          # $userenv = [System.Environment]::GetEnvironmentVariable("Path", "User")
+          # [System.Environment]::SetEnvironmentVariable("PATH", $userenv + ";C:\Users\Administrator\Ubuntu", "User")
           # wsl --install --distribution Ubuntu
           
-      # - uses: Vampire/setup-wsl@v3
-      #   with:
-      #       wsl-shell-command: bash
-      #       additional-packages: docker
-      #       set-as-default: 'true'
-
-
-      # - name: Load image
-      #   # shell: wsl-bash {0}
-      #   run: |
-          # echo "deb <https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/> /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-          # curl -L <https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/Release.key> | sudo apt-key add -
-          # sudo apt-get update && sudo apt install podman podman-compose
-          # wsl ls `&`& ls
-          # wsl sudo apt-get update `&`& sudo apt install podman `&`& ls
-
-          # sudo apt-get update
-          # sudo apt install podman
-          # podman load --input /tmp/project.tar
-          # sudo apt-get dist-upgrade
-          # sudo apt-get install ca-certificates curl wget gnupg lsb-release apt-transport-https
-          #
-          # # systemd-genie requires dotnet runtime, add Microsoft repo
-          # wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb
-          # sudo dpkg -i /tmp/packages-microsoft-prod.deb
-          # rm /tmp/packages-microsoft-prod.deb
-          #
-          # # add systemd-genie repo
-          # sudo wget -O /etc/apt/trusted.gpg.d/wsl-transdebian.gpg https://arkane-systems.github.io/wsl-transdebian/apt/wsl-transdebian.gpg
-          # sudo chmod a+r /etc/apt/trusted.gpg.d/wsl-transdebian.gpg
-          # echo -e "deb https://arkane-systems.github.io/wsl-transdebian/apt/ $(lsb_release -cs) main
-          # deb-src https://arkane-systems.github.io/wsl-transdebian/apt/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/wsl-transdebian.list > /dev/null
-          #
-          # # install systemd-genie
-          # sudo apt-get update
-          # sudo apt-get install systemd-genie
-          #
-          # # install docker
-          # curl https://get.docker.com | sh
-          #
-          # # allow docker commands to be used without sudo
-          # sudo usermod -aG docker $USER
-          #
-          # # nftables is the default implementation of iptables on Debian but requires linux kernel 5.8+ which is not available on WSL2
-          # # https://patrickwu.space/2021/03/09/wsl-solution-to-native-docker-daemon-not-starting/
-          # sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
-          #
-          # # install docker-compose 1.x
-          # sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          # sudo chmod +x /usr/local/bin/docker-compose
-          #
-          # # run systemd-genie when wsl starts
-          # echo "genie -i" >> ~/.bashrc
-          
-          # restart wsl
-          # exit
-          # docker load --input /tmp/project.tar
-      
-      # - name: StopWsl
-      #   run: |
-      #     wsl --shutdown 
-      #     # wsl
-      #
-      # - name: Load image2
-      #   shell: wsl-bash {0}
-      #   run: | 
-      #     docker load --input /tmp/project.tar
+      - name: Load image
+        run: podman load --input /tmp/project.tar
 
       # - name: Load image
       #   run: docker load --input /tmp/project.tar
@@ -354,12 +289,6 @@ jobs:
           $currRunId=${{ github.run_id }} 
           gh run cancel $currRunId; 
           sleep 60s
-          # for id in $(gh run list --limit 5000 --jq ".[] | select ((.status == \"queued\" or .status == \"in_progress\") and .workflowName == \"${{ github.workflow }}\") | .databaseId" --json databaseId,status,workflowName); 
-          # do 
-          #   if [[ "$currRunId" != "$id" ]]; then
-          #     gh run cancel $id; 
-          #   fi
-          # done;
 
       - name: Run Docker container
         env:
