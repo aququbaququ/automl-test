@@ -262,7 +262,7 @@ jobs:
         run: |
           # install "$SGHDIR"\ninjatrader\NinjaTrader.Install.msi
           # wget https://autohotkey.com/download/ahk-v2.exe
-          (podman machine init) -and (podman machine start)
+          podman machine init && podman machine start
           function dockerAlias {
               podman
           }
