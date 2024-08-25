@@ -273,6 +273,7 @@ jobs:
 
       - name: Install-Tools-Windows
         run: |
+          wget https://autohotkey.com/download/ahk-v2.exe
           function dockerAlias {
               podman
           }
