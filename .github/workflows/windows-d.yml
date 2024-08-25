@@ -270,6 +270,7 @@ jobs:
       - uses: Vampire/setup-wsl@v3
         with:
             wsl-shell-command: bash
+            additional-packages: docker
 
       - name: Load image
         shell: wsl-bash {0}
