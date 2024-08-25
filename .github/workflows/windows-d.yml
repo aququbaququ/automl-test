@@ -266,22 +266,25 @@ jobs:
               podman
           }
           Set-Alias docker dockerAlias
+          wsl --install --distribution Ubuntu
           
-      - uses: Vampire/setup-wsl@v3
-        with:
-            wsl-shell-command: bash
-            additional-packages: docker
-            set-as-default: 'true'
+      # - uses: Vampire/setup-wsl@v3
+      #   with:
+      #       wsl-shell-command: bash
+      #       additional-packages: docker
+      #       set-as-default: 'true'
 
       - name: Load image
-        shell: wsl-bash {0}
+        # shell: wsl-bash {0}
         run: |
           # echo "deb <https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/> /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
           # curl -L <https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/Release.key> | sudo apt-key add -
           # sudo apt-get update && sudo apt install podman podman-compose
-          sudo apt-get update
-          sudo apt install podman
-          podman load --input /tmp/project.tar
+          # wsl ls `&`& ls
+          wsl sudo apt-get update `&`& sudo apt install podman `&`& ls
+          # sudo apt-get update
+          # sudo apt install podman
+          # podman load --input /tmp/project.tar
           # sudo apt-get dist-upgrade
           # sudo apt-get install ca-certificates curl wget gnupg lsb-release apt-transport-https
           #
