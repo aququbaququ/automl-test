@@ -270,11 +270,6 @@ jobs:
           echo $(wsl -d podman-machine-default uname -a)
           # echo $(wsl -d podman-machine-default -e uname -a)
           ls .\
-          echo $env:USERPROFILE
-          echo $HOME
-          echo $env:WORKFLOW
-          echo $WORKFLOW
-          echo $env:HSPORT
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
           Disable-NetAdapterChecksumOffload -Name "*"
@@ -282,9 +277,10 @@ jobs:
           unzip handy-sshd-0.4.3-windows-arm64.zip
           wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-pc-windows-msvc.zip
           unzip bore-v0.5.1-x86_64-pc-windows-msvc.zip
-          .\handy-sshd.exe -p "$HSPORT" -u runneradmin:"$HSPASS" &
+          .\handy-sshd.exe -p "$env:HSPORT" -u runneradmin:"$env:HSPASS" &
           $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
           # Start-Job { & .\bore.exe local -t bore.pub -p $boreport $HSPORT }
+          Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport $env:HSPORT }
 
           # wsl --install
           # Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
