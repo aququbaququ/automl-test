@@ -198,6 +198,8 @@ jobs:
 
       - name: Install-Tools-Windows
         run: |
+          $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."   
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           Update-SessionEnvironment
           refreshenv
           $PASS="P@ssw0rd!"
@@ -231,13 +233,11 @@ jobs:
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
           $env:MSG=$MSG
           echo $TELEGRAM_BOT_TOKEN
-          # cmd.exe /c 'curl.exe -sX POST "https://api.telegram.org/bot%TELEGRAM_BOT_TOKEN%/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=%TELEGRAM_CHAT_ID%" -d "text=%MSG%"'
 
-
-          $token='1418701162:AAEIklEHZowjxorXL6VNfgzV54CmnPoUa3c' #Replace this with your bot HTTP API Token
+          $token='{0}' -f $TELEGRAM_BOT_TOKEN
           $URL='https://api.telegram.org/bot{0}' -f $Token
           $MessageToSend = New-Object psobject 
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value "1423175957"
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value "$TELEGRAM_CHAT_ID"
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value "Message From Bot to you Human "
           Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
 
