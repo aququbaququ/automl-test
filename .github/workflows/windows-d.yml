@@ -221,7 +221,7 @@ jobs:
 
           Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
           Import-Module -Name 'PoshGram'
-          Send-TelegramTextMessage -BotToken "$env:TELEGRAM_BOT_TOKEN" -ChatID "$env:TELEGRAM_CHAT_ID" -Message 'Hello'
+          Send-TelegramTextMessage -BotToken "$TELEGRAM_BOT_TOKEN" -ChatID "$TELEGRAM_CHAT_ID" -Message 'Hello'
 
           Start-Sleep -Seconds 18000
 
