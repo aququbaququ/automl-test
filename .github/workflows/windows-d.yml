@@ -224,12 +224,9 @@ jobs:
           unzip handy-sshd-0.4.3-windows-arm64.zip
           wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-pc-windows-msvc.zip
           unzip bore-v0.5.1-x86_64-pc-windows-msvc.zip
-          .\handy-sshd.exe -p "$env:HSPORT" -u runneradmin:"$env:HSPASS" &
+          Start-Job -ScriptBlock { .\handy-sshd.exe -p "$env:HSPORT" -u runneradmin:"$env:HSPASS" }
           $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
-          # Start-Job { & .\bore.exe local -t bore.pub -p $boreport $HSPORT }
-          # Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $1boreport $env:HSPORT }
           Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport 3389 }
-          echo "$boreport"
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``";
           echo $TELEGRAM_BOT_TOKEN
 
