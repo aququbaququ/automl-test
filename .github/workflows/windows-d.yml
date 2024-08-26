@@ -344,6 +344,7 @@ jobs:
             appnameexpr="$(echo "${appnames[@]:$appindex:$appsperjob}")"
             docker run \
               -d --name "main-app-$appindex-$appnameexpr" \
+              --memory="1g"
               -v $(pwd):/"$SGHDIR" \
               -v ~/.pm2/logs:/root/.pm2/logs \
               --add-host=host.docker.internal:host-gateway \
