@@ -179,24 +179,26 @@ jobs:
       #     command: |
       #       gh run download --repo ${{ github.repository }} -n "project" --dir /tmp
 
-      - uses: MinoruSekine/setup-scoop@v4
+      - name: PM scoop
+        uses: MinoruSekine/setup-scoop@v4
         with:
           buckets: extras
           apps: autohotkey podman wget curl aria2 git jq neovim
           update_path: 'true'
 
-      - name: Choco help
+      - name: PM chocolatey
         uses: crazy-max/ghaction-chocolatey@v3
         with:
-          args: install refreshenv
+          args: -h
 
-      - name: Install winget
+      - name: PM winget
         uses: Cyberboss/install-winget@v1
         with:
           GITHUB_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
 
       - name: Install-Tools-Windows
         run: |
+          Update-SessionEnvironment
           refreshenv
           $PASS="P@ssw0rd!"
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
