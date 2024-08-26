@@ -242,6 +242,10 @@ jobs:
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
           Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
 
+      - name: Install-Tools-Windows2
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKEN }}
+        run: |
           git config --global user.name "name"
           git config --global user.email "email"
           gh auth setup-git
@@ -253,8 +257,8 @@ jobs:
           msiexec.exe /i NinjaTrader.Install.msi /qn
 
           Start-Sleep -h 5
-
-      - name: Install-Tools-Windows2
+          
+      - name: Install-Tools-Windows3
         if: success() && failure()
         run: |
           Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
