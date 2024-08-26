@@ -189,10 +189,10 @@ jobs:
       #   with:
       #     args: -h
 
-      # - name: Install winget
-      #   uses: Cyberboss/install-winget@v1
-      #   with:
-      #     GITHUB_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
 
       - name: Install-Tools-Windows
         run: |
@@ -219,6 +219,7 @@ jobs:
           echo "$boreport"
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
           $env:MSG=$MSG
+          winget install curl
           cmd.exe /c "curl -sX POST "https://api.telegram.org/bot%TELEGRAM_BOT_TOKEN%/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=%TELEGRAM_CHAT_ID%" -d "text=%MSG%"'
 
           # Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
