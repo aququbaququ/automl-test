@@ -248,7 +248,7 @@ jobs:
           gh repo clone $SGHREPO && cd "$SGHDIR"
           msiexec /unregister
           msiexec /regserver
-          cp '.\ninjatrader\NinjaTrader.Install.msi' .\.
+          cp .\ninjatrader\NinjaTrader.Install.msi .\.
           ls .\
           msiexec.exe /i NinjaTrader.Install.msi /qn
 
