@@ -231,19 +231,14 @@ jobs:
           Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport 3389 }
           echo "$boreport"
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
-          $env:MSG=$MSG
           echo $TELEGRAM_BOT_TOKEN
 
-          $token='{0}' -f $TELEGRAM_BOT_TOKEN
-          $URL='https://api.telegram.org/bot{0}' -f $Token
+          $URL='https://api.telegram.org/bot{0}' -f $TELEGRAM_BOT_TOKEN
           $MessageToSend = New-Object psobject 
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value '$TELEGRAM_CHAT_ID'
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value "Message From Bot to you Human "
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $TELEGRAM_CHAT_ID
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'parse_mode' -Value 'MarkDown'
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
           Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
-
-          # Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
-          # Import-Module -Name 'PoshGram'
-          # Send-TelegramTextMessage -BotToken "$TELEGRAM_BOT_TOKEN" -ChatID "$TELEGRAM_CHAT_ID" -Message 'Hello'
 
           Start-Sleep -Seconds 18000
 
