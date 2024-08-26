@@ -218,8 +218,6 @@ jobs:
           Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport $env:HSPORT }
           echo "$boreport"
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
-          # curl -sX POST "https://api.telegram.org/bot$env:TELEGRAM_BOT_TOKEN/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=$env:TELEGRAM_CHAT_ID" -d "text=$MSG"
-          # Start-Job -ScriptBlock { curl -sX POST "https://api.telegram.org/bot$env:TELEGRAM_BOT_TOKEN/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=$env:TELEGRAM_CHAT_ID" -d "text=$MSG" }
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-RestMethod -Uri "https://api.telegram.org/bot$env:TELEGRAM_BOT_TOKEN/sendMessage?chat_id=$env:TELEGRAM_CHAT_ID&text=$MSG" -Method Post 
           
