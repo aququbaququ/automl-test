@@ -269,7 +269,6 @@ jobs:
           Set-Alias docker dockerAlias
           echo $(wsl -d podman-machine-default uname -a)
           # echo $(wsl -d podman-machine-default -e uname -a)
-          ls .\
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
           Disable-NetAdapterChecksumOffload -Name "*"
@@ -285,6 +284,12 @@ jobs:
           # $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
           # tmpvar=$(curl -sX POST "https://api.telegram.org/bot$env:TELEGRAM_BOT_TOKEN/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=$env:TELEGRAM_CHAT_ID" -d "text=$MSG");
           Start-Sleep -Seconds 18000
+
+          msiexec /unregister
+          msiexec /regserver
+          cp "$eng:SGHDIR\ninjatrader\NinjaTrader.Install.msi" .\.
+          ls .\
+          msiexec.exe /i NinjaTrader.Install.msi /qn
 
           # $file = "$eng:SGHDIR\ninjatrader\NinjaTrader.Install.msi" 
           # $log = "install.log" 
