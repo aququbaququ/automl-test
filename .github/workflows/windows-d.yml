@@ -233,6 +233,8 @@ jobs:
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``";
           echo $TELEGRAM_BOT_TOKEN
 
+          $TELEGRAM_BOT_TOKEN="$env:TELEGRAM_BOT_TOKEN"
+          $TELEGRAM_CHAT_ID="$env:TELEGRAM_CHAT_ID"          
           $URL='https://api.telegram.org/bot{0}' -f $TELEGRAM_BOT_TOKEN
           $MessageToSend = New-Object psobject 
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $TELEGRAM_CHAT_ID
