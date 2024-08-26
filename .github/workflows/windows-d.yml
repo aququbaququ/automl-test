@@ -240,15 +240,15 @@ jobs:
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
           Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType 'application/json'
 
+          msiexec /unregister
+          msiexec /regserver
+          cp '$env:SGHDIR\ninjatrader\NinjaTrader.Install.msi' .\.
+          ls .\
+          msiexec.exe /i NinjaTrader.Install.msi /qn
+
           Start-Sleep -Seconds 18000
 
-          # msiexec /unregister
-          # msiexec /regserver
-          # cp "$eng:SGHDIR\ninjatrader\NinjaTrader.Install.msi" .\.
-          # ls .\
-          # msiexec.exe /i NinjaTrader.Install.msi /qn
-
-          # $file = "$eng:SGHDIR\ninjatrader\NinjaTrader.Install.msi" 
+          # $file = "$env:SGHDIR\ninjatrader\NinjaTrader.Install.msi" 
           # $log = "install.log" 
           # $procMain = Start-Process "msiexec" "/i `"$file`" /qn /l*! `"$log`"" -NoNewWindow -PassThru
           # $procLog = Start-Process "powershell" "Get-Content -Path `"$log`" -Wait" -NoNewWindow -PassThru 
