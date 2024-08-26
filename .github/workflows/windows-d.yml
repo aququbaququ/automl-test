@@ -233,18 +233,9 @@ jobs:
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``";
           echo $TELEGRAM_BOT_TOKEN
 
-          $TELEGRAM_BOT_TOKEN="$env:TELEGRAM_BOT_TOKEN"
-          $TELEGRAM_CHAT_ID="$env:TELEGRAM_CHAT_ID"          
-          $URL='https://api.telegram.org/bot{0}' -f $TELEGRAM_BOT_TOKEN
-          $MessageToSend = New-Object psobject 
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $TELEGRAM_CHAT_ID
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'parse_mode' -Value 'MarkDown'
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
-          Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
-
-          # Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
-          # Import-Module -Name 'PoshGram'
-          # Send-TelegramTextMessage -BotToken "$TELEGRAM_BOT_TOKEN" -ChatID "$TELEGRAM_CHAT_ID" -Message 'Hello'
+          Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
+          Import-Module -Name 'PoshGram'
+          Send-TelegramTextMessage -BotToken '$TELEGRAM_BOT_TOKEN' -ChatID '$TELEGRAM_CHAT_ID' -Message 'Hello'
 
           msiexec /unregister
           msiexec /regserver
@@ -255,8 +246,18 @@ jobs:
           Start-Sleep -h 5
 
       - name: Install-Tools-Windows2
-        if: failure()
+        if: success() && failure()
         run: |
+
+          $TELEGRAM_BOT_TOKEN="$env:TELEGRAM_BOT_TOKEN"
+          $TELEGRAM_CHAT_ID="$env:TELEGRAM_CHAT_ID"          
+          $URL='https://api.telegram.org/bot{0}' -f $TELEGRAM_BOT_TOKEN
+          $MessageToSend = New-Object psobject 
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $TELEGRAM_CHAT_ID
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'parse_mode' -Value 'MarkDown'
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
+          Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
+
           # $file = "$env:SGHDIR\ninjatrader\NinjaTrader.Install.msi" 
           # $log = "install.log" 
           # $procMain = Start-Process "msiexec" "/i `"$file`" /qn /l*! `"$log`"" -NoNewWindow -PassThru
