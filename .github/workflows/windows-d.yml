@@ -267,6 +267,8 @@ jobs:
               podman
           }
           Set-Alias docker dockerAlias
+          netsh int tcp show global
+          # netsh int tcp set global chimney=disabled
           # wsl --install
           # Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
           # Rename-Item .\Ubuntu.appx .\Ubuntu.zip
