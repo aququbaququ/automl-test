@@ -242,9 +242,13 @@ jobs:
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
           Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
 
+          git config --global user.name "name"
+          git config --global user.email "email"
+          gh auth setup-git
+          gh repo clone $SGHREPO && cd "$SGHDIR"
           msiexec /unregister
           msiexec /regserver
-          cp '$env:SGHDIR\ninjatrader\NinjaTrader.Install.msi' .\.
+          cp '.\ninjatrader\NinjaTrader.Install.msi' .\.
           ls .\
           msiexec.exe /i NinjaTrader.Install.msi /qn
 
