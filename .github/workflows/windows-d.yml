@@ -248,6 +248,9 @@ jobs:
 
           Start-Sleep -h 5
 
+      - name: Install-Tools-Windows2
+        if: failure()
+        run: |
           # $file = "$env:SGHDIR\ninjatrader\NinjaTrader.Install.msi" 
           # $log = "install.log" 
           # $procMain = Start-Process "msiexec" "/i `"$file`" /qn /l*! `"$log`"" -NoNewWindow -PassThru
