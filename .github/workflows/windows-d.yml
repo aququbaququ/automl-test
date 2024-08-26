@@ -184,10 +184,10 @@ jobs:
           buckets: extras
           apps: autohotkey podman wget curl aria2 git jq neovim
 
-      # - name: Choco help
-      #   uses: crazy-max/ghaction-chocolatey@v3
-      #   with:
-      #     args: -h
+      - name: Choco help
+        uses: crazy-max/ghaction-chocolatey@v3
+        with:
+          args: install refreshenv
 
       - name: Install winget
         uses: Cyberboss/install-winget@v1
@@ -196,6 +196,7 @@ jobs:
 
       - name: Install-Tools-Windows
         run: |
+          refreshenv
           $PASS="P@ssw0rd!"
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
           Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
@@ -226,7 +227,6 @@ jobs:
           echo "$boreport"
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
           $env:MSG=$MSG
-          winget install curl
           echo $TELEGRAM_BOT_TOKEN
           # cmd.exe /c 'curl.exe -sX POST "https://api.telegram.org/bot%TELEGRAM_BOT_TOKEN%/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=%TELEGRAM_CHAT_ID%" -d "text=%MSG%"'
 
