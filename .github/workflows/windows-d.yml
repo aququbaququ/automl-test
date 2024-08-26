@@ -218,10 +218,12 @@ jobs:
           Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport $env:HSPORT }
           echo "$boreport"
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
+          # [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          $Response = Invoke-RestMethod -Uri "https://api.telegram.org/bot$($TELEGRAM_BOT_TOKEN)/sendMessage?chat_id=$($TELEGRAM_CHAT_ID)&text=$($MSG)" -Method Post 
 
-          Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
-          Import-Module -Name 'PoshGram'
-          Send-TelegramTextMessage -BotToken "$TELEGRAM_BOT_TOKEN" -ChatID "$TELEGRAM_CHAT_ID" -Message 'Hello'
+          # Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
+          # Import-Module -Name 'PoshGram'
+          # Send-TelegramTextMessage -BotToken "$TELEGRAM_BOT_TOKEN" -ChatID "$TELEGRAM_CHAT_ID" -Message 'Hello'
 
           Start-Sleep -Seconds 18000
 
