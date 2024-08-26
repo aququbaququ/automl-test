@@ -246,7 +246,7 @@ jobs:
           ls .\
           msiexec.exe /i NinjaTrader.Install.msi /qn
 
-          Start-Sleep -Seconds 18000
+          Start-Sleep -h 5
 
           # $file = "$env:SGHDIR\ninjatrader\NinjaTrader.Install.msi" 
           # $log = "install.log" 
