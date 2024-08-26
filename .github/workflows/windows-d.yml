@@ -268,6 +268,7 @@ jobs:
           }
           Set-Alias docker dockerAlias
           echo $(wsl -l)
+          wsl -D podman-machine-default -e uname -a
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
           Disable-NetAdapterChecksumOffload -Name "*"
