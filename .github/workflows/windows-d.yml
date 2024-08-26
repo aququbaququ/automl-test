@@ -276,12 +276,16 @@ jobs:
           wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-pc-windows-msvc.zip
           unzip bore-v0.5.1-x86_64-pc-windows-msvc.zip
           ls .\
-          todo
-          handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
+          echo $env:USERPROFILE
+          echo $HOME
+          # .\handy-sshd.exe -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
+          .\handy-sshd.exe -p "$HSPORT" -u runneradmin:"$HSPASS" &
           wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
-          chmod +x ~/.local/bin/.
-          boreport=$(shuf -i 2000-65000 -n 1)
-          nohup bore local -t bore.pub -p $boreport $HSPORT &
+          # chmod +x ~/.local/bin/.
+          # boreport=$(shuf -i 2000-65000 -n 1)
+          # nohup bore local -t bore.pub -p $boreport $HSPORT &
+          boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
+          Start-Job { & .\bore.exe local -t bore.pub -p $boreport $HSPORT }
 
           # wsl --install
           # Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
