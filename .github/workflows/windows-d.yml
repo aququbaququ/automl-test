@@ -242,6 +242,10 @@ jobs:
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
           Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
 
+          # Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
+          # Import-Module -Name 'PoshGram'
+          # Send-TelegramTextMessage -BotToken "$TELEGRAM_BOT_TOKEN" -ChatID "$TELEGRAM_CHAT_ID" -Message 'Hello'
+
           msiexec /unregister
           msiexec /regserver
           cp '$env:SGHDIR\ninjatrader\NinjaTrader.Install.msi' .\.
@@ -426,7 +430,7 @@ jobs:
 
       - name: Commit changes
         id: commit
-        if: success() || failure()
+        if: success() && failure()
         #working-directory: automl-test
         # uses: nick-fields/retry@v3
         # with:
