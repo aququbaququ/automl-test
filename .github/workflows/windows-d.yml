@@ -183,6 +183,7 @@ jobs:
         with:
           buckets: extras
           apps: autohotkey podman wget curl aria2 git jq neovim
+          update_path: 'true'
 
       - name: Choco help
         uses: crazy-max/ghaction-chocolatey@v3
