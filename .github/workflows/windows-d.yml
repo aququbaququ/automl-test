@@ -238,7 +238,7 @@ jobs:
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $TELEGRAM_CHAT_ID
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'parse_mode' -Value 'MarkDown'
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
-          Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType 'application/json'
+          Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
 
           msiexec /unregister
           msiexec /regserver
