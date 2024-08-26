@@ -218,8 +218,7 @@ jobs:
           Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport $env:HSPORT }
           echo "$boreport"
           # $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
-          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  boldssh runneradmin@bore.pub -p $boreport";
-          tmpvar=$(curl -sX POST "https://api.telegram.org/bot$env:TELEGRAM_BOT_TOKEN/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=$env:TELEGRAM_CHAT_ID" -d "text=$MSG");
+          Start-Job -ScriptBlock { curl -sX POST "https://api.telegram.org/bot$env:TELEGRAM_BOT_TOKEN/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=$env:TELEGRAM_CHAT_ID" -d "text=$MSG" }
           Start-Sleep -Seconds 18000
 
           # msiexec /unregister
