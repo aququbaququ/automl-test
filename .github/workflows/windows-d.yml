@@ -230,7 +230,7 @@ jobs:
           # Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $1boreport $env:HSPORT }
           Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport 3389 }
           echo "$boreport"
-          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
+          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``";
           echo $TELEGRAM_BOT_TOKEN
 
           $URL='https://api.telegram.org/bot{0}' -f $TELEGRAM_BOT_TOKEN
