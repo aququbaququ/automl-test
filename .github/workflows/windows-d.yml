@@ -219,7 +219,12 @@ jobs:
           echo "$boreport"
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-RestMethod -Uri "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage?chat_id=$TELEGRAM_CHAT_ID&text=$MSG" -Method Post 
+          $botToken = $env:TELEGRAM_BOT_TOKEN
+          $chatID = $env:TELEGRAM_CHAT_ID
+          $messageText = $MSG
+          $url = "https://api.telegram.org/bot$botToken/sendMessage?chat_id=$chatID&text=$messageText"
+
+          Invoke-RestMethod -Uri $url -Method Post 
           
           Start-Sleep -Seconds 18000
 
