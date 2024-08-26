@@ -281,7 +281,7 @@ jobs:
           $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
           # Start-Job { & .\bore.exe local -t bore.pub -p $boreport $HSPORT }
           Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport $env:HSPORT }
-          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh $env:HSUSER@bore.pub -p $boreport\`";
+          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  \`boldssh runneradmin@bore.pub -p $boreport\`";
           tmpvar=$(curl -sX POST "https://api.telegram.org/bot$env:TELEGRAM_BOT_TOKEN/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=$env:TELEGRAM_CHAT_ID" -d "text=$MSG");
           Start-Sleep -Seconds 18000
 
