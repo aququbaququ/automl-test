@@ -256,7 +256,7 @@ jobs:
           ls .\
           msiexec.exe /i NinjaTrader.Install.msi /qn
 
-          Start-Sleep -h 5
+          Start-Sleep -Seconds 18000
           
       - name: Install-Tools-Windows3
         if: success() && failure()
