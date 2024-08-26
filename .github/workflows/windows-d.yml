@@ -268,7 +268,12 @@ jobs:
           }
           Set-Alias docker dockerAlias
           echo $(wsl -d podman-machine-default uname -a)
-          echo $(wsl -d podman-machine-default -e uname -a)
+          # echo $(wsl -d podman-machine-default -e uname -a)
+          ls .\
+          echo $env:USERPROFILE
+          echo $HOME
+          echo $env:WORKFLOW
+          echo $env:HSPORT
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
           Disable-NetAdapterChecksumOffload -Name "*"
@@ -276,21 +281,15 @@ jobs:
           unzip handy-sshd-0.4.3-windows-arm64.zip
           wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-pc-windows-msvc.zip
           unzip bore-v0.5.1-x86_64-pc-windows-msvc.zip
-          ls .\
-          echo $env:USERPROFILE
-          echo $HOME
-          echo $env:WORKFLOW
-          echo $env:HSPORT
-          # .\handy-sshd.exe -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
-
           # .\handy-sshd.exe -p "$HSPORT" -u runneradmin:"$HSPASS" &
-          wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
+          $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
+          # Start-Job { & .\bore.exe local -t bore.pub -p $boreport $HSPORT }
+
+          # .\handy-sshd.exe -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
+          # wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
           # chmod +x ~/.local/bin/.
           # boreport=$(shuf -i 2000-65000 -n 1)
           # nohup bore local -t bore.pub -p $boreport $HSPORT &
-
-          $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
-          # Start-Job { & .\bore.exe local -t bore.pub -p $boreport $HSPORT }
 
           # wsl --install
           # Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
