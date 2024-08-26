@@ -250,11 +250,11 @@ jobs:
           git config --global user.email "email"
           gh auth setup-git
           gh repo clone "$env:SGHREPO" && cd ".\$env:SGHDIR"
-          msiexec /unregister
-          msiexec /regserver
-          cp .\ninjatrader\NinjaTrader.Install.msi .\.
+          # msiexec /unregister
+          # msiexec /regserver
+          # cp .\ninjatrader\NinjaTrader.Install.msi .\.
           ls .\
-          msiexec.exe /i NinjaTrader.Install.msi /qn
+          # msiexec.exe /i NinjaTrader.Install.msi /qn
 
           Start-Sleep -Seconds 18000
           
