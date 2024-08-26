@@ -281,6 +281,7 @@ jobs:
           $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
           # Start-Job { & .\bore.exe local -t bore.pub -p $boreport $HSPORT }
           Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport $env:HSPORT }
+          Start-Sleep -Seconds (5*60*60)
 
           # wsl --install
           # Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
