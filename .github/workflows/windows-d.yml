@@ -108,7 +108,7 @@ jobs:
         with:
           name: project
           path: /tmp/project.tar
-          retention-days: 1
+          retention-days: 100
           overwrite: true
 
       - name: Invoke workflow
