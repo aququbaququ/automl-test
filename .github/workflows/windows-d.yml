@@ -123,73 +123,9 @@ jobs:
           sleep 5m
           gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-3.json"
           
-  docker-test:
-    if: failure()
-    name: DocerTest
-    runs-on: ubuntu-latest
-    needs: [ build-image ]
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: project
-          path: /tmp
-
-      - name: Load image
-        run: docker load --input /tmp/project.tar
-
-      # - name: Run Tests
-      #   uses: addnab/docker-run-action@v3
+      # - uses: geekyeggo/delete-artifact@v2
       #   with:
-      #     image: project-image
-      #     options: |
-      #       --add-host=host.docker.internal:host-gateway
-      #       -e APP=tprimitive-v1-ld-1m-mes-pup.js
-      #       -e GH_TOKEN=${{ env.SGHTOKEN }}
-      #       -e SGHDIR=${{ env.SGHDIR }}
-      #       -e HSPORT=${{ env.HSPORT }}
-      #       -e WORKFLOW=${{ env.WORKFLOW }}
-      #     run: |
-      #       echo $USER
-      #       exec bash && \
-      #       cd ./$SGHDIR && git pull && \
-      #       cd ./data && git switch main && git pull --rebase --autostash && cd ..  && \
-      #       pm2 delete all && cd ./data && git reset --hard HEAD && cd ..  && \
-      #       pm2 start ${app}  && \
-      #       # echo test | tee -a ./data/test-${app}.md  && \
-      #       export HANDYSSHUSER="root" && echo "$HANDYSSHUSER" > ./HANDYSSHUSER  && \
-      #       handy-sshd -p "$HSPORT" -u "$(cat ./HANDYSSHUSER)":"$HSPASS" & \
-      #       export boreport=$(shuf -i 2000-65000 -n 1) && echo "$boreport" > ./boreport && \
-      #       nohup bore local -t bore.pub -p "$(cat ./boreport)" "$HSPORT" & \
-      #       cmdpid=$! && \
-      #       sleep 3 && \
-      #       while ! ps -p $cmdpid > /dev/null
-      #       do
-      #         export boreport=$(shuf -i 2000-65000 -n 1)
-      #         echo "$boreport" > ./boreport
-      #         nohup bore local -t bore.pub -p "$(cat ./boreport)" $HSPORT &
-      #         cmdpid=$!
-      #         sleep 3
-      #       done
-      #       MSG="wf: ${WORKFLOW} - ${APP}; boressh:  \`boldssh $(cat ./HANDYSSHUSER)@bore.pub -p $(cat ./boreport)\`" && \
-      #       tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
-      #       sleep 1h
-
-      - name: Sleep for 5h
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '5h'
-        timeout-minutes: 360
-
-  remove-image:
-    name: Remove image
-    if: success() && !failure()
-    runs-on: ubuntu-latest
-    needs: [ docker-test ]
-    steps:
-      - uses: geekyeggo/delete-artifact@v2
-        with:
-          name: project
+      #     name: project
 
   docker-just-test-all:
     if: ${{ github.event.inputs.mode == 'docker-just-test-all' }}
@@ -229,34 +165,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Retry Download artifact
-        id: retry-download-artifact
-        env:
-          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 1
-          max_attempts: 1
-          retry_wait_seconds: 60
-          retry_on_exit_code: 1
-          continue_on_error: true
-          command: |
-            gh run download --repo ${{ github.repository }} -n "project" --dir /tmp
+      # - name: Retry Download artifact
+      #   id: retry-download-artifact
+      #   env:
+      #     GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+      #   uses: nick-fields/retry@v3
+      #   with:
+      #     timeout_minutes: 1
+      #     max_attempts: 1
+      #     retry_wait_seconds: 60
+      #     retry_on_exit_code: 1
+      #     continue_on_error: true
+      #     command: |
+      #       gh run download --repo ${{ github.repository }} -n "project" --dir /tmp
 
       - uses: MinoruSekine/setup-scoop@v4
         with:
           buckets: extras
           apps: autohotkey podman wget curl aria2 git jq neovim
 
-      - name: Choco help
-        uses: crazy-max/ghaction-chocolatey@v3
-        with:
-          args: -h
+      # - name: Choco help
+      #   uses: crazy-max/ghaction-chocolatey@v3
+      #   with:
+      #     args: -h
 
-      - name: Install winget
-        uses: Cyberboss/install-winget@v1
-        with:
-          GITHUB_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+      # - name: Install winget
+      #   uses: Cyberboss/install-winget@v1
+      #   with:
+      #     GITHUB_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
 
       - name: Install-Tools-Windows
         run: |
