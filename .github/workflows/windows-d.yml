@@ -237,7 +237,7 @@ jobs:
           $token='{0}' -f $TELEGRAM_BOT_TOKEN
           $URL='https://api.telegram.org/bot{0}' -f $Token
           $MessageToSend = New-Object psobject 
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value "$TELEGRAM_CHAT_ID"
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value '$TELEGRAM_CHAT_ID'
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value "Message From Bot to you Human "
           Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
 
