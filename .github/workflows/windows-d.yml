@@ -267,8 +267,7 @@ jobs:
               podman
           }
           Set-Alias docker dockerAlias
-          echo $(wsl -l)
-          wsl -D podman-machine-default -e uname -a
+          echo $(wsl -D podman-machine-default -e uname -a)
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
           Disable-NetAdapterChecksumOffload -Name "*"
@@ -280,7 +279,7 @@ jobs:
           echo $env:USERPROFILE
           echo $HOME
           echo $env:HSPORT
-          echo $HSPORT
+          echo $WORKFLOW
           # .\handy-sshd.exe -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
 
           # .\handy-sshd.exe -p "$HSPORT" -u runneradmin:"$HSPASS" &
@@ -289,8 +288,7 @@ jobs:
           # boreport=$(shuf -i 2000-65000 -n 1)
           # nohup bore local -t bore.pub -p $boreport $HSPORT &
 
-          echo $(Get-Random -Minimum 2000 -Maximum 65000)
-          # boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
+          $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
           # Start-Job { & .\bore.exe local -t bore.pub -p $boreport $HSPORT }
 
           # wsl --install
