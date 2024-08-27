@@ -233,8 +233,9 @@ jobs:
           $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
           # Start-Job -ScriptBlock { .\bore.exe local -t bore.pub -p $boreport 3389 }
           # $env:boreport=$boreport
-          New-Item -Path Env:\boreport -Value $boreport -Force
-          cmd /c "start /b bore local -p %boreport% --to bore.pub 3389 > NUL"
+          # New-Item -Path Env:\boreport -Value $boreport -Force
+          cmd /c "start /b bore local -p 59353 --to bore.pub 3389 > NUL"
+          # cmd /c "start /b bore local -p %boreport% --to bore.pub 3389 > NUL"
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``";
           echo $TELEGRAM_BOT_TOKEN
 
