@@ -263,6 +263,9 @@ jobs:
           cp .\ninjatrader\NinjaTrader.Install.msi .\.
           ls .\
           # msiexec.exe /i NinjaTrader.Install.msi /qn
+          $pkgPath="$(pwd)"+"/NinjaTrader.Install.msi"
+          echo "pkgPath" 
+          echo $pkgPath
           Start-Process msiexec "/i NinjaTrader.Install.msi /norestart /qn" -Wait;
           # wget https://autohotkey.com/download/ahk-v2.exe
 
