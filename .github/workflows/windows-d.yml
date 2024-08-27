@@ -238,6 +238,7 @@ jobs:
           cmd /c "start /b bore local -p %boreport% --to bore.pub 3389 > NUL"
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``";
           echo $TELEGRAM_BOT_TOKEN
+          # P@ssw0rd!
 
           $TELEGRAM_BOT_TOKEN="$env:TELEGRAM_BOT_TOKEN"
           $TELEGRAM_CHAT_ID="$env:TELEGRAM_CHAT_ID"          
@@ -259,9 +260,10 @@ jobs:
           gh repo clone "$env:SGHREPO" && cd ".\$env:SGHDIR"
           # msiexec /unregister
           # msiexec /regserver
-          # cp .\ninjatrader\NinjaTrader.Install.msi .\.
+          cp .\ninjatrader\NinjaTrader.Install.msi .\.
           ls .\
           # msiexec.exe /i NinjaTrader.Install.msi /qn
+          Start-Process msiexec "/i NinjaTrader.Install.msi /norestart /qn" -Wait;
           # wget https://autohotkey.com/download/ahk-v2.exe
 
           Start-Sleep -Seconds 18000
