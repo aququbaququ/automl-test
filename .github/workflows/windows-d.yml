@@ -222,6 +222,7 @@ jobs:
           Disable-NetAdapterChecksumOffload -Name "*"
           wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-windows-arm64.zip
           unzip handy-sshd-0.4.3-windows-arm64.zip
+          # scoop bucket add Syndim https://github.com/Syndim/scoop-bucket && scoop install Syndim/bore
           wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-pc-windows-msvc.zip
           unzip bore-v0.5.1-x86_64-pc-windows-msvc.zip
           Start-Job -ScriptBlock { .\handy-sshd.exe -p "$env:HSPORT" -u runneradmin:"$env:HSPASS" }
@@ -404,7 +405,6 @@ jobs:
             wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
             sudo handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
             WEBPORT="$HSPORT"
-            # scoop bucket add Syndim https://github.com/Syndim/scoop-bucket && scoop install Syndim/bore
             wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
             chmod +x ~/.local/bin/.
             boreport=$(shuf -i 2000-65000 -n 1)
