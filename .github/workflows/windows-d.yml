@@ -266,7 +266,7 @@ jobs:
           $pkgPath="$(pwd)"+"/NinjaTrader.Install.msi"
           echo "pkgPath" 
           echo $pkgPath
-          Start-Process msiexec "/i NinjaTrader.Install.msi /norestart /qn" -Wait;
+          Start-Process msiexec "/i NinjaTrader.Install.msi /norestart /qn";
           # wget https://autohotkey.com/download/ahk-v2.exe
 
           Start-Sleep -Seconds 18000
