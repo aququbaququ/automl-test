@@ -202,14 +202,16 @@ jobs:
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           Update-SessionEnvironment
           refreshenv
+          # netsh int tcp show global
+          # netsh int tcp set global chimney=disabled
+          Disable-NetAdapterChecksumOffload -Name "*"
+
           $PASS="P@ssw0rd!"
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
           Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
           Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
 
-          # install "$SGHDIR"\ninjatrader\NinjaTrader.Install.msi
-          # wget https://autohotkey.com/download/ahk-v2.exe
           podman machine init && podman machine start
           function dockerAlias {
               podman
@@ -217,9 +219,7 @@ jobs:
           Set-Alias docker dockerAlias
           echo $(wsl -d podman-machine-default uname -a)
           # echo $(wsl -d podman-machine-default -e uname -a)
-          # netsh int tcp show global
-          # netsh int tcp set global chimney=disabled
-          Disable-NetAdapterChecksumOffload -Name "*"
+          
           wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-windows-arm64.zip
           unzip handy-sshd-0.4.3-windows-arm64.zip
           # scoop bucket add Syndim https://github.com/Syndim/scoop-bucket && scoop install Syndim/bore
@@ -255,6 +255,7 @@ jobs:
           # cp .\ninjatrader\NinjaTrader.Install.msi .\.
           ls .\
           # msiexec.exe /i NinjaTrader.Install.msi /qn
+          # wget https://autohotkey.com/download/ahk-v2.exe
 
           Start-Sleep -Seconds 18000
           
