@@ -207,7 +207,7 @@ jobs:
           Disable-NetAdapterChecksumOffload -Name "*"
 
           .\scripts\DisablePasswordComplexity.ps1
-          .\scripts\DisablePasswordComplexity2.ps1
+          # .\scripts\DisablePasswordComplexity2.ps1
           # $PASS="P@ssw0rd!"
           $PASS="$env:HSPASS"
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
