@@ -269,7 +269,8 @@ jobs:
           Start-Process msiexec "/i NinjaTrader.Install.msi /norestart /qn" -Wait;
           # wget https://autohotkey.com/download/ahk-v2.exe
           pathed /USER /APPEND "C:\Users\runneradmin\scoop\apps\autohotkey\current\UX"
-          # AutoHotkeyUX nt8ahk.ahk2
+          Start-Sleep -Seconds 120
+          AutoHotkeyUX nt8ahk.ahk2
 
           Start-Sleep -Seconds 18000
           
