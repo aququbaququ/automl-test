@@ -117,16 +117,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
         run: |
-          # gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test"
-          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-1.json"
-          sleep 5m
-          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-2.json"
-          sleep 5m
-          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-3.json"
-          sleep 5m
-          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-4.json"
-          sleep 5m
-          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="pm2-t-2024-5.json"
+          gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test-all"
           
   docker-test:
     if: failure()
