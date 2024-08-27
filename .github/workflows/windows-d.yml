@@ -183,7 +183,7 @@ jobs:
         uses: MinoruSekine/setup-scoop@v4
         with:
           buckets: extras
-          apps: autohotkey podman wget curl aria2 git jq neovim
+          apps: autohotkey podman wget curl aria2 git jq neovim gtools
           update_path: 'true'
 
       - name: PM chocolatey
@@ -266,8 +266,10 @@ jobs:
           $pkgPath="$(pwd)"+"/NinjaTrader.Install.msi"
           echo "pkgPath" 
           echo $pkgPath
-          Start-Process msiexec "/i NinjaTrader.Install.msi /norestart /qn";
+          Start-Process msiexec "/i NinjaTrader.Install.msi /norestart /qn" -Wait;
           # wget https://autohotkey.com/download/ahk-v2.exe
+          pathed /USER /APPEND "C:\Users\runneradmin\scoop\apps\autohotkey\current\UX"
+          # AutoHotkeyUX nt8ahk.ahk2
 
           Start-Sleep -Seconds 18000
           
