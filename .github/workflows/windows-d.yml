@@ -200,8 +200,7 @@ jobs:
         run: |
           $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."   
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-          Update-SessionEnvironment
-          refreshenv
+          Update-SessionEnvironment && refreshenv
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
           Disable-NetAdapterChecksumOffload -Name "*"
@@ -269,6 +268,7 @@ jobs:
           Start-Process msiexec "/i NinjaTrader.Install.msi /norestart /qn" -Wait;
           # wget https://autohotkey.com/download/ahk-v2.exe
           pathed /USER /APPEND "C:\Users\runneradmin\scoop\apps\autohotkey\current\UX"
+          Update-SessionEnvironment && refreshenv
           Start-Sleep -Seconds 120
           AutoHotkeyUX nt8ahk.ahk2
 
