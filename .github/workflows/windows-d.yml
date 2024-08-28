@@ -274,6 +274,9 @@ jobs:
           Start-Sleep -Seconds 60
 
           Start-Sleep -Seconds 18000
+
+          # totdomoomoo
+          # .\OpenD.exe -login_account=$MACC -login_pwd=$MPWD -lang=en
           
       - name: Install-Tools-Windows3
         if: success() && failure()
