@@ -9,6 +9,16 @@ on:
     #- cron: "0 */5 * * *"
     
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'cancell_all'
+        type: choice
+        required: false
+        default: 'default'
+        options:
+          - default
+          - cancell_all
+
   repository_dispatch:
   
 env:
@@ -28,7 +38,26 @@ env:
   ENV64: ${{ secrets.ENV64 }}
           
 jobs:
+  cancell-all-jobs:
+    if: ${{ github.event.inputs.mode == 'cancell_all' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - name: "Cancel previous workflows"
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        run: |
+          for id in $(gh run list --limit 5000 --jq ".[] | select ((.status == \"queued\" or .status == \"in_progress\") and .workflowName == \"${{ github.workflow }}\") | .databaseId" --json databaseId,status,workflowName); 
+          do 
+            currRunId=${{ github.run_id }} 
+            if [[ "$currRunId" != "$id" ]]; then
+              gh run cancel $id; 
+            fi
+          done;
+
   define-matrix:
+    if: ${{ github.event.inputs.mode == 'default' }}
     runs-on: ubuntu-latest
 
     outputs:
