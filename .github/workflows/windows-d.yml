@@ -275,6 +275,8 @@ jobs:
 
           Start-Sleep -Seconds 18000
 
+          winget install Microsoft.DotNet.SDK.8
+
           # totdomoomoo
           # .\OpenD.exe -login_account=$MACC -login_pwd=$MPWD -lang=en
           
