@@ -233,8 +233,8 @@ jobs:
           echo $(wsl -d podman-machine-default uname -a)
           # echo $(wsl -d podman-machine-default -e uname -a)
           
-          wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-windows-arm64.zip
-          unzip handy-sshd-0.4.3-windows-arm64.zip
+          wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-windows-amd64.zip
+          unzip handy-sshd-0.4.3-windows-amd64.zip
           # scoop bucket add Syndim https://github.com/Syndim/scoop-bucket && scoop install Syndim/bore
           wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-pc-windows-msvc.zip
           unzip bore-v0.5.1-x86_64-pc-windows-msvc.zip
