@@ -205,7 +205,7 @@ jobs:
           scoop install clink busybox ripgrep ag fzf
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
           clink autorun install
-          scoop install scoop-completion
+          # scoop install scoop-completion
           scoop install main/clink-completions
           clink set autosuggest.enable true
           clink set history_io 1
