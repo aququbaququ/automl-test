@@ -210,6 +210,7 @@ jobs:
           clink set autosuggest.enable true
           clink set history_io 1
           clink set clink.autoupdate off
+          scoop install neovim extras/lunarvim gitui lazygit
 
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
