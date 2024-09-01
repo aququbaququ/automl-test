@@ -200,6 +200,17 @@ jobs:
         run: |
           $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."   
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
+
+          scoop install autohotkey podman wget curl aria2 git jq neovim gtools
+          scoop install clink busybox ripgrep ag fzf
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
+          clink autorun install
+          scoop install scoop-completion
+          scoop install main/clink-completions
+          clink set autosuggest.enable true
+          clink set history_io 1
+          clink set clink.autoupdate off
+
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
           Disable-NetAdapterChecksumOffload -Name "*"
