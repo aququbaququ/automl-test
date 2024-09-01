@@ -239,8 +239,10 @@ jobs:
           Start-Service -Name "sshd"
           # Set-Service -Name sshd -StartupType 'Automatic'
           Set-Service -Name "sshd" -StartupType Automatic
+          # Start-Service 'ssh-agent'
+          # Set-Service -Name 'ssh-agent' -StartupType 'Automatic'
+          Set-Service ssh-agent -StartupType Manual
           Start-Service 'ssh-agent'
-          Set-Service -Name 'ssh-agent' -StartupType 'Automatic'
           New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
 
           cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL"
