@@ -107,6 +107,10 @@ jobs:
           mise use --global node@14.15.4
           
           npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js
+
+          export PATH="/home/runner/work/${{ github.repository }}/${{ github.repository }}/$SGHDIR/moomoo-usmartSG-ibkr/moomoo/moomoo_OpenD_8.5.4518_Ubuntu16.04/moomoo_OpenD_8.5.4518_Ubuntu16.04/:$PATH"
+          export $(cat ./$SGHDIR/fixes/ghrunner-dotfiles/.etc/.ghenv | xargs)
+          nohup OpenD -login_account=$MACC -login_pwd=$MPWD -lang=en &
           
 
       - name: Network-tools
