@@ -110,7 +110,7 @@ jobs:
 
           export PATH="/home/runner/work/${{ github.repository }}/${{ github.repository }}/$SGHDIR/moomoo-usmartSG-ibkr/moomoo/moomoo_OpenD_8.5.4518_Ubuntu16.04/moomoo_OpenD_8.5.4518_Ubuntu16.04/:$PATH"
           export $(cat ./$SGHDIR/fixes/ghrunner-dotfiles/.etc/.ghenv | xargs)
-          nohup OpenD -login_account=$MACC -login_pwd=$MPWD -lang=en &
+          # nohup OpenD -login_account=$MACC -login_pwd=$MPWD -lang=en &
           
 
       - name: Network-tools
