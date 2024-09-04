@@ -7,7 +7,7 @@ on:
         description: 'mode of dispatch'
         type: choice
         required: false
-        default: 'default'
+        default: 'docker-just-test'
         options:
           - default
           - docker-just-test
@@ -201,6 +201,7 @@ jobs:
           $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."   
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
 
+          #region main apps
           scoop install autohotkey podman wget curl aria2 git jq neovim gtools
           scoop install clink busybox ripgrep ag fzf
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
@@ -212,6 +213,19 @@ jobs:
           clink set clink.autoupdate off
           scoop install neovim extras/lunarvim gitui lazygit
           scoop bucket add wordijp https://github.com/wordijp/scoop-bucket && scoop install wordijp/alias-exe && scoop bucket rm wordijp
+          mkdir $env:USERPROFILE\bin && pathed /USER /APPEND $env:USERPROFILE\bin
+          wget https://github.com/manasmbellani/xargswin/releases/download/initial/xargswin.exe && mv .\xargswin.exe $env:USERPROFILE\bin\xargswin.exe
+
+          # scoop install vfox
+          # # call clink info | findstr scripts
+          # wget https://github.com/version-fox/vfox/blob/main/internal/shell/clink_vfox.lua -P %CLINK_COMPLETIONS_DIR%
+          # vfox add nodejs
+          # vfox install nodejs@14.15.4
+          # vfox use -g nodejs@14.15.4
+          # vfox add python
+          # vfox install python@3.7.2
+          # vfox use -g python@3.7.2
+          #endregion
 
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
@@ -296,7 +310,6 @@ jobs:
           $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
           Copy-Item  -Path '.\ninjatrader\Documents\NinjaTrader 8' -Destination "C:\Users\runneradmin\Documents" -Recurse -force
           Start-Sleep -Seconds 60
-          # "C:\Users\runneradmin/scoop/apps/autohotkey/current/UX/AutoHotkeyUX.exe" .\nt8ahk.ahk2
           AutoHotkeyUX.exe ".\nt8ahk.ahk2"
           Start-Sleep -Seconds 60
           AutoHotkeyUX.exe ".\nt8ahk-strategy.ahk2" && Start-Sleep -Seconds 20
