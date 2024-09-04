@@ -294,6 +294,7 @@ jobs:
           pathed /USER /APPEND "C:\Users\runneradmin\scoop\apps\autohotkey\current\UX"
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
           $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+          Copy-Item  -Path .\ninjatrader\Documents -Destination "C:\Users\runneradmin\Documents" -Recurse -force
           Start-Sleep -Seconds 60
           # "C:\Users\runneradmin/scoop/apps/autohotkey/current/UX/AutoHotkeyUX.exe" .\nt8ahk.ahk2
           AutoHotkeyUX.exe ".\nt8ahk.ahk2"
