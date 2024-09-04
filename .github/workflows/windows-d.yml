@@ -211,6 +211,7 @@ jobs:
           clink set history_io 1
           clink set clink.autoupdate off
           scoop install neovim extras/lunarvim gitui lazygit
+          scoop bucket add wordijp https://github.com/wordijp/scoop-bucket && scoop install wordijp/alias-exe && scoop bucket rm wordijp
 
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
@@ -298,6 +299,10 @@ jobs:
           # "C:\Users\runneradmin/scoop/apps/autohotkey/current/UX/AutoHotkeyUX.exe" .\nt8ahk.ahk2
           AutoHotkeyUX.exe ".\nt8ahk.ahk2"
           Start-Sleep -Seconds 60
+          AutoHotkeyUX.exe ".\nt8ahk-strategy.ahk2" && Start-Sleep -Seconds 20
+
+          mkdir -p C:\Users\runneradmin\scoop\apps\alias-exe\current\list
+          cp .\fixes\windows-alias-exe\. C:\Users\runneradmin\scoop\apps\alias-exe\current\list\.
 
           Start-Sleep -Seconds 18000
 
