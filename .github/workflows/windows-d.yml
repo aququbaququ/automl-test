@@ -302,8 +302,9 @@ jobs:
           AutoHotkeyUX.exe ".\nt8ahk-strategy.ahk2" && Start-Sleep -Seconds 20
 
           mkdir -p C:\Users\runneradmin\scoop\apps\alias-exe\current\list
-          cp .\fixes\windows-alias-exe\list\. C:\Users\runneradmin\scoop\apps\alias-exe\current\list\.
-          cp .\fixes\windows-alias-exe\.alias-exe C:\Users\runneradmin\.
+          Copy-Item  -Path '.\fixes\windows-alias-exe\.alias-exe' -Destination "C:\Users\runneradmin" -Recurse -force
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
+          alias repair
 
           Start-Sleep -Seconds 18000
 
