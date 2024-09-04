@@ -232,7 +232,6 @@ jobs:
           }
           Set-Alias docker dockerAlias
           echo $(wsl -d podman-machine-default uname -a)
-          # echo $(wsl -d podman-machine-default -e uname -a)
           
           wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-windows-amd64.zip
           unzip handy-sshd-0.4.3-windows-amd64.zip
@@ -304,7 +303,6 @@ jobs:
 
           winget install Microsoft.DotNet.SDK.8
 
-          # totdomoomoo
           # .\OpenD.exe -login_account=$MACC -login_pwd=$MPWD -lang=en
           
       - name: Install-Tools-Windows3
