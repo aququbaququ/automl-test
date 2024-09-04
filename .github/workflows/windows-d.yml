@@ -302,7 +302,8 @@ jobs:
           AutoHotkeyUX.exe ".\nt8ahk-strategy.ahk2" && Start-Sleep -Seconds 20
 
           mkdir -p C:\Users\runneradmin\scoop\apps\alias-exe\current\list
-          cp .\fixes\windows-alias-exe\. C:\Users\runneradmin\scoop\apps\alias-exe\current\list\.
+          cp .\fixes\windows-alias-exe\list\. C:\Users\runneradmin\scoop\apps\alias-exe\current\list\.
+          cp .\fixes\windows-alias-exe\.alias-exe C:\Users\runneradmin\.
 
           Start-Sleep -Seconds 18000
 
