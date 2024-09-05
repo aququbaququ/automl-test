@@ -320,7 +320,7 @@ jobs:
 
           Start-Sleep -Seconds 18000
 
-          winget install Microsoft.DotNet.SDK.8 --disable-interactivity --accept-source-agreements --accept-package-agreements
+          winget install Microsoft.DotNet.SDK.8 --disable-interactivity --accept-source-agreements --accept-package-agreements --silent
 
           # .\OpenD.exe -login_account=$MACC -login_pwd=$MPWD -lang=en
           
