@@ -277,14 +277,14 @@ jobs:
           New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
 
           # cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL"
-          cmd /c "start /b bore local -p %boreport% --to bore.pub %HSPORT% > NUL"
+          cmd /c "start /b bore local -p %boreport% --to bore.pub %HSPORT%"
           # Start-Job -ScriptBlock { bore local -p $env:boreport --to bore.pub 22 }
           while (-not $? -or $LASTEXITCODE -ne 0) {
             $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
             echo "boreport=$boreport" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
             Set-Item -Path Env:\boreport -Value $boreport
             # cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL"
-            cmd /c "start /b bore local -p %boreport% --to bore.pub %HSPORT% > NUL"
+            cmd /c "start /b bore local -p %boreport% --to bore.pub %HSPORT%"
             # Start-Job -ScriptBlock { bore local -p $env:boreport --to bore.pub 22 }
           }
           cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL"
