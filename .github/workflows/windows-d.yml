@@ -253,7 +253,10 @@ jobs:
           # scoop bucket add Syndim https://github.com/Syndim/scoop-bucket && scoop install Syndim/bore
           wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-pc-windows-msvc.zip
           unzip bore-v0.5.1-x86_64-pc-windows-msvc.zip
-          Start-Job -ScriptBlock { .\handy-sshd.exe -p "$env:HSPORT" -u runneradmin:"$env:HSPASS" }
+          # Start-Job -ScriptBlock { .\handy-sshd.exe -p "$env:HSPORT" -u runneradmin:"$env:HSPASS" }
+          New-Item -Path Env:\HSPORT -Value $env:HSPORT -Force
+          New-Item -Path Env:\HSPASS -Value $env:HSPASS -Force
+          cmd /c "start /b .\handy-sshd.exe -p %HSPORT% -u runneradmin:%HSPASS%
           $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
           $boreportrdp=$(Get-Random -Minimum 2000 -Maximum 65000)
           New-Item -Path Env:\boreport -Value $boreport -Force
