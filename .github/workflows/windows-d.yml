@@ -276,24 +276,25 @@ jobs:
           Start-Service 'ssh-agent'
           New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
 
-          # cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL"
+          if ($False) {
+            cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL"
+          }
           cmd /c "start /b bore local -p %boreport% --to bore.pub %HSPORT%"
           # Start-Job -ScriptBlock { bore local -p $env:boreport --to bore.pub 22 }
           while (-not $? -or $LASTEXITCODE -ne 0) {
             $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
             echo "boreport=$boreport" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
             Set-Item -Path Env:\boreport -Value $boreport
-            # cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL"
             cmd /c "start /b bore local -p %boreport% --to bore.pub %HSPORT%"
             # Start-Job -ScriptBlock { bore local -p $env:boreport --to bore.pub 22 }
           }
-          cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL"
+          cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389"
           # Start-Job -ScriptBlock { bore local -p $env:boreportrdp --to bore.pub 3389 }
           while (-not $? -or $LASTEXITCODE -ne 0) {
             $boreportrdp=$(Get-Random -Minimum 2000 -Maximum 65000)
             echo "boreportrdp=$boreportrdp" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
             Set-Item -Path Env:\boreportrdp -Value $boreportrdp
-            cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL"
+            cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389"
             # Start-Job -ScriptBlock { bore local -p $env:boreportrdp --to bore.pub 3389 }
           }
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``" + "`n" + "rdp: runneradmin@bore.pub:  ``$boreportrdp``";
