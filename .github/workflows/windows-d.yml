@@ -258,6 +258,8 @@ jobs:
           $boreportrdp=$(Get-Random -Minimum 2000 -Maximum 65000)
           New-Item -Path Env:\boreport -Value $boreport -Force
           New-Item -Path Env:\boreportrdp -Value $boreportrdp -Force
+          echo "boreportrdp=$boreportrdp" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "boreport=$boreport" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
           # Add-WindowsCapability -Online -Name OpenSSH.Server*
           Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0 
@@ -273,15 +275,17 @@ jobs:
 
           # cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL"
           # cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL"
-          Start-Job -ScriptBlock { bore local -p $boreport --to bore.pub 22 }
+          Start-Job -ScriptBlock { bore local -p $env:boreport --to bore.pub 22 }
           while (-not $? -or $LASTEXITCODE -ne 0) {
             $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
-            Start-Job -ScriptBlock { bore local -p $boreport --to bore.pub 22 }
+            echo "boreport=$boreport" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            Start-Job -ScriptBlock { bore local -p $env:boreport --to bore.pub 22 }
           }
-          Start-Job -ScriptBlock { bore local -p $boreportrdp --to bore.pub 3389 }
+          Start-Job -ScriptBlock { bore local -p $env:boreportrdp --to bore.pub 3389 }
           while (-not $? -or $LASTEXITCODE -ne 0) {
             $boreportrdp=$(Get-Random -Minimum 2000 -Maximum 65000)
-            Start-Job -ScriptBlock { bore local -p $boreportrdp --to bore.pub 3389 }
+            echo "boreportrdp=$boreportrdp" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            Start-Job -ScriptBlock { bore local -p $env:boreportrdp --to bore.pub 3389 }
           }
           $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``" + "`n" + "rdp: runneradmin@bore.pub:  ``$boreportrdp``";
           echo $TELEGRAM_BOT_TOKEN
