@@ -241,12 +241,14 @@ jobs:
           Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText $PASS -Force)
           # Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
 
-          podman machine init && podman machine start
-          function dockerAlias {
-              podman
-          }
-          Set-Alias docker dockerAlias
-          echo $(wsl -d podman-machine-default uname -a)
+          #region podman
+          # podman machine init && podman machine start
+          # function dockerAlias {
+          #     podman
+          # }
+          # Set-Alias docker dockerAlias
+          # echo $(wsl -d podman-machine-default uname -a)
+          #endregion
           
           wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-windows-amd64.zip
           unzip handy-sshd-0.4.3-windows-amd64.zip
