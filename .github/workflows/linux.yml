@@ -265,27 +265,27 @@ jobs:
           time: '5m'
 
 
-      - name: Commit changes
-        id: commit
-        if: success() || failure()
-        run: |
-          cd ./$SGHDIR/data
-          mkdir reports
-          git ls-files --others --exclude-standard | grep trades | xargs -I {} cp {} reports/
-          git ls-files --others --exclude-standard | grep test | xargs -I {} cp {} reports/
-          git ls-files -m | grep trades | xargs -I {} cp {} reports/
-          git ls-files -m | grep test | xargs -I {} cp {} reports/
-          mv reports ../../reports; 
+      # - name: Commit changes
+      #   id: commit-artifact
+      #   if: success() || failure()
+      #   run: |
+      #     cd ./$SGHDIR/data
+      #     mkdir reports
+      #     git ls-files --others --exclude-standard | grep trades | xargs -I {} cp {} reports/
+      #     git ls-files --others --exclude-standard | grep test | xargs -I {} cp {} reports/
+      #     git ls-files -m | grep trades | xargs -I {} cp {} reports/
+      #     git ls-files -m | grep test | xargs -I {} cp {} reports/
+      #     mv reports ../../reports; 
 
-      - name: Upload reports' artifacts 
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifact_${{ github.run_id }}
-          if-no-files-found: ignore
-          path: reports
-          retention-days: 1
-          overwrite: true
+      # - name: Upload reports' artifacts 
+      #   if: success() || failure()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: artifact_${{ github.run_id }}
+      #     if-no-files-found: ignore
+      #     path: reports
+      #     retention-days: 1
+      #     overwrite: true
 
           
       - name: Commit changes
