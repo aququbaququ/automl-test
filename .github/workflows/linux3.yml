@@ -65,7 +65,7 @@ jobs:
         run: |
           echo "HSPORT=$HSPORT" >> $GITHUB_ENV
           sudo apt-get update
-          sudo apt install fish magic-wormhole jq
+          sudo apt install fish magic-wormhole jq lynx
           mkdir -p ~/.config/fish
           mkdir -p ~/.local/bin
           
@@ -277,6 +277,13 @@ jobs:
           git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
           git ls-files -m | grep trades | xargs git add
           git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "modified trade changes" && git push origin HEAD:main; }
+
+          #region options-data
+          git ls-files --others --exclude-standard | grep options | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
+          git ls-files -m | grep options | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "modified trade changes" && git push origin HEAD:main; }
+          #endregion
 
           cd ..;
           git add ./data
