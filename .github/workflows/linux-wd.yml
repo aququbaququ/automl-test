@@ -136,7 +136,7 @@ jobs:
           echo "apps=[ $appnames ]" >> "$GITHUB_OUTPUT"
           echo "appscount=$appscount" >> "$GITHUB_OUTPUT"
 
-          appsperjob=5
+          appsperjob=3
           apps=($(jq -r ".apps[].script" ./pm2-t-2024-*.json))
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
