@@ -212,6 +212,7 @@ jobs:
           clink set history_io 1
           clink set clink.autoupdate off
           scoop install neovim extras/lunarvim gitui lazygit
+          git clone https://github.com/LazyVim/starter $env:LOCALAPPDATA\nvim
           scoop bucket add wordijp https://github.com/wordijp/scoop-bucket && scoop install wordijp/alias-exe && scoop bucket rm wordijp
           mkdir $env:USERPROFILE\bin && pathed /USER /APPEND $env:USERPROFILE\bin
           wget https://github.com/manasmbellani/xargswin/releases/download/initial/xargswin.exe && mv .\xargswin.exe $env:USERPROFILE\bin\xargswin.exe
@@ -357,6 +358,7 @@ jobs:
           Start-Sleep -Seconds 60
           AutoHotkeyUX.exe ".\nt8ahk.ahk2"
           Start-Sleep -Seconds 60
+          winget install Microsoft.DotNet.SDK.8 --disable-interactivity --accept-source-agreements --accept-package-agreements --silent
           AutoHotkeyUX.exe ".\nt8ahk-strategy.ahk2" && Start-Sleep -Seconds 20
 
           Copy-Item  -Path '.\fixes\windows-alias-exe\.alias-exe' -Destination "C:\Users\runneradmin" -Recurse -force
@@ -364,8 +366,6 @@ jobs:
           alias repair
 
           Start-Sleep -Seconds 18000
-
-          winget install Microsoft.DotNet.SDK.8 --disable-interactivity --accept-source-agreements --accept-package-agreements --silent
 
           # .\OpenD.exe -login_account=$MACC -login_pwd=$MPWD -lang=en
           
