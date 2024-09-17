@@ -231,7 +231,7 @@ jobs:
 
           # netsh int tcp show global
           # netsh int tcp set global chimney=disabled
-          Disable-NetAdapterChecksumOffload -Name "*"
+          # Disable-NetAdapterChecksumOffload -Name "*"
 
           .\scripts\DisablePasswordComplexity.ps1
           # .\scripts\DisablePasswordComplexity2.ps1
