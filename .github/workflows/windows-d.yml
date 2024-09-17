@@ -305,8 +305,8 @@ jobs:
           $rules |% {
             Set-NetFirewallRule -DisplayName $_.DisplayName -Action Allow -Profile Any -Direction Inbound
           }
-          mkdir -p "%userprofile%\.ssh\config"
-          cat .\scripts\cloudflare-sshconfig | tee -a "%userprofile%\.ssh\config"
+          mkdir -p "$env:USERPROFILE\.ssh"
+          cat .\scripts\cloudflare-sshconfig | tee -a "$env:USERPROFILE\.ssh\config"
           cmd /c "start /b cloudflared tunnel --url ssh://localhost:7777 > output.msg 2> output.err"
           output.err
           $line = Get-Content ".\output.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
