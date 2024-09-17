@@ -332,6 +332,8 @@ jobs:
           $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
           Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
 
+          # ttyd -c test:test -W fish && cloudflared --url 127.0.0.1:7681
+
       - name: Install-Tools-Windows2
         env:
           GH_TOKEN: ${{ secrets.SGHTOKEN }}
