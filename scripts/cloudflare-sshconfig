@@ -1,0 +1,5 @@
+Host *.trycloudflare.com
+	HostName %h
+	User root
+	Port 22
+	ProxyCommand %d/scoop/shims/cloudflared.exe access ssh --hostname %h

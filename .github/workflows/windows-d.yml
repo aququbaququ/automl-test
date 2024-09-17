@@ -298,9 +298,13 @@ jobs:
           #   Set-Item -Path Env:\boreportrdp -Value $boreportrdp
           #   cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL"
           # }
-          echo "debug 4"
-          # wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
-          # handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
+          echo "debug 3.5"
+          Start-Job -ScriptBlock { cmd /c "start /b .\handy-sshd.exe -p 7777 -u runneradmin:%HSPASS% --shell powershell" }
+          $rules = Get-NetFirewallRule -All |? {$_.DisplayName -match "handy-sshd"}
+          $rules |% {
+            Set-NetFirewallRule -DisplayName $_.DisplayName -Action Allow -Profile Any -Direction Inbound
+          }
+          cat .\scripts\cloudflare-sshconfig | tee -a "%userprofile%\.ssh\config"
           cmd /c "start /b cloudflared tunnel --url ssh://localhost:22 > NUL"
 
           $boreport=0
