@@ -183,7 +183,7 @@ jobs:
         uses: MinoruSekine/setup-scoop@v4
         with:
           buckets: extras
-          apps: autohotkey podman wget curl aria2 git jq neovim gtools
+          apps: autohotkey podman wget curl aria2 git jq neovim gtools cloudflared
           update_path: 'true'
 
       - name: PM chocolatey
@@ -299,6 +299,10 @@ jobs:
           #   cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL"
           # }
           echo "debug 4"
+          # wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
+          # handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
+          cmd /c "start /b cloudflared tunnel --url ssh://localhost:22 > NUL"
+
           $boreport=0
           $boreError = $true
           while($boreError)
