@@ -299,35 +299,43 @@ jobs:
           #   cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL"
           # }
           echo "debug 3.5"
-          Start-Job -ScriptBlock { cmd /c "start /b .\handy-sshd.exe -p 7777 -u runneradmin:%HSPASS% --shell powershell" }
+          #region cloudflare ssh
+          # Start-Job -ScriptBlock { cmd /c "start /b .\handy-sshd.exe -p 7777 -u runneradmin:%HSPASS% --shell powershell" }
           $rules = Get-NetFirewallRule -All |? {$_.DisplayName -match "handy-sshd"}
           $rules |% {
             Set-NetFirewallRule -DisplayName $_.DisplayName -Action Allow -Profile Any -Direction Inbound
           }
           cat .\scripts\cloudflare-sshconfig | tee -a "%userprofile%\.ssh\config"
-          cmd /c "start /b cloudflared tunnel --url ssh://localhost:22 > NUL"
+          cmd /c "start /b cloudflared tunnel --url ssh://localhost:7777 > output.msg 2> output.err"
+          output.err
+          $line = Get-Content ".\output.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
+          $cloudflareUrl = $line.split(" ",5)[-1].Trim()
+          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@$cloudflareUrl -p 7777``" + "`n" + "rdp: runneradmin@bore.pub:  ``$boreportrdp``";
+          #endregion
 
+          echo "debug 4"
           $boreport=0
-          $boreError = $true
-          while($boreError)
-          {
-              echo "boreport loop"
-              Start-Sleep -Seconds 1
-              $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
-              Set-Item -Path Env:\boreport -Value $boreport -Force
-              $j = Start-Job -ScriptBlock { cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL" }; Start-Sleep -Seconds 1; try { receive-job $j -ErrorAction Stop; $boreError = $false; "bore success"; break } catch { "bore err $_" } 
-          }
-          $boreportrdp=0
-          $boreError = $true
-          while($boreError)
-          {
-              echo "boreportrdp loop"
-              Start-Sleep -Seconds 1
-              $boreportrdp=$(Get-Random -Minimum 2000 -Maximum 65000)
-              Set-Item -Path Env:\boreportrdp -Value $boreportrdp -Force
-              $j = Start-Job -ScriptBlock { cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL" }; Start-Sleep -Seconds 1; try { receive-job $j -ErrorAction Stop; $boreError = $false; "bore success"; break } catch { "bore err $_" } 
-          }
-          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``" + "`n" + "rdp: runneradmin@bore.pub:  ``$boreportrdp``";
+
+          # $boreError = $true
+          # while($boreError)
+          # {
+          #     echo "boreport loop"
+          #     Start-Sleep -Seconds 1
+          #     $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
+          #     Set-Item -Path Env:\boreport -Value $boreport -Force
+          #     $j = Start-Job -ScriptBlock { cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL" }; Start-Sleep -Seconds 1; try { receive-job $j -ErrorAction Stop; $boreError = $false; "bore success"; break } catch { "bore err $_" } 
+          # }
+          # $boreportrdp=0
+          # $boreError = $true
+          # while($boreError)
+          # {
+          #     echo "boreportrdp loop"
+          #     Start-Sleep -Seconds 1
+          #     $boreportrdp=$(Get-Random -Minimum 2000 -Maximum 65000)
+          #     Set-Item -Path Env:\boreportrdp -Value $boreportrdp -Force
+          #     $j = Start-Job -ScriptBlock { cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL" }; Start-Sleep -Seconds 1; try { receive-job $j -ErrorAction Stop; $boreError = $false; "bore success"; break } catch { "bore err $_" } 
+          # }
+          # $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``" + "`n" + "rdp: runneradmin@bore.pub:  ``$boreportrdp``";
           echo $TELEGRAM_BOT_TOKEN
           # P@ssw0rd!
 
