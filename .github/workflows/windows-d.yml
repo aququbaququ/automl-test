@@ -310,7 +310,13 @@ jobs:
           output.err
           $line = Get-Content ".\output.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
           $cloudflareUrl = $line.split(" ",5)[-1].Trim()
-          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@$cloudflareUrl -p 7777``" + "`n" + "rdp: runneradmin@bore.pub:  ``$boreportrdp``";
+
+          # taskkill /IM cloudflared.exe /F
+          # if exist "%USERPROFILE%\.cloudflared" del /s/q "%USERPROFILE%\.cloudflared\*.*"
+          # start /B C:\Cloudflared\bin\cloudflared.exe access rdp --hostname [access hostname] --url localhost:2244 --destination [workstation]:3389 > NUL
+          # mstsc /v:localhost:2244
+          # taskkill /IM cloudflared.exe /F
+          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@$cloudflareUrl -p 7777``" + "`n" + "rdp: runneradmin@bore.pub:  ``3389``";
           #endregion
 
           echo "debug 4"
