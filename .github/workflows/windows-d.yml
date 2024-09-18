@@ -212,7 +212,7 @@ jobs:
           clink set history_io 1
           clink set clink.autoupdate off
           scoop install neovim extras/lunarvim gitui lazygit
-          rm -rf $env:LOCALAPPDATA\nvim
+          Remove-Item -Path $env:LOCALAPPDATA\nvim -Force
           git clone https://github.com/LazyVim/starter $env:LOCALAPPDATA\nvim
           git clone https://github.com/LazyVim/starter $env:LOCALAPPDATA\nvim
           scoop bucket add wordijp https://github.com/wordijp/scoop-bucket && scoop install wordijp/alias-exe && scoop bucket rm wordijp
