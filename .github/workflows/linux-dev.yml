@@ -288,9 +288,9 @@ jobs:
 
           #region options-data
           git ls-files --others --exclude-standard | grep options | xargs git add
-          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "options trade changes" && git push origin HEAD:main; }
           git ls-files -m | grep options | xargs git add
-          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "modified trade changes" && git push origin HEAD:main; }
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "options modified trade changes" && git push origin HEAD:main; }
           #endregion
 
           cd ..;
