@@ -185,6 +185,9 @@ jobs:
           timeout_minutes: 100
           max_attempts: 3
           command: |
+            # possible puppeteer socket stuck fix tcp/udp network offload fix
+            sudo ethtool -K eth0 tx off rx off
+
             echo "HSPORT=$HSPORT" >> $GITHUB_ENV
             sudo apt-get update
             sudo apt install fish magic-wormhole jq
