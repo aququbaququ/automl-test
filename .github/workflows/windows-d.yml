@@ -307,7 +307,8 @@ jobs:
           }
           mkdir -p "$env:USERPROFILE\.ssh"
           cat .\scripts\cloudflare-sshconfig | tee -a "$env:USERPROFILE\.ssh\config"
-          cmd /c "start /b cloudflared tunnel --url ssh://localhost:7777 > output.msg 2> output.err"
+          # cmd /c "start /b cloudflared tunnel --url ssh://localhost:7777 > output.msg 2> output.err"
+          cmd /c "start /b cloudflared tunnel --url ssh://localhost:22 > output.msg 2> output.err"
           $line = Get-Content ".\output.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
           $cloudflareUrl = $line.split(" ",5)[-1].Trim().Replace('https://','').split("|")[0].Trim()
 
