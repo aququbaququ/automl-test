@@ -211,7 +211,7 @@ jobs:
           # grep -E "pm2-t-2024-(.+)"
           appscount=$(ls | grep -E "pm2-t-2024-[0-9]{1}.json" | wc -l)  
           apps=($(ls | grep -E "pm2-t-2024-[0-9]{1}.json"))
-          appsperjob=50;
+          appsperjob=1;
           for (( appindex=0; appindex<$appscount; appindex+=$appsperjob )); do
             appsexpr="$(echo "${apps[@]:$appindex:$appsperjob}")"
             gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file="$appsexpr"
