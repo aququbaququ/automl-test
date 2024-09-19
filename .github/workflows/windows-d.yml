@@ -236,23 +236,12 @@ jobs:
           # Disable-NetAdapterChecksumOffload -Name "*"
 
           .\scripts\DisablePasswordComplexity.ps1
-          # .\scripts\DisablePasswordComplexity2.ps1
           # $PASS="P@ssw0rd!"
           $PASS="$env:HSPASS"
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
           Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
           Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText $PASS -Force)
-          # Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
-
-          #region podman
-          # podman machine init && podman machine start
-          # function dockerAlias {
-          #     podman
-          # }
-          # Set-Alias docker dockerAlias
-          # echo $(wsl -d podman-machine-default uname -a)
-          #endregion
           
           echo "debug 2"
           wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-windows-amd64.zip
@@ -394,25 +383,20 @@ jobs:
           Copy-Item  -Path '.\fixes\windows-alias-exe\.alias-exe' -Destination "C:\Users\runneradmin" -Recurse -force
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
           alias repair
-
-          Start-Sleep -Seconds 18000
-
-          # .\OpenD.exe -login_account=$MACC -login_pwd=$MPWD -lang=en
           
       - name: Install-Tools-Windows3
         if: success() && failure()
         run: |
-          Install-Module -Name 'PoshGram' -Repository PSGallery -Scope CurrentUser
-          Import-Module -Name 'PoshGram'
-          Send-TelegramTextMessage -BotToken '$TELEGRAM_BOT_TOKEN' -ChatID '$TELEGRAM_CHAT_ID' -Message 'Hello'
+          #region podman
+          podman machine init && podman machine start
+          function dockerAlias {
+              podman
+          }
+          Set-Alias docker dockerAlias
+          echo $(wsl -d podman-machine-default uname -a)
+          #endregion
 
-          # $file = "$env:SGHDIR\ninjatrader\NinjaTrader.Install.msi" 
-          # $log = "install.log" 
-          # $procMain = Start-Process "msiexec" "/i `"$file`" /qn /l*! `"$log`"" -NoNewWindow -PassThru
-          # $procLog = Start-Process "powershell" "Get-Content -Path `"$log`" -Wait" -NoNewWindow -PassThru 
-          # $procMain.WaitForExit() 
-          # $procLog.Kill()
-
+          # .\OpenD.exe -login_account=$MACC -login_pwd=$MPWD -lang=en
           # wsl --install
           # Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
           # Rename-Item .\Ubuntu.appx .\Ubuntu.zip
@@ -424,10 +408,8 @@ jobs:
           # wsl --install --distribution Ubuntu
           
       - name: Sleep for 5h
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '5h'
-        timeout-minutes: 360
+        run: |
+          Start-Sleep -Seconds 18000
 
       - name: Load image
         run: podman load --input /tmp/project.tar
