@@ -254,12 +254,12 @@ jobs:
           New-Item -Path Env:\HSPASS -Value $env:HSPASS -Force
           cmd /c "start /b .\handy-sshd.exe -p 7777 -u runneradmin:%HSPASS% --shell powershell"
           # cmd /c "start /b .\handy-sshd.exe -p %HSPORT% -u runneradmin:%HSPASS%"
-          $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
-          $boreportrdp=$(Get-Random -Minimum 2000 -Maximum 65000)
-          New-Item -Path Env:\boreport -Value $boreport -Force
-          New-Item -Path Env:\boreportrdp -Value $boreportrdp -Force
-          echo "boreportrdp=$boreportrdp" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          echo "boreport=$boreport" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+          # Start-Job -ScriptBlock { cmd /c "start /b .\handy-sshd.exe -p 7777 -u runneradmin:%HSPASS% --shell powershell" }
+          $rules = Get-NetFirewallRule -All |? {$_.DisplayName -match "handy-sshd"}
+          $rules |% {
+            Set-NetFirewallRule -DisplayName $_.DisplayName -Action Allow -Profile Any -Direction Inbound
+          }
 
           echo "debug 3"
           # Add-WindowsCapability -Online -Name OpenSSH.Server*
@@ -274,29 +274,9 @@ jobs:
           Start-Service 'ssh-agent'
           New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
 
-          # cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL"
-          # while (-not $? -or $LASTEXITCODE -ne 0) {
-          #   $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
-          #   echo "boreport=$boreport" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          #   Set-Item -Path Env:\boreport -Value $boreport
-          #   cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL"
-          #   # cmd /c "start /b bore local -p %boreport% --to bore.pub 7777 > NUL"
-          # }
-          # cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL"
-          # while (-not $? -or $LASTEXITCODE -ne 0) {
-          #   $boreportrdp=$(Get-Random -Minimum 2000 -Maximum 65000)
-          #   echo "boreportrdp=$boreportrdp" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          #   Set-Item -Path Env:\boreportrdp -Value $boreportrdp
-          #   cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL"
-          # }
           echo "debug 3.5"
 
           #region cloudflare ssh
-          # Start-Job -ScriptBlock { cmd /c "start /b .\handy-sshd.exe -p 7777 -u runneradmin:%HSPASS% --shell powershell" }
-          $rules = Get-NetFirewallRule -All |? {$_.DisplayName -match "handy-sshd"}
-          $rules |% {
-            Set-NetFirewallRule -DisplayName $_.DisplayName -Action Allow -Profile Any -Direction Inbound
-          }
           mkdir -p "$env:USERPROFILE\.ssh"
           cat .\scripts\cloudflare-sshconfig | tee -a "$env:USERPROFILE\.ssh\config"
           cmd /c "start /b cloudflared tunnel --url ssh://localhost:22 > output.msg 2> output.err"
@@ -315,28 +295,7 @@ jobs:
           #endregion
 
           echo "debug 4"
-          $boreport=0
 
-          # $boreError = $true
-          # while($boreError)
-          # {
-          #     echo "boreport loop"
-          #     Start-Sleep -Seconds 1
-          #     $boreport=$(Get-Random -Minimum 2000 -Maximum 65000)
-          #     Set-Item -Path Env:\boreport -Value $boreport -Force
-          #     $j = Start-Job -ScriptBlock { cmd /c "start /b bore local -p %boreport% --to bore.pub 22 > NUL" }; Start-Sleep -Seconds 1; try { receive-job $j -ErrorAction Stop; $boreError = $false; "bore success"; break } catch { "bore err $_" } 
-          # }
-          # $boreportrdp=0
-          # $boreError = $true
-          # while($boreError)
-          # {
-          #     echo "boreportrdp loop"
-          #     Start-Sleep -Seconds 1
-          #     $boreportrdp=$(Get-Random -Minimum 2000 -Maximum 65000)
-          #     Set-Item -Path Env:\boreportrdp -Value $boreportrdp -Force
-          #     $j = Start-Job -ScriptBlock { cmd /c "start /b bore local -p %boreportrdp% --to bore.pub 3389 > NUL" }; Start-Sleep -Seconds 1; try { receive-job $j -ErrorAction Stop; $boreError = $false; "bore success"; break } catch { "bore err $_" } 
-          # }
-          # $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@bore.pub -p $boreport``" + "`n" + "rdp: runneradmin@bore.pub:  ``$boreportrdp``";
           echo $TELEGRAM_BOT_TOKEN
           # P@ssw0rd!
 
@@ -491,71 +450,9 @@ jobs:
 
           # sleep 1h
 
-
-      - name: Network-tools
-        run: |
-            echo "HSPORT=$HSPORT" >> $GITHUB_ENV
-            sudo apt-get update
-            sudo apt install fish magic-wormhole jq
-            mkdir -p ~/.config/fish
-            mkdir -p ~/.local/bin
-  
-            sudo tee -a ~/.bash_profile <<EOF
-              if [ -f ~/.bashrc ]; then
-                . ~/.bashrc
-              di
-            EOF
-            sudo chsh -s /usr/bin/fish runner
-            sudo chsh -s /usr/bin/fish root
-            
-            wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage
-            chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim
-            sudo apt-get install fuse libfuse2
-            #git clone https://github.com/LazyVim/starter ~/.config/lazyvim
-            git clone https://github.com/LazyVim/starter ~/.config/nvim
-
-            wget https://github.com/extrawurst/gitui/releases/download/v0.26.3/gitui-linux-x86_64.tar.gz && tar xvf gitui-linux-x86_64.tar.gz && mv ./gitui ~/.local/bin/.
-            wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz lazygit && mv lazygit ~/.local/bin/.
-            cp -r "$SGHDIR"/fixes/ghrunner-dotfiles/. ~/.
-            cp -r "$SGHDIR"/fixes/termux-configs/lazyvim ~/.config/.
-            sudo systemctl restart sshd
-            fish -c "lvim" &
-  
-            echo "export TERM=xterm-256color" >> ~/.bashrc
-            fish -c "set -Ux TERM xterm-256color"
-            wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
-            sudo handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
-            WEBPORT="$HSPORT"
-            wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
-            chmod +x ~/.local/bin/.
-            boreport=$(shuf -i 2000-65000 -n 1)
-            nohup bore local -t bore.pub -p $boreport $HSPORT &
-            cmdpid=$!
-            sleep 3
-            while ! ps -p $cmdpid > /dev/null
-            do
-              boreport=$(shuf -i 2000-65000 -n 1)
-              nohup bore local -t bore.pub -p $boreport $HSPORT &
-              cmdpid=$!
-              sleep 3
-            done
-            echo "boreport=$boreport" >> $GITHUB_ENV
-            
-            echo "${{ github.workflow }}" > ~/workflowname
-            MSG=$'\n'"wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`";
-            tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
-            
-            echo $HSUSER:$HSPASS | sudo chpasswd root
-            echo $HSUSER:$HSPASS | sudo chpasswd runner
-            sudo sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
-            sudo echo 'PermitRootLogin yes' | sudo tee -a /etc/ssh/sshd_config
-            sudo systemctl reload sshd
-
       - name: Sleep for 5h
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '5h'
-        timeout-minutes: 360
+        run: |
+          Start-Sleep -Seconds 18000
 
 
       - name: Commit changes
