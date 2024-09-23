@@ -344,8 +344,9 @@ jobs:
       - name: Install-Tools-Windows3
         if: success() && failure()
         run: |
-          wget https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-windows-x64.exe
-          # wget https://download2.interactivebrokers.com/installers/ntws/latest-standalone/ntws-latest-standalone-windows-x64.exe
+          # wget https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-windows-x64.exe
+          winget install -e --id Oracle.JavaRuntimeEnvironment
+          wget https://download2.interactivebrokers.com/installers/ntws/latest-standalone/ntws-latest-standalone-windows-x64.exe
           #region podman
           podman machine init && podman machine start
           function dockerAlias {
