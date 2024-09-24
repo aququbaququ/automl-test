@@ -29,10 +29,6 @@ env:
           
 jobs:
   build:
-    strategy:
-      max-parallel: 1000
-      fail-fast: false
-
     runs-on: ubuntu-latest
     #if: ${{ github.event_name == 'schedule' }}
     permissions:
