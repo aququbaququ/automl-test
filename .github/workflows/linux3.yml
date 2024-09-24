@@ -67,7 +67,8 @@ jobs:
         with:
           timeout_minutes: 100
           max_attempts: 3
-          command: |          echo "HSPORT=$HSPORT" >> $GITHUB_ENV
+          command: |          
+            echo "HSPORT=$HSPORT" >> $GITHUB_ENV
             sudo apt-get update
             sudo apt install fish magic-wormhole jq lynx
             mkdir -p ~/.config/fish
