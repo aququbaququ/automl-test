@@ -217,6 +217,10 @@ jobs:
           git clone https://github.com/LazyVim/starter $env:LOCALAPPDATA\nvim
           scoop bucket add wordijp https://github.com/wordijp/scoop-bucket && scoop install wordijp/alias-exe && scoop bucket rm wordijp
           mkdir $env:USERPROFILE\bin && pathed /USER /APPEND $env:USERPROFILE\bin
+          setx PATH "$env:path;$env:USERPROFILE\bin"
+          # $path = $Env:Path
+          # $newpath = $path.replace("C:\WINDOWS\System32\OpenSSH\;","")
+          # $env:Path = $newpath
           wget https://github.com/manasmbellani/xargswin/releases/download/initial/xargswin.exe && mv .\xargswin.exe $env:USERPROFILE\bin\xargswin.exe
 
           echo "debug 1"
@@ -393,11 +397,11 @@ jobs:
           echo test | tee -a ".\$env:SGHDIR\data\trades_NewStrategy_tinds-v2v3d-ld_MES_1m_2024-09-25.txt"
           cd ".\$env:SGHDIR" && git pull
           cd ./data && git switch main && git pull --rebase --autostash
-          git ls-files --others --exclude-standard | grep trades | xargswin git add
-          git ls-files --others --exclude-standard | grep test | xargswin git add
+          git ls-files --others --exclude-standard | grep trades | xargswin.exe git add
+          git ls-files --others --exclude-standard | grep test | xargswin.exe git add
           git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
-          git ls-files -m | grep trades | xargswin git add
-          git ls-files -m | grep test | xargswin git add
+          git ls-files -m | grep trades | xargswin.exe git add
+          git ls-files -m | grep test | xargswin.exe git add
           git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple modified trade changes" && git push origin HEAD:main; }
           cd ..;
           git add ./data
