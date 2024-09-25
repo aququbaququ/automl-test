@@ -374,6 +374,31 @@ jobs:
         run: |
           Start-Sleep -Seconds 18000
 
+      - name: Commit changes Windows
+        id: commit-windows
+        if: success() && failure()
+        #working-directory: automl-test
+        # uses: nick-fields/retry@v3
+        # with:
+        #   timeout_minutes: 5
+        #   max_attempts: 1
+        #   command: |
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKEN }}
+        run:  |
+          cd ".\$env:SGHDIR" && git pull
+          cd ./data && git switch main && git pull --rebase --autostash
+          git ls-files --others --exclude-standard | grep trades | xargs git add
+          git ls-files --others --exclude-standard | grep test | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
+          git ls-files -m | grep trades | xargs git add
+          git ls-files -m | grep test | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple modified trade changes" && git push origin HEAD:main; }
+          cd ..;
+          git add ./data
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
+          
+
       - name: Load image
         run: podman load --input /tmp/project.tar
 
@@ -387,6 +412,10 @@ jobs:
           $currRunId=${{ github.run_id }} 
           gh run cancel $currRunId; 
           sleep 60s
+
+      - name: Sleep for 5h
+        run: |
+          Start-Sleep -Seconds 18000
 
       - name: Run Docker container
         env:
