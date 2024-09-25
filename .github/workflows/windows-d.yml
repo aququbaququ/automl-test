@@ -323,7 +323,7 @@ jobs:
           # msiexec /unregister
           # msiexec /regserver
           cp .\ninjatrader\NinjaTrader.Install.msi .\.
-          ls .\
+          # ls .\
           # msiexec.exe /i NinjaTrader.Install.msi /qn
           $pkgPath="$(pwd)"+"/NinjaTrader.Install.msi"
           echo "pkgPath" 
