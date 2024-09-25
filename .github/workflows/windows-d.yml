@@ -329,6 +329,10 @@ jobs:
           echo "pkgPath" 
           echo $pkgPath
           Start-Process msiexec "/i NinjaTrader.Install.msi /norestart /qn" -Wait;
+          do {
+              Start-Sleep -Seconds 60
+          }
+          While (!(Test-Path "C:\Program Files\NinjaTrader 8" -ErrorAction SilentlyContinue))
           # wget https://autohotkey.com/download/ahk-v2.exe
           pathed /USER /APPEND "C:\Users\runneradmin\scoop\apps\autohotkey\current\UX"
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
