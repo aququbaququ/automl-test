@@ -219,7 +219,7 @@ jobs:
           mkdir $env:USERPROFILE\bin && pathed /USER /APPEND $env:USERPROFILE\bin
           setx PATH "$env:Path;$env:USERPROFILE\bin"
           [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$env:USERPROFILE\bin", "Machine")
-          cmd /c "setx /M PATH \"%PATH%;%USERPROFILE%\bin\""
+          cmd /c "setx /M PATH `"%PATH%;%USERPROFILE%\bin`""
           # $path = $Env:Path
           # $newpath = $path.replace("C:\WINDOWS\System32\OpenSSH\;","")
           # $env:Path = $newpath
