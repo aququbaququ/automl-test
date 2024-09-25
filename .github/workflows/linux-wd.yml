@@ -551,4 +551,64 @@ jobs:
           time: '150m'
         timeout-minutes: 360
 
-         
+
+  commit-only:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.mode == 'commit_only' }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Retry Download artifact
+        id: retry-download-artifact
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 1
+          # max_attempts: ${{ needs.define-dispatchs.outputs.appscount }}
+          max_attempts: 5
+          retry_wait_seconds: 60
+          retry_on_exit_code: 1
+          continue_on_error: true
+          command: |
+            gh run download --repo ${{ github.repository }} --pattern "artifact_*" --dir downloaded_artifacts || exit 1
+            # if [ "$(ls downloaded_artifacts/ | wc -l)" -lt ${{ needs.define-dispatchs.outputs.appscount }} ]; then exit 1; fi;
+            [[ $(ls downloaded_artifacts/ | wc -l) -lt ${{ needs.define-dispatchs.outputs.appscount }} ]] && exit 1 || echo done
+            # [[ $(ls -A downloaded_artifacts/*) ]] && echo "contains files" || { echo "empty" && exit 1 }
+ 
+      - name: Check reports existence
+        id: check_files
+        uses: andstor/file-existence-action@v3
+        with:
+          # files: 'downloaded_artifacts/**/-*.json'
+          files: 'downloaded_artifacts/**/*'
+
+      - name: Place reports' artifacts
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: |
+          git config --global user.name "name"
+          git config --global user.email "email"
+          wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && sudo apt install ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb
+          gh auth setup-git
+          gh repo clone $SGHREPO && cd "$SGHDIR"
+          tmpvar=$(git submodule update --init --recursive && git config submodule.recurse true && git pull)
+
+          rsync -av ../downloaded_artifacts/*/* data/
+          # mv ../downloaded_artifacts/*/* data/
+          # yes | cp -rf ../downloaded_artifacts/*/* data/
+
+      - name: Commit results
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: |
+          cd ./$SGHDIR && git pull
+          cd ./data && git switch main && git pull --rebase --autostash
+          # cd ./data && git stash --include-untracked && git checkout main && git stash pop && git pull --rebase --autostash
+          git ls-files --others --exclude-standard | grep trades | xargs git add
+          git ls-files --others --exclude-standard | grep test | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
+          git ls-files -m | grep trades | xargs git add
+          git ls-files -m | grep test | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple modified trade changes" && git push origin HEAD:main; }
+          cd ..;
+          git add ./data
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; } 

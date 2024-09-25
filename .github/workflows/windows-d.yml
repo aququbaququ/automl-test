@@ -319,6 +319,7 @@ jobs:
           git config --global user.email "email"
           gh auth setup-git
           gh repo clone "$env:SGHREPO" && cd ".\$env:SGHDIR"
+          cmd /c "start /b git submodule update --init --recursive && git config submodule.recurse true && git pull" >NUL 2>&1
           # msiexec /unregister
           # msiexec /regserver
           cp .\ninjatrader\NinjaTrader.Install.msi .\.
