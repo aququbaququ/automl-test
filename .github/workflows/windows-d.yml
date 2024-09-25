@@ -390,7 +390,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SGHTOKEN }}
         run:  |
-          echo test >> ".\$env:SGHDIR"\data\trades_NewStrategy_tinds-v2v3d-ld_MES_1m_2024-09-25.txt
+          echo test | tee -a ".\$env:SGHDIR\data\trades_NewStrategy_tinds-v2v3d-ld_MES_1m_2024-09-25.txt"
           cd ".\$env:SGHDIR" && git pull
           cd ./data && git switch main && git pull --rebase --autostash
           git ls-files --others --exclude-standard | grep trades | xargswin git add
