@@ -236,8 +236,8 @@ jobs:
           # Disable-NetAdapterChecksumOffload -Name "*"
 
           .\scripts\DisablePasswordComplexity.ps1
-          # REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f
-          # REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f
+          REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f
+          REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f
           # $PASS="P@ssw0rd!"
           $PASS="$env:HSPASS"
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
@@ -376,7 +376,7 @@ jobs:
           
       - name: Sleep for 5h
         run: |
-          Start-Sleep -Seconds 18000
+          Start-Sleep -Seconds 1800
 
       - name: Commit changes Windows
         id: commit-windows
