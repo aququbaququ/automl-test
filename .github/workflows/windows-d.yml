@@ -380,7 +380,7 @@ jobs:
 
       - name: Commit changes Windows
         id: commit-windows
-        if: success() && failure()
+        if: success() || failure()
         #working-directory: automl-test
         # uses: nick-fields/retry@v3
         # with:
