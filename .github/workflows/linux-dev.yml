@@ -177,6 +177,11 @@ jobs:
           nohup sslocal -c ./$SGHDIR/fixes/ghrunner-dotfiles/.etc/.ssprofile &
           sudo apt install proxychains4 && echo "socks5 127.0.0.1 1080" | sudo tee -a /etc/proxychains4.conf && sudo sed -e '/socks4/ s/^#*/# /' -i /etc/proxychains4.conf && sleep 3
 
+      - name: gh-restart-alias
+        run: |
+          echo "alias restartgh \"gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file='pm2-t-2024-3.json'
+          ghas && gh run cancel ${{ github.run_id }}\"" | sudo tee -a ~/.config/fish/config.fish
+
       - uses: ahmadnassri/action-workflow-queue@v1
       
       #- name: NGROK with Telegram
