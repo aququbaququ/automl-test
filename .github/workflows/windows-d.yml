@@ -399,7 +399,7 @@ jobs:
           echo test | tee -a ".\$env:SGHDIR\data\trades_NewStrategy_tinds-v2v3d-ld_MES_1m_2024-09-25.txt"
           cd ".\$env:SGHDIR" && git pull
           cd ./data && git switch main && git pull --rebase --autostash
-          wget https://github.com/manasmbellani/xargswin/releases/download/initial/xargswin.exe && mv .\xargswin.exe
+          wget https://github.com/manasmbellani/xargswin/releases/download/initial/xargswin.exe 
           git ls-files --others --exclude-standard | grep trades | .\xargswin.exe git add
           git ls-files --others --exclude-standard | grep test | .\xargswin.exe git add
           git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
