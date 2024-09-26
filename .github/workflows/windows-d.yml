@@ -349,6 +349,11 @@ jobs:
           Start-Sleep -Seconds 60
           winget install Microsoft.DotNet.SDK.8 --disable-interactivity --accept-source-agreements --accept-package-agreements --silent
           AutoHotkeyUX.exe ".\nt8ahk-strategy.ahk2" && Start-Sleep -Seconds 20
+          While (!(Test-Path "C:\Users\runneradmin\Documents\NinjaTrader 8\StrategyStarted.txt" -ErrorAction SilentlyContinue))
+          {
+              echo "waiting StrategyStarted"
+              Start-Sleep -Seconds 60
+          }
 
           Copy-Item  -Path '.\fixes\windows-alias-exe\.alias-exe' -Destination "C:\Users\runneradmin" -Recurse -force
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
@@ -382,7 +387,7 @@ jobs:
           
       - name: Sleep for 5h
         run: |
-          Start-Sleep -Seconds 1800
+          Start-Sleep -Seconds 18000
 
       - name: Commit changes Windows
         id: commit-windows
