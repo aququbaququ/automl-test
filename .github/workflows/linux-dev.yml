@@ -179,7 +179,7 @@ jobs:
 
       - name: gh-restart-alias
         run: |
-          echo "alias restartgh \"gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file='pm2-t-2024-3.json' && ghas && gh run cancel ${{ github.run_id }}\"" | sudo tee -a ~/.config/fish/config.fish
+          echo "alias restartgh \"gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main && ghas && gh run cancel ${{ github.run_id }}\"" | sudo tee -a ~/.config/fish/config.fish
 
       - uses: ahmadnassri/action-workflow-queue@v1
       
