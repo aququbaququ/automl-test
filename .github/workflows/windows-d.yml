@@ -400,15 +400,30 @@ jobs:
           cd ".\$env:SGHDIR" && git pull
           cd ./data && git switch main && git pull --rebase --autostash
           wget https://github.com/manasmbellani/xargswin/releases/download/initial/xargswin.exe 
-          git ls-files --others --exclude-standard | grep trades | .\xargswin.exe -I {} "git add {}"
-          git ls-files --others --exclude-standard | grep test | .\xargswin.exe -I {} "git add {}"
-          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
-          git ls-files -m | grep trades | .\xargswin.exe -I {} "git add {}"
-          git ls-files -m | grep test | .\xargswin.exe -I {} "git add {}"
-          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple modified trade changes" && git push origin HEAD:main; }
+          try {
+            git ls-files --others --exclude-standard | grep trades | .\xargswin.exe git add
+            git commit -m "multiple trade changes" && git push origin HEAD:main;
+          }
+          catch { }
+          try {
+            git ls-files -m | grep trades | .\xargswin.exe git add 
+            git commit -m "multiple modified trade changes" && git push origin HEAD:main; 
+          }
+          catch { }
+          # git ls-files --others --exclude-standard | grep trades | .\xargswin.exe -I {} "git add {}"
+          # git ls-files --others --exclude-standard | grep test | .\xargswin.exe -I {} "git add {}"
+          # git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
+          # git ls-files -m | grep trades | .\xargswin.exe -I {} "git add {}"
+          # git ls-files -m | grep test | .\xargswin.exe -I {} "git add {}"
+          # git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple modified trade changes" && git push origin HEAD:main; }
           cd ..;
-          git add ./data
-          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
+          try {
+            git add ./data 
+            git commit -m "multiple trade changes" && git push origin HEAD:main;
+          }
+          catch { }
+          # git add ./data
+          # git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "multiple trade changes" && git push origin HEAD:main; }
 
       - name: "Cancel current workflow"
         env:
