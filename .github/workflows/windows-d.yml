@@ -385,6 +385,10 @@ jobs:
           # [System.Environment]::SetEnvironmentVariable("PATH", $userenv + ";C:\Users\Administrator\Ubuntu", "User")
           # wsl --install --distribution Ubuntu
           
+      - name: gh-restart-alias-windows
+        run: |
+          echo "function restartGH { gh workflow run ${{ github.workflow }} --repo ${{ github.repository }} --ref main -f mode="docker-just-test" -f pm2file='pm2-t-2024-3.json' && ghas && gh run cancel ${{ github.run_id }} }; New-Alias -Force ALIAS restartGH" >> $profile
+
       - name: Sleep for 5h
         run: |
           Start-Sleep -Seconds 18000
