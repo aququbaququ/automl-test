@@ -365,6 +365,8 @@ jobs:
           # wget https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-windows-x64.exe
           winget install -e --id Oracle.JavaRuntimeEnvironment
           curl -O https://download2.interactivebrokers.com/installers/ntws/latest-standalone/ntws-latest-standalone-windows-x64.exe
+          # winget install -e --id RedHat.Podman
+          # winget install -e --id RedHat.Podman-Desktop
           #region podman
           podman machine init && podman machine start
           function dockerAlias {
