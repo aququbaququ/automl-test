@@ -176,7 +176,7 @@ jobs:
         run: |
           cd ./$SGHDIR && git pull
           cd ./data && git checkout main && git pull --rebase --autostash && cd ..;
-          proxychains4 pm2 start ./pm2-f2024-07-14.json
+          proxychains4 pm2 start ./pm2-f2024-10-19.json
       
       #- name: NGROK with Telegram
       #  run: |
