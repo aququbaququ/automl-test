@@ -358,6 +358,9 @@ jobs:
           Copy-Item  -Path '.\fixes\windows-alias-exe\.alias-exe' -Destination "C:\Users\runneradmin" -Recurse -force
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
           alias repair
+
+          npm i -g yarn nodemon
+          yarn --ignore-optional --ignore-scripts
           
       - name: Install-Tools-Windows3
         if: success() && failure()
