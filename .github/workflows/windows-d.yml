@@ -284,38 +284,38 @@ jobs:
 
           echo "debug 3.5"
 
-          #region cloudflare ssh
-          mkdir -p "$env:USERPROFILE\.ssh"
-          cat .\scripts\cloudflare-sshconfig | tee -a "$env:USERPROFILE\.ssh\config"
-          cmd /c "start /b cloudflared tunnel --url ssh://localhost:22 > output.msg 2> output.err"
-          $line = Get-Content ".\output.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
-          $cloudflareUrl = $line.split(" ",5)[-1].Trim().Replace('https://','').split("|")[0].Trim()
-          cmd /c "start /b cloudflared tunnel --url rdp://localhost:3389 > output-rdp.msg 2> output-rdp.err"
-          $linerdp = Get-Content ".\output-rdp.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
-          $cloudflarerdpUrl = $linerdp.split(" ",5)[-1].Trim().Replace('https://','').split("|")[0].Trim()
-          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@$cloudflareUrl -p 7777``" + "`n" + "rdp: runneradmin@...:  ``cloudflared access rdp --hostname $cloudflarerdpUrl --url rdp://localhost:4389``";
+          # #region cloudflare ssh
+          # mkdir -p "$env:USERPROFILE\.ssh"
+          # cat .\scripts\cloudflare-sshconfig | tee -a "$env:USERPROFILE\.ssh\config"
+          # cmd /c "start /b cloudflared tunnel --url ssh://localhost:22 > output.msg 2> output.err"
+          # $line = Get-Content ".\output.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
+          # $cloudflareUrl = $line.split(" ",5)[-1].Trim().Replace('https://','').split("|")[0].Trim()
+          # cmd /c "start /b cloudflared tunnel --url rdp://localhost:3389 > output-rdp.msg 2> output-rdp.err"
+          # $linerdp = Get-Content ".\output-rdp.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
+          # $cloudflarerdpUrl = $linerdp.split(" ",5)[-1].Trim().Replace('https://','').split("|")[0].Trim()
+          # $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@$cloudflareUrl -p 7777``" + "`n" + "rdp: runneradmin@...:  ``cloudflared access rdp --hostname $cloudflarerdpUrl --url rdp://localhost:4389``";
 
-          # taskkill /IM cloudflared.exe /F
-          # if exist "%USERPROFILE%\.cloudflared" del /s/q "%USERPROFILE%\.cloudflared\*.*"
-          # start /B cloudflared access rdp --hostname [access hostname] --url localhost:2244 --destination [workstation]:3389 > NUL
-          # mstsc /v:localhost:2244
-          # taskkill /IM cloudflared.exe /F
-          #endregion
+          # # taskkill /IM cloudflared.exe /F
+          # # if exist "%USERPROFILE%\.cloudflared" del /s/q "%USERPROFILE%\.cloudflared\*.*"
+          # # start /B cloudflared access rdp --hostname [access hostname] --url localhost:2244 --destination [workstation]:3389 > NUL
+          # # mstsc /v:localhost:2244
+          # # taskkill /IM cloudflared.exe /F
+          # #endregion
 
-          echo "debug 4"
+          # echo "debug 4"
 
-          echo $TELEGRAM_BOT_TOKEN
-          # P@ssw0rd!
+          # echo $TELEGRAM_BOT_TOKEN
+          # # P@ssw0rd!
 
-          $TELEGRAM_BOT_TOKEN="$env:TELEGRAM_BOT_TOKEN"
-          $TELEGRAM_CHAT_ID="$env:TELEGRAM_CHAT_ID"          
-          $URL='https://api.telegram.org/bot{0}' -f $TELEGRAM_BOT_TOKEN
-          $MessageToSend = New-Object psobject 
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $TELEGRAM_CHAT_ID
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'parse_mode' -Value 'MarkDown'
-          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
-          Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
-
+          # $TELEGRAM_BOT_TOKEN="$env:TELEGRAM_BOT_TOKEN"
+          # $TELEGRAM_CHAT_ID="$env:TELEGRAM_CHAT_ID"          
+          # $URL='https://api.telegram.org/bot{0}' -f $TELEGRAM_BOT_TOKEN
+          # $MessageToSend = New-Object psobject 
+          # $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $TELEGRAM_CHAT_ID
+          # $MessageToSend | Add-Member -MemberType NoteProperty -Name 'parse_mode' -Value 'MarkDown'
+          # $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
+          # Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
+          
       - name: Install-Tools-Windows2
         env:
           GH_TOKEN: ${{ secrets.SGHTOKEN }}
@@ -362,6 +362,42 @@ jobs:
           npm i -g yarn nodemon
           yarn --ignore-optional --ignore-scripts
           
+      - name: Cloudflare and Telegram
+        run: |
+          echo "debug 3.5"
+
+          #region cloudflare ssh
+          mkdir -p "$env:USERPROFILE\.ssh"
+          cat .\scripts\cloudflare-sshconfig | tee -a "$env:USERPROFILE\.ssh\config"
+          cmd /c "start /b cloudflared tunnel --url ssh://localhost:22 > output.msg 2> output.err"
+          $line = Get-Content ".\output.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
+          $cloudflareUrl = $line.split(" ",5)[-1].Trim().Replace('https://','').split("|")[0].Trim()
+          cmd /c "start /b cloudflared tunnel --url rdp://localhost:3389 > output-rdp.msg 2> output-rdp.err"
+          $linerdp = Get-Content ".\output-rdp.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
+          $cloudflarerdpUrl = $linerdp.split(" ",5)[-1].Trim().Replace('https://','').split("|")[0].Trim()
+          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@$cloudflareUrl -p 7777``" + "`n" + "rdp: runneradmin@...:  ``cloudflared access rdp --hostname $cloudflarerdpUrl --url rdp://localhost:4389``";
+
+          # taskkill /IM cloudflared.exe /F
+          # if exist "%USERPROFILE%\.cloudflared" del /s/q "%USERPROFILE%\.cloudflared\*.*"
+          # start /B cloudflared access rdp --hostname [access hostname] --url localhost:2244 --destination [workstation]:3389 > NUL
+          # mstsc /v:localhost:2244
+          # taskkill /IM cloudflared.exe /F
+          #endregion
+
+          echo "debug 4"
+
+          echo $TELEGRAM_BOT_TOKEN
+          # P@ssw0rd!
+
+          $TELEGRAM_BOT_TOKEN="$env:TELEGRAM_BOT_TOKEN"
+          $TELEGRAM_CHAT_ID="$env:TELEGRAM_CHAT_ID"          
+          $URL='https://api.telegram.org/bot{0}' -f $TELEGRAM_BOT_TOKEN
+          $MessageToSend = New-Object psobject 
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $TELEGRAM_CHAT_ID
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'parse_mode' -Value 'MarkDown'
+          $MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $MSG
+          Invoke-RestMethod -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
+
       - name: Install-Tools-Windows3
         if: success() && failure()
         run: |
