@@ -344,11 +344,10 @@ jobs:
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
           $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
           Copy-Item  -Path '.\ninjatrader\Documents\NinjaTrader 8' -Destination "C:\Users\runneradmin\Documents" -Recurse -force
-          Start-Sleep -Seconds 60
-          AutoHotkeyUX.exe ".\nt8ahk.ahk2"
-          Start-Sleep -Seconds 60
-          winget install Microsoft.DotNet.SDK.8 --disable-interactivity --accept-source-agreements --accept-package-agreements --silent
-
+          # Start-Sleep -Seconds 60
+          # AutoHotkeyUX.exe ".\nt8ahk.ahk2"
+          # Start-Sleep -Seconds 60
+          # winget install Microsoft.DotNet.SDK.8 --disable-interactivity --accept-source-agreements --accept-package-agreements --silent
           # AutoHotkeyUX.exe ".\nt8ahk-strategy.ahk2" && Start-Sleep -Seconds 20
           # While (!(Test-Path "C:\Users\runneradmin\Documents\NinjaTrader 8\StrategyStarted.txt" -ErrorAction SilentlyContinue))
           # {
@@ -360,9 +359,8 @@ jobs:
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
           alias repair
 
-          cmd /c "start /b npm i -g yarn nodemon"
-          cmd /c "start /b yarn --ignore-optional --ignore-scripts"
-          cmd /c "start /b nvim"
+          Start-Job -ScriptBlock { npm -g yarn nodemon }
+          Start-Job -ScriptBlock { yarn --ignore-optional --ignore-scripts }
           
       - name: Cloudflare and Telegram
         run: |
