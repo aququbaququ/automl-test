@@ -359,8 +359,9 @@ jobs:
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
           alias repair
 
-          npm i -g yarn nodemon
-          yarn --ignore-optional --ignore-scripts
+          cmd /c "start /b npm i -g yarn nodemon"
+          cmd /c "start /b yarn --ignore-optional --ignore-scripts"
+          cmd /c "start /b nvim"
           
       - name: Cloudflare and Telegram
         run: |
