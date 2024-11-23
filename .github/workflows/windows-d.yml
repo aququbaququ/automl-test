@@ -394,7 +394,7 @@ jobs:
           cmd /c "start /b cloudflared tunnel --url rdp://localhost:3389 > output-rdp.msg 2> output-rdp.err"
           $linerdp = Get-Content ".\output-rdp.err" -Wait |Where-Object { $_ -match '\.trycloudflare.com' } |Select -First 1
           $cloudflarerdpUrl = $linerdp.split(" ",5)[-1].Trim().Replace('https://','').split("|")[0].Trim()
-          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@$cloudflareUrl -p 7777``" + "`n" + "rdp: runneradmin@...:  ``cloudflared access rdp --hostname $cloudflarerdpUrl --url rdp://localhost:4389``";
+          $MSG="`n" + "wf: ${{ github.workflow }} - MAIN - ${{ github.event.inputs.pm2file }}" + "`n" + "boressh:  ``boldssh runneradmin@$cloudflareUrl -p 7777``" + "`n" + "rdp: runneradmin@...:  ``nohup `"cloudflared access rdp --hostname $cloudflarerdpUrl --url rdp://localhost:4389`" &``";
 
           # taskkill /IM cloudflared.exe /F
           # if exist "%USERPROFILE%\.cloudflared" del /s/q "%USERPROFILE%\.cloudflared\*.*"
