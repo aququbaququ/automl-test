@@ -359,8 +359,22 @@ jobs:
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
           alias repair
 
-          npm i -g yarn nodemon
-          yarn --ignore-optional --ignore-scripts
+          # npm i -g yarn nodemon
+          # yarn --ignore-optional --ignore-scripts
+          start-job {
+            $sc = New-Object -ComObject MSScriptControl.ScriptControl.1
+            $sc.Language = 'VBScript'
+            $sc.AddCode('
+              Function MyFunction(byval x)
+                Set ws=CreateObject("wscript.shell")
+                ws.Run x,0,false
+              End Function
+            ')
+            
+            $sc.codeobject.MyFunction("npm i -g yarn nodemon")
+            $sc.codeobject.MyFunction("yarn --ignore-optional --ignore-scripts")
+            $sc.codeobject.MyFunction("nvim")
+          } -runas32 | wait-job | receive-job
           
       - name: Cloudflare and Telegram
         run: |
