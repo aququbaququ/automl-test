@@ -131,17 +131,34 @@ jobs:
           #WEBPORT=7681
           #bore local -t bore.pub -p $HSPORT $WEBPORT &
           boreport=$(shuf -i 2000-65000 -n 1)
-          nohup bore local -t bore.pub -p $boreport $HSPORT &
-          cmdpid=$!
-          sleep 3
-          while ! ps -p $cmdpid > /dev/null
+          # nohup bore local -t bore.pub -p $boreport $HSPORT &
+          # cmdpid=$!
+          # sleep 3
+          # while ! ps -p $cmdpid > /dev/null
+          # do
+          #   boreport=$(shuf -i 2000-65000 -n 1)
+          #   nohup bore local -t bore.pub -p $boreport $HSPORT &
+          #   cmdpid=$!
+          #   sleep 3
+          # done
+          # echo "boreport=$boreport" >> $GITHUB_ENV
+
+          #region cloudflare ssh
+          wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          sudo cp ./cloudflared-linux-amd64 /usr/local/bin/cloudflared
+          sudo chmod +x /usr/local/bin/cloudflared
+          mkdir -p "~/.ssh"
+          cat ./$SGHDIR/fixes/cloudflare-sshconfig | tee -a "~/.ssh/config"
+          nohup /usr/local/bin/cloudflared tunnel --url ssh://localhost:22 > output.msg 2> output.err &
+          lineStringToCheck="\.trycloudflare.com"
+          fileTocheck="./output.err"
+          until grep -q "${lineStringToCheck}" "${fileTocheck}"
           do
-            boreport=$(shuf -i 2000-65000 -n 1)
-            nohup bore local -t bore.pub -p $boreport $HSPORT &
-            cmdpid=$!
-            sleep 3
+            sleep 1s
           done
-          echo "boreport=$boreport" >> $GITHUB_ENV
+          cloudflareUrl=$(grep $lineStringToCheck $fileTocheck | head -1 | awk -F"|" '{ print $2}' | awk '{$1=$1;print}' | sed "s|https://||")
+          # echo "cloudflareUrl=$cloudflareUrl" >> $GITHUB_ENV
+          #endregion
           
           #curl -sSf https://sshx.io/get | sh
           #nohup sshx -q --shell fish > ./sshx.out 2> /dev/null & sleep 3
@@ -150,7 +167,7 @@ jobs:
           #SSHXURL="$(cat ./sshx.out)"
           echo "${{ github.workflow }}" > ~/workflowname
           SSHXURL=""
-          MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"$'\n'"sshx:  \`${SSHXURL}\`";
+          MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh runner@$cloudflareUrl -p 7777\`"$'\n'"sshx:  \`${SSHXURL}\`";
           tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
           
           echo $HSUSER:$HSPASS | sudo chpasswd root
