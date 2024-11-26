@@ -182,9 +182,9 @@ jobs:
           sudo chmod +x /usr/local/bin/cloudflared
           mkdir -p "~/.ssh"
           cat ./$SGHDIR/fixes/cloudflare-sshconfig | tee -a "~/.ssh/config"
-          nohup cloudflared tunnel --url ssh://localhost:22 > output.msg 2> output.err &
-          lineStringToCheck = "\.trycloudflare.com"
-          fileTocheck = "./output.err"
+          nohup /usr/local/bin/cloudflared tunnel --url ssh://localhost:22 > output.msg 2> output.err &
+          lineStringToCheck="\.trycloudflare.com"
+          fileTocheck="./output.err"
           until grep -q "${lineStringToCheck}" "${fileTocheck}"
           do
             sleep 1s
