@@ -189,7 +189,7 @@ jobs:
           do
             sleep 1s
           done
-          cloudflareUrl = $(grep $lineStringToCheck $fileTocheck | head -1 | awk -F"|" '{ print $2}' | awk '{$1=$1;print}' | sed "s|https://||")
+          cloudflareUrl=$(grep $lineStringToCheck $fileTocheck | head -1 | awk -F"|" '{ print $2}' | awk '{$1=$1;print}' | sed "s|https://||")
           # echo "cloudflareUrl=$cloudflareUrl" >> $GITHUB_ENV
           #endregion
           
