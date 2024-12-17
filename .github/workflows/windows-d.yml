@@ -356,6 +356,7 @@ jobs:
           #     Start-Sleep -Seconds 60
           # }
           choco install sandboxie-plus.install -y
+          cp .\ninjatrader\Sandboxie.ini "C:\Windows\Sandboxie.ini"
 
           Copy-Item  -Path '.\fixes\windows-alias-exe\.alias-exe' -Destination "C:\Users\runneradmin" -Recurse -force
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
