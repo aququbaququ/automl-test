@@ -200,6 +200,7 @@ jobs:
         run: |
           $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."   
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
+          choco feature enable -n=allowGlobalConfirmation
 
           #region main apps
           scoop install autohotkey podman wget curl aria2 git jq neovim gtools
@@ -354,7 +355,7 @@ jobs:
           #     echo "waiting StrategyStarted"
           #     Start-Sleep -Seconds 60
           # }
-          choco install sandboxie-plus.install
+          choco install sandboxie-plus.install -y
 
           Copy-Item  -Path '.\fixes\windows-alias-exe\.alias-exe' -Destination "C:\Users\runneradmin" -Recurse -force
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
