@@ -1,0 +1,369 @@
+name: CI2b2
+
+on:
+  #push:
+  #  branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
+  #schedule:
+    #- cron: "0 */5 * * *"
+    
+  workflow_dispatch:
+  # repository_dispatch:
+  
+env:
+  SGHREPO: ${{ secrets.SGHREPO }}
+  SGHDIR: ${{ secrets.SGHDIR }}
+  GH_TOKEN: ${{ secrets.SGHTOKEN }}
+  SNUSER: ${{ secrets.SNUSER }}
+  SNUSERTOKEN: ${{ secrets.SNUSERTOKEN }}
+  SNSKEY: ${{ secrets.SNSKEY }}
+  HSUSER: ${{ secrets.HSUSER }}
+  HSPASS: ${{ secrets.HSPASS }}
+  HSPORT: ${{ secrets.HSPORT }}
+  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+  SSH_PASSWORD: ${{ secrets.HSPASS }}
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  ENV64: ${{ secrets.ENV64 }}
+          
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    #if: ${{ github.event_name == 'schedule' }}
+    permissions:
+      actions: write
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
+          
+      - uses: thaind0/envfile@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+          file: .prod.env
+          
+      - name: Load ENV file
+        run: |
+          echo $ENV64 | openssl base64 -d --out .env
+          #gh secret set -f .env
+            
+      - name: Read environment file and set variables
+        uses: cosq-network/dotenv-loader@v1.0.2
+        with:
+          env-file: .env
+          
+          
+      - name: Run a multi-line script
+        run: |
+          echo "HSPORT=$HSPORT" >> $GITHUB_ENV
+          sudo apt-get update
+          sudo apt install fish magic-wormhole jq
+          mkdir -p ~/.config/fish
+          mkdir -p ~/.local/bin
+          
+          sudo tee -a ~/.bash_profile <<EOF
+            if [ -f ~/.bashrc ]; then
+              . ~/.bashrc
+            di
+          EOF
+          sudo chsh -s /usr/bin/fish runner
+          sudo chsh -s /usr/bin/fish root
+          
+          wget https://github.com/neovim/neovim-releases/releases/download/v0.10.0/nvim.appimage
+          chmod u+x ./nvim.appimage && mv ./nvim.appimage ~/.local/bin/nvim
+          sudo apt-get install fuse libfuse2
+          #git clone https://github.com/LazyVim/starter ~/.config/lazyvim
+
+          wget https://github.com/extrawurst/gitui/releases/download/v0.26.3/gitui-linux-x86_64.tar.gz && tar xvf gitui-linux-x86_64.tar.gz && mv ./gitui ~/.local/bin/.
+          wget https://github.com/jesseduffield/lazygit/releases/download/v0.42.0/lazygit_0.42.0_Linux_x86_64.tar.gz && tar -zxvf lazygit_0.42.0_Linux_x86_64.tar.gz lazygit && mv lazygit ~/.local/bin/.
+          git config --global user.name "name"
+          git config --global user.email "email"
+          wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb && sudo apt install ./gh_2.52.0_linux_amd64.deb && rm ./gh_2.52.0_linux_amd64.deb
+          gh auth setup-git
+          gh repo clone $SGHREPO && cd "$SGHDIR"
+          cp -r ./fixes/ghrunner-dotfiles/. ~/.
+          cp -r ./fixes/termux-configs/lazyvim ~/.config/.
+          sudo systemctl restart sshd
+          fish -c "lvim" &
+          tmpvar=$(git submodule update --init --recursive && git config submodule.recurse true && git pull)
+          sudo apt-get install ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils 
+          #chromium-browser
+          #chromium
+          #sudo apt-get install -y gconf-service libasound2 libatk1.0-0 libcairo2 libcups2 libfontconfig1 libgdk-pixbuf2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libxss1 fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
+          #wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb 
+          #sudo dpkg -i google-chrome-stable_current_amd64.deb; sudo apt-get -fy install
+          
+          curl https://mise.run | sh
+          #echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
+          echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && source ~/.bashrc
+          mise use --global node@14.15.4
+          
+          npm i -g yarn && npm i -g pm2 && npm i -g nodemon && yarn config set network-timeout 600000 -g && yarn --ignore-optional --ignore-scripts && node ./node_modules/puppeteer/install.js
+          
+
+      - name: Network-tools
+        run: |
+          echo "export TERM=xterm-256color" >> ~/.bashrc
+          wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-linux-amd64.deb && sudo apt install ./handy-sshd-0.4.3-linux-amd64.deb && rm ./handy-sshd-0.4.3-linux-amd64.deb
+          sudo handy-sshd -p "$HSPORT" -u "$HSUSER":"$HSPASS" &
+          WEBPORT="$HSPORT"
+          wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && tar xf ./bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && mv ./bore ~/.local/bin/.
+          wget https://github.com/yudai/gotty/releases/download/v2.0.0-alpha.3/gotty_2.0.0-alpha.3_linux_amd64.tar.gz && tar xvf gotty_2.0.0-alpha.3_linux_amd64.tar.gz && mv ./gotty ~/.local/bin/.
+          wget https://github.com/yubo/gotty/releases/download/pre-release/gotty_linux_amd64.tar.gz && tar xf ./gotty_linux_amd64.tar.gz && mv ./gotty ~/.local/bin/gotty2
+          chmod +x ~/.local/bin/.
+          #gotty --height 384 --width 512 --reconnect -c $HSUSER:$HSPASS -w fish &
+          #sudo gotty2 deamon
+          #WEBPORT=8080
+          #sudo apt install ttyd && sudo -u runner ttyd -c "$HSUSER:$HSPASS" -W fish &
+          #WEBPORT=7681
+          #bore local -t bore.pub -p $HSPORT $WEBPORT &
+          boreport=$(shuf -i 2000-65000 -n 1)
+          # nohup bore local -t bore.pub -p $boreport $HSPORT &
+          # cmdpid=$!
+          # sleep 3
+          # while ! ps -p $cmdpid > /dev/null
+          # do
+          #   boreport=$(shuf -i 2000-65000 -n 1)
+          #   nohup bore local -t bore.pub -p $boreport $HSPORT &
+          #   cmdpid=$!
+          #   sleep 3
+          # done
+          # echo "boreport=$boreport" >> $GITHUB_ENV
+
+          #region cloudflare ssh
+          wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          sudo cp ./cloudflared-linux-amd64 /usr/local/bin/cloudflared
+          sudo chmod +x /usr/local/bin/cloudflared
+          mkdir -p "~/.ssh"
+          cat ./$SGHDIR/fixes/cloudflare-sshconfig | tee -a "~/.ssh/config"
+          nohup /usr/local/bin/cloudflared tunnel --url ssh://localhost:22 > output.msg 2> output.err &
+          lineStringToCheck="\.trycloudflare.com"
+          fileTocheck="./output.err"
+          until grep -q "${lineStringToCheck}" "${fileTocheck}"
+          do
+            sleep 1s
+          done
+          cloudflareUrl=$(grep $lineStringToCheck $fileTocheck | head -1 | awk -F"|" '{ print $2}' | awk '{$1=$1;print}' | sed "s|https://||")
+          # echo "cloudflareUrl=$cloudflareUrl" >> $GITHUB_ENV
+          #endregion
+          
+          #curl -sSf https://sshx.io/get | sh
+          #nohup sshx -q --shell fish > ./sshx.out 2> /dev/null & sleep 3
+          ##SSHXURL=$(<sshx.out)
+          ##SSHXURL=`cat sshx.out`
+          #SSHXURL="$(cat ./sshx.out)"
+          echo "${{ github.workflow }}" > ~/workflowname
+          SSHXURL=""
+          MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh runner@$cloudflareUrl -p 7777\`"$'\n'"sshx:  \`${SSHXURL}\`";
+          tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
+          
+          echo $HSUSER:$HSPASS | sudo chpasswd root
+          echo $HSUSER:$HSPASS | sudo chpasswd runner
+          sudo sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo echo 'PermitRootLogin yes' | sudo tee -a /etc/ssh/sshd_config
+          sudo systemctl reload sshd
+          WEBPORT=22
+          #bore local -t bore.pub -p $HSPORT $WEBPORT &
+          #pip install webssh
+          #wssh &
+          #WEBPORT=8888
+          
+
+          # curl -fsSL https://pkgs.netbird.io/install.sh | sh
+          # netbird login --setup-key $SNSKEY --hostname ghserver
+          # netbird up --setup-key $SNSKEY --hostname ghserver --allow-server-ssh
+          
+          mkdir ss && cd ss && wget https://github.com/shadowsocks/shadowsocks-rust/releases/download/v1.20.1/shadowsocks-v1.20.1.x86_64-unknown-linux-gnu.tar.xz && tar xvf ./shadowsocks-v1.20.1.x86_64-unknown-linux-gnu.tar.xz && rm ./shadowsocks-v1.20.1.x86_64-unknown-linux-gnu.tar.xz && mv ./* ~/.local/bin/. && cd .. && rm -rf ss
+          nohup sslocal -c ./$SGHDIR/fixes/ghrunner-dotfiles/.etc/.ssprofile &
+          sudo apt install proxychains4 && echo "socks5 127.0.0.1 1080" | sudo tee -a /etc/proxychains4.conf && sudo sed -e '/socks4/ s/^#*/# /' -i /etc/proxychains4.conf && sleep 3
+          
+          
+      - uses: ahmadnassri/action-workflow-queue@v1
+      
+      
+      - name: start-app    
+        run: |
+          cd ./$SGHDIR && git pull
+          cd ./data && git checkout main && git pull --rebase --autostash && cd ..;
+          proxychains4 pm2 start ./pm2-f2024-10-19b.json
+      
+      #- name: NGROK with Telegram
+      #  run: |
+          #curl -sSf https://sshx.io/get | sh
+          #echo -e "${HSUSER}\n${HSPASS}" | sudo passwd "${USER}"
+      #     curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
+      #    ngrok config add-authtoken $NGROK_TOKEN
+      #    while true; do date; nohup pkill ngrok & sleep 1s; nohup ngrok tcp 22 & sleep 1s; NGROKURL="$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')"; MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh ${HSUSER}@bore.pub -p ${boreport}\`"$'\n'"ngrokssh:  \`ngssh ${NGROKURL}\`"; tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}"); sleep 25m ; done &
+          
+          
+      # - name: Manual TMATE with Telegram and zellij
+      #   id: manual-tmate
+      #   run: |
+      #       sudo apt-get install tmate
+      #       curl -L zellij.dev/launch > zlj && chmod +x ./zlj && mv ./zlj ~/.local/bin/.
+
+      #       tmpvar=$(tmate -S /tmp/tmate.sock new-session -d)
+      #       #sleep 20s
+      #       tmpvar=$(tmate -S /tmp/tmate.sock wait tmate-ready)
+      #       TMATE_SSH=$(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')
+      #       TMATE_WEB=$(tmate -S /tmp/tmate.sock display -p '#{tmate_web}')
+      #       echo "::add-mask::$TMATE_SSH"
+      #       echo "::add-mask::$TMATE_WEB"
+          
+      #       TMATEMSG=" 
+      #       *GitHub Actions - tmate session info:*  
+            
+      #       ⚡ *CLI:*  
+      #       \`${TMATE_SSH}\`  
+              
+      #       🔗 *URL:*  
+      #       ${TMATE_WEB}  
+      #       "
+      #       tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=true" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${TMATEMSG}")
+            
+      #       #echo "TMATEMSG<<EOF" >> $GITHUB_ENV
+      #       #echo $TMATEMSG >> $GITHUB_ENV
+      #       #echo "EOF" >> $GITHUB_ENV
+            
+      #       #echo "TMATEMSG=$TMATEMSG" >> $GITHUB_OUTPUT
+      #       #echo "TMATEMSG=$TMATEMSG" >> $env:GITHUB_ENV
+      #       #curl -s -X POST https://api.telegram.org/bot"$TELEGRAM_BOT_TOKEN"/sendMessage -d chat_id="$TELEGRAM_CHAT_ID" -d text="$MESSAGE"
+    
+      - name: Install OpenVPN
+        run: |
+          sudo apt update
+          sudo apt install -y openvpn openvpn-systemd-resolved
+          #for binance netherlands,spain works
+          #sudo openvpn --config riseup-ovpn.conf --daemon
+          #sudo openvpn --config ovpn.conf -auth-user-pass <(echo -e "user\npass")
+          curl ipinfo.io
+
+      #- name: Connect to PPTP VPN
+      #  uses: mizumotok/pptp-action@master
+      #  with:
+      #    server: "server1.freevpn.me"
+      #    username: "freevpn.me"
+      #    password: "k2YbR6Ve2JBe"
+      
+      #- name: Establish VPN Connection
+      #  uses: unknow-sk/github-action-vpn@main
+      #  with:
+      #    VPN_SERVER: "FR231.vpnbook.com"
+      #    VPN_USER: "vpnbook"
+      #    VPN_PASSWORD: "dnx97sa"
+          
+
+      - name: Sleep for 5 hours
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '5h'
+        timeout-minutes: 360
+
+      - name: Invoke workflow
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: linux2b2.yml
+          repo: ${{ github.repository }}
+          token: "${{ secrets.SGHTOKENLOCAL }}"
+
+      - name: Invoke workflow-fail
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: linux2b2.yml
+          repo: ${{ github.repository }}
+          token: "${{ secrets.SGHTOKENLOCAL }}"
+
+      - name: Sleep for 5 mins for new Workflow to init
+        if: success() || failure()
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '5m'
+          
+      - name: Commit changes
+        id: commit
+        if: success() || failure()
+        #working-directory: automl-test
+        run: |
+          #cd ./$SGHDIR/data && git stash && cd ../..;
+          cd ./$SGHDIR && git pull
+          cd ./data && git checkout main && git pull --rebase --autostash
+          #git stash pop
+          git ls-files --others --exclude-standard | grep trades | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
+          git ls-files -m | grep trades | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "modified trade changes" && git push origin HEAD:main; }
+
+          cd ..;
+          git add ./data
+          # cp ~/.local/share/fish/fish_history ./fixes/ghrunner-dotfiles/.local/share/fish/fish_history && git add ./fixes/ghrunner-dotfiles/.local/share/fish/fish_history
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "trade changes" && git push origin HEAD:main; }
+          
+      - name: inform telegram for commit
+        if: steps.commit.conclusion == 'failure' || steps.commit.outcome == 'failure'
+        run: |
+          MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`commit\`"$$'\n'"sshx:  \`${SSHXURL}\`"
+          tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");         
+          
+      - name: wait 30m for commit
+        if: steps.commit.conclusion == 'failure' || steps.commit.outcome == 'failure'
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '30m'
+          
+      - name: Cancel workflow
+        if: success() || failure()
+        uses: action-pack/cancel@v1
+
+  # workflow-keepalive:
+  #   runs-on: ubuntu-latest
+  #   #if: ${{ github.event_name == 'schedule' }}
+  #   permissions:
+  #     actions: write
+  #   strategy:
+  #     fail-fast: false
+  #   env:
+  #     GH_TOKEN: ${{ secrets.SGHTOKENLOCAL }}
+  #   steps:
+  #     - uses: ahmadnassri/action-workflow-queue@v1
+      
+  #     - name: Sleep for 5 hours
+  #       uses: jakejarvis/wait-action@master
+  #       with:
+  #         time: '5h'
+          
+  #     - name: Invoke workflow
+  #       uses: benc-uk/workflow-dispatch@v1
+  #       with:
+  #         workflow: linux2b2.yml
+  #         repo: ${{ github.repository }}
+  #         token: "${{ secrets.SGHTOKENLOCAL }}"
+    
+      # - name: Redispatch workflow
+      #   run: |
+      #      curl -L \
+      #       -X POST \
+      #       -H "Accept: application/vnd.github+json" \
+      #       -H "Authorization: Bearer $GH_TOKEN" \
+      #       -H "X-GitHub-Api-Version: 2022-11-28" \
+      #       https://api.github.com/repos/$GITHUB_REPOSITORY/dispatches \
+      #       -d '{"event_type":"repository_dispatch"'
+      #      curl -L \
+      #      -X POST \
+      #      -H "Accept: application/vnd.github+json" \
+      #      -H "Authorization: Bearer $GH_TOKEN" \
+      #      -H "X-GitHub-Api-Version: 2022-11-28" \
+      #      https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/rerun
