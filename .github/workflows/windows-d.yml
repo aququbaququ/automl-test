@@ -365,9 +365,9 @@ jobs:
           # npm i -g yarn nodemon
           # yarn --ignore-optional --ignore-scripts
           
-          CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "npm i -g yarn nodemon"
-          CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "yarn --ignore-optional --ignore-scripts"
-          CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "nvim"
+          # CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "npm i -g yarn nodemon"
+          # CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "yarn --ignore-optional --ignore-scripts"
+          # CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "nvim"
 
           # start-job {
           #   $sc = New-Object -ComObject MSScriptControl.ScriptControl.1
