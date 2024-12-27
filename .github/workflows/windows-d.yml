@@ -256,8 +256,8 @@ jobs:
           wget https://github.com/nwtgck/handy-sshd/releases/download/v0.4.3/handy-sshd-0.4.3-windows-amd64.zip
           unzip handy-sshd-0.4.3-windows-amd64.zip
           # scoop bucket add Syndim https://github.com/Syndim/scoop-bucket && scoop install Syndim/bore
-          wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-pc-windows-msvc.zip
-          unzip bore-v0.5.1-x86_64-pc-windows-msvc.zip
+          # wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-pc-windows-msvc.zip && unzip bore-v0.5.1-x86_64-pc-windows-msvc.zip
+          wget https://github.com/ekzhang/bore/releases/download/v0.5.2/bore-v0.5.2-x86_64-pc-windows-msvc.zip && unzip bore-v0.5.2-x86_64-pc-windows-msvc.zip && mv .\bore.exe $env:USERPROFILE\bin\bore.exe 
           # Start-Job -ScriptBlock { .\handy-sshd.exe -p "$env:HSPORT" -u runneradmin:"$env:HSPASS" }
           New-Item -Path Env:\HSPORT -Value $env:HSPORT -Force
           New-Item -Path Env:\HSPASS -Value $env:HSPASS -Force
