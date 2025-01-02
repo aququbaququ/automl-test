@@ -388,6 +388,12 @@ jobs:
         run: |
           echo "debug 3.5"
 
+          scoop install netbird
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
+          # curl -fsSL https://pkgs.netbird.io/install.sh | sh
+          netbird login --setup-key $env:SNSKEY$ --hostname ghserver
+          netbird up --setup-key $env:SNSKEY --hostname ghserver --allow-server-ssh
+
           #region cloudflare ssh
           mkdir -p "$env:USERPROFILE\.ssh"
           cat .\scripts\cloudflare-sshconfig | tee -a "$env:USERPROFILE\.ssh\config"
