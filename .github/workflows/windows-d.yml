@@ -391,6 +391,8 @@ jobs:
           scoop install netbird
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" && Update-SessionEnvironment && refreshenv
           # curl -fsSL https://pkgs.netbird.io/install.sh | sh
+          netbird service install 
+          netbird service start
           netbird login --setup-key $env:SNSKEY --hostname ghserver
           netbird up --setup-key $env:SNSKEY --hostname ghserver --allow-server-ssh
 
