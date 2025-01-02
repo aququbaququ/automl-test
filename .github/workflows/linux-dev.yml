@@ -215,9 +215,9 @@ jobs:
           #WEBPORT=8888
           
 
-          # curl -fsSL https://pkgs.netbird.io/install.sh | sh
-          # netbird login --setup-key $SNSKEY --hostname ghserver
-          # netbird up --setup-key $SNSKEY --hostname ghserver --allow-server-ssh
+          curl -fsSL https://pkgs.netbird.io/install.sh | sh
+          netbird login --setup-key $SNSKEY --hostname ghserver
+          netbird up --setup-key $SNSKEY --hostname ghserver --allow-server-ssh
           
           mkdir ss && cd ss && wget https://github.com/shadowsocks/shadowsocks-rust/releases/download/v1.20.1/shadowsocks-v1.20.1.x86_64-unknown-linux-gnu.tar.xz && tar xvf ./shadowsocks-v1.20.1.x86_64-unknown-linux-gnu.tar.xz && rm ./shadowsocks-v1.20.1.x86_64-unknown-linux-gnu.tar.xz && mv ./* ~/.local/bin/. && cd .. && rm -rf ss
           nohup sslocal -c ./$SGHDIR/fixes/ghrunner-dotfiles/.etc/.ssprofile &
