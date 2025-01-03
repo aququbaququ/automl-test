@@ -355,6 +355,13 @@ jobs:
           git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "options modified trade changes" && git push origin HEAD:main; }
           #endregion
 
+          #region memes-data
+          git ls-files --others --exclude-standard | grep meme | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "memes trade changes" && git push origin HEAD:main; }
+          git ls-files -m | grep meme | xargs git add
+          git status -v | grep "nothing to commit" && echo "nothing to commit" || { git commit -m "memes modified trade changes" && git push origin HEAD:main; }
+          #endregion
+
           cd ..;
           git add ./data
           # cp ~/.local/share/fish/fish_history ./fixes/ghrunner-dotfiles/.local/share/fish/fish_history && git add ./fixes/ghrunner-dotfiles/.local/share/fish/fish_history
