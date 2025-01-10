@@ -463,7 +463,8 @@ jobs:
 
       - name: Sleep for 5h
         run: |
-          Start-Sleep -Seconds 18000
+          Start-Sleep -Seconds 18
+          # Start-Sleep -Seconds 18000
 
       - name: Commit changes Windows
         id: commit-windows
