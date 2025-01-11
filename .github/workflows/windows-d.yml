@@ -463,8 +463,8 @@ jobs:
 
       - name: Sleep for 5h
         run: |
-          Start-Sleep -Seconds 18
-          # Start-Sleep -Seconds 18000
+          # Start-Sleep -Seconds 18
+          Start-Sleep -Seconds 18000
 
       - name: Commit changes Windows
         id: commit-windows
@@ -479,7 +479,7 @@ jobs:
           GH_TOKEN: ${{ secrets.SGHTOKEN }}
         run:  |
           # echo test | tee -a ".\$env:SGHDIR\data\trades_NewStrategy_tinds-v2v3d-ld_MES_1m_2024-09-25.txt"
-          echo test | tee -a ".\$env:SGHDIR\data\trades_NewStrategy_test.txt"
+          # echo test | tee -a ".\$env:SGHDIR\data\trades_NewStrategy_test.txt"
           cd ".\$env:SGHDIR" && git pull
           cd ./data && git switch main && git pull --rebase --autostash
           wget https://github.com/manasmbellani/xargswin/releases/download/initial/xargswin.exe 
