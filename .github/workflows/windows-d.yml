@@ -229,7 +229,8 @@ jobs:
           echo "debug 1"
           # scoop install vfox
           # # call clink info | findstr scripts
-          # wget https://github.com/version-fox/vfox/blob/main/internal/shell/clink_vfox.lua -P %CLINK_COMPLETIONS_DIR%
+          # wget https://raw.githubusercontent.com/version-fox/vfox/refs/heads/main/internal/shell/clink_vfox.lua -P %CLINK_COMPLETIONS_DIR%
+          # wget https://raw.githubusercontent.com/version-fox/vfox/refs/heads/main/internal/shell/clink_vfox.lua -P %LOCALAPPDATA%\clink
           # vfox add nodejs
           # vfox install nodejs@14.15.4
           # vfox use -g nodejs@14.15.4
