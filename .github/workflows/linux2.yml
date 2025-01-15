@@ -91,6 +91,8 @@ jobs:
           gh repo clone $SGHREPO && cd "$SGHDIR"
           cp -r ./fixes/ghrunner-dotfiles/. ~/.
           cp -r ./fixes/termux-configs/lazyvim ~/.config/.
+          sudo apt-get remove --purge openssh-server
+          sudo apt-get install openssh-server
           sudo systemctl restart sshd
           fish -c "lvim" &
           tmpvar=$(git submodule update --init --recursive && git config submodule.recurse true && git pull)
