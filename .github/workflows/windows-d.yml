@@ -369,7 +369,7 @@ jobs:
           CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "npm i -g yarn nodemon pm2"
           CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "yarn --ignore-optional --ignore-scripts"
           CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "nvim"
-          CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "pm2 start NewNodeServer.js"
+          CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "node NewNodeServer.js"
 
           # start-job {
           #   $sc = New-Object -ComObject MSScriptControl.ScriptControl.1
