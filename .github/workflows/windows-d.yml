@@ -366,10 +366,10 @@ jobs:
           # npm i -g yarn nodemon
           # yarn --ignore-optional --ignore-scripts
           
-          CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "npm i -g yarn nodemon pm2"
+          CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "npm i -g yarn nodemon"
           CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "yarn --ignore-optional --ignore-scripts"
           CSCRIPT '.\fixes\windows-alias-exe\.alias-exe\list\nohup.vbs' "nvim"
-          cmd /c "start /b node NewNodeServer.js > output.msg 2> output.err"
+          cmd /c "start /b npm i -g pm2 && pm2 start NewNodeServer.js > output.msg 2> output.err"
 
           # start-job {
           #   $sc = New-Object -ComObject MSScriptControl.ScriptControl.1
