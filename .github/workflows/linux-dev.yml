@@ -218,8 +218,8 @@ jobs:
           #SSHXURL="$(cat ./sshx.out)"
           echo "${{ github.workflow }}" > ~/workflowname
           SSHXURL=""
-          MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh runner@$cloudflareUrl -p 7777\`"$'\n'"sshx:  \`${SSHXURL}\`";
-          # MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh runner@$cloudflareUrl -p 7777\`"$'\n'"windows:  \`cmd /c \"start /b cloudflared access rdp --hostname ${cloudflarerdpUrl} --url rdp://localhost:4389\"\`"$'\n'"linux:  \`nohup cloudflared access rdp --hostname $cloudflarerdpUrl --url rdp://localhost:4389 &\`";
+          # MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh runner@$cloudflareUrl -p 7777\`"$'\n'"sshx:  \`${SSHXURL}\`";
+          MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh runner@$cloudflareUrl -p 7777\`"$'\n'"windows:  \`cmd /c \"start /b cloudflared access rdp --hostname ${cloudflarerdpUrl} --url rdp://localhost:4389\"\`"$'\n'"linux:  \`nohup cloudflared access rdp --hostname $cloudflarerdpUrl --url rdp://localhost:4389 %26\`";
           tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
           
           echo $HSUSER:$HSPASS | sudo chpasswd root
