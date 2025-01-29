@@ -197,8 +197,8 @@ jobs:
           #endregion
 
           #region cloudflare rdp
-          apt install xfce4 xfce4-goodies xrdp
-          # apt install xrdp -y
+          sudo apt install xfce4 xfce4-goodies
+          sudo apt install xrdp -y
           echo "xfce4-session" | tee .xsession
           systemctl restart xrdp
           nohup /usr/local/bin/cloudflared tunnel --url rdp://localhost:3389 > outputrdp.msg 2> outputrdp.err &
