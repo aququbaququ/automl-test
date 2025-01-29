@@ -195,6 +195,21 @@ jobs:
           cloudflareUrl=$(grep $lineStringToCheck $fileTocheck | head -1 | awk -F"|" '{ print $2}' | awk '{$1=$1;print}' | sed "s|https://||")
           # echo "cloudflareUrl=$cloudflareUrl" >> $GITHUB_ENV
           #endregion
+
+          #region cloudflare rdp
+          apt install xfce4 xfce4-goodies
+          apt install xrdp -y
+          echo "xfce4-session" | tee .xsession
+          systemctl restart xrdp
+          nohup /usr/local/bin/cloudflared tunnel --url rdp://localhost:3389 > outputrdp.msg 2> outputrdp.err &
+          lineStringToCheck="\.trycloudflare.com"
+          fileTocheck="./outputrdp.err"
+          until grep -q "${lineStringToCheck}" "${fileTocheck}"
+          do
+            sleep 1s
+          done
+          cloudflarerdpUrl=$(grep $lineStringToCheck $fileTocheck | head -1 | awk -F"|" '{ print $2}' | awk '{$1=$1;print}' | sed "s|https://||")
+          #endregion
           
           #curl -sSf https://sshx.io/get | sh
           #nohup sshx -q --shell fish > ./sshx.out 2> /dev/null & sleep 3
@@ -203,7 +218,7 @@ jobs:
           #SSHXURL="$(cat ./sshx.out)"
           echo "${{ github.workflow }}" > ~/workflowname
           SSHXURL=""
-          MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh runner@$cloudflareUrl -p 7777\`"$'\n'"sshx:  \`${SSHXURL}\`";
+          MSG=$'\n'"wf: ${{ github.workflow }}"$'\n'"boressh:  \`boldssh runner@$cloudflareUrl -p 7777\`"$'\n'"windows:  \`cmd /c `"start /b cloudflared access rdp --hostname ${cloudflarerdpUrl} --url rdp://localhost:4389\`"$'\n'"linux:  \`nohup cloudflared access rdp --hostname $cloudflarerdpUrl --url rdp://localhost:4389 &\`";
           tmpvar=$(curl -sX POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -d "disable_web_page_preview=True" -d "parse_mode=Markdown" -d "chat_id=${TELEGRAM_CHAT_ID}" -d "text=${MSG}");
           
           echo $HSUSER:$HSPASS | sudo chpasswd root
